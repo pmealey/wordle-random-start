@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="wordle/normalize.css">
+    <link rel="stylesheet" href="wordle/skeleton.css">
+    <meta name="robots" content="noindex" />
+</head>
+<body>
+
+<h1>Today's Starting Word</h1>
+<p id="starting-word">Loading...</p>
+<p><a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a></p>
+
+<script>
+(function() {
+    let httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function() {
+        let startingWord = document.getElementById('starting-word');
+        if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+            startingWord = httpRequest.responseText;
+        }
+    }
+
+    httpRequest.open('GET', '/api/wordle/word', false);
+    httpRequest.send();
+})();
+</script>
+</body>
+</html>
