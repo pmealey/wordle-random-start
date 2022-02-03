@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="wordle/normalize.css">
-    <link rel="stylesheet" href="wordle/skeleton.css">
+    <base href="wordle" />
+    <title>Wordle: Random Start</title>
+    <style>
+        body {
+            margin: 40px auto;
+            max-width: 650px;
+            line-height: 1.6;
+            font-size: 18px;
+            color: #444;
+            padding: 0 10px;
+        }
+    
+        h1,
+        h2,
+        h3 {
+            line-height: 1.2;
+        }
+    </style>
     <meta name="robots" content="noindex" />
 </head>
 <body>
 
-<h1>Today's Starting Word</h1>
-<p id="starting-word">Loading...</p>
+<h1>Wordle: Random Start</h1>
+<p>Today's random word: <span id="starting-word">Loading...</span></p>
 <p><a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a></p>
 
 <script>
@@ -17,11 +33,11 @@
     httpRequest.onreadystatechange = function() {
         let startingWord = document.getElementById('starting-word');
         if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
-            startingWord = httpRequest.responseText;
+            startingWord.innerText = httpRequest.responseText;
         }
     }
 
-    httpRequest.open('GET', '/api/wordle/word', false);
+    httpRequest.open('GET', '/api/wordle/daily-word', false);
     httpRequest.send();
 })();
 </script>
