@@ -10,11 +10,13 @@ namespace backend.Controllers;
 [Route("[controller]")]
 public class DailyWordController : ControllerBase
 {
+    private readonly IConfiguration _configuration;
     private readonly DataContext _context;
     private readonly ILogger<DailyWordController> _logger;
  
-    public DailyWordController(DataContext context, ILogger<DailyWordController> logger)
+    public DailyWordController(IConfiguration configuration, DataContext context, ILogger<DailyWordController> logger)
     {
+        _configuration = configuration;
         _context = context;
         _logger = logger;
     }
@@ -88,7 +90,7 @@ public class DailyWordController : ControllerBase
 
     private string GetNewRandomWord()
     {
-        if (!System.IO.File.Exists(".\\Resources\\allowed.txt"))
+        if (!System.IO.File.Exists(_configuration["DictionaryPath"]))
         {
             throw new Exception("DICTIONARY NOT FOUND");
         }
