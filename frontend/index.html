@@ -10,16 +10,13 @@
             font-size: 18px;
             color: #444;
             padding: 0 10px;
+            max-width: 650px;
         }
 
         @media (max-width: 1024px) {
             body {
                 font-size: 24px;
             }
-        }
-
-        .intro {
-            max-width: 650px;
         }
 
         h1,
@@ -46,8 +43,6 @@
     <meta name="robots" content="noindex" />
 </head>
 <body>
-
-<div class="intro">
     <h1>Wordle: Random Start</h1>
     <p>Today's random word: <span id="starting-word">Loading...</span></p>
 
@@ -68,7 +63,6 @@
         <div id="summary" class="summary"></div>
         <button id="share">Copy to Clipboard (Share)</button>
     </div>
-</div>
 
 <script>
 function requestIsDone(request) {
