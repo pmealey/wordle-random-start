@@ -24,7 +24,7 @@ namespace backend.Services.Parsers
 
         protected override string GetCleanResult(string result, Match parserResults)
         {
-            return result.Substring(0, result.IndexOf("quordle.com"));
+            return result.Substring(0, result.IndexOf("quordle.com")).Trim();
         }
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
