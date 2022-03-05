@@ -8,15 +8,15 @@ namespace backend.Models
         public int Id { get; set; }
         [Required]
         [MaxLength(128)]
-        public string User { get; set; }
+        public string User { get; set; } = null!;
         [Required]
         [Column(TypeName="Date")]
         public DateTime Date { get; set; }
         [Required]
         [MaxLength(128)]
-        public string Game { get; set; }
+        public string Game { get; set; } = null!;
         [Required]
-        public string Result { get; set; }
+        public string Result { get; set; } = null!;
         public int? Score { get; set; }
         public TimeSpan? Time { get; set; }
         public List<int>? Scores { get; set; }

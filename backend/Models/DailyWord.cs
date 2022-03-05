@@ -9,6 +9,6 @@ namespace backend.Models
         [Column(TypeName="Date")]
         public DateTime Date { get; set; }
         [MaxLength(5)]
-        public string Word { get; set; }
+        public string Word { get; set; } = null!;
     }
 }

@@ -34,7 +34,7 @@ namespace backend.Services.Parsers
                 .Select(g => parserResults.Groups[g].Value)
                 .Select(v => int.TryParse(v, out var score) ? (int?)score : null)
                 .Where(v => v.HasValue)
-                .Select(v => v.Value)
+                .Select(v => v!.Value)
                 .ToList();
 
             dailyResult.Scores = scores;
