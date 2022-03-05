@@ -6,39 +6,175 @@
     <style>
         body {
             margin: 40px auto;
-            max-width: 650px;
             line-height: 1.6;
             font-size: 18px;
             color: #444;
             padding: 0 10px;
         }
-    
+
+        @media (max-width: 1024px) {
+            body {
+                font-size: 24px;
+            }
+        }
+
+        .intro {
+            max-width: 650px;
+        }
+
         h1,
         h2,
         h3 {
             line-height: 1.2;
+        }
+
+        .hidden {
+            display: none;
+            visibility: hidden;
+        }
+
+        textarea {
+            width: 50%;
+            min-height: 150px;
+            min-width: 200px;
+        }
+        
+        .summary {
+            font-size: 14px;
         }
     </style>
     <meta name="robots" content="noindex" />
 </head>
 <body>
 
-<h1>Wordle: Random Start</h1>
-<p>Today's random word: <span id="starting-word">Loading...</span></p>
-<p><a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a></p>
+<div class="intro">
+    <h1>Wordle: Random Start</h1>
+    <p>Today's random word: <span id="starting-word">Loading...</span></p>
+
+    <p id="user-area" class="hidden">
+        <label for="user">Name: </label><input id="user" type="text" />
+        <button id="set-user">Set Name</button>
+    </p>
+
+    <p id="results-area" class="hidden">
+        <div><label for="results">Results: </label></div>
+        <textarea id="results"></textarea>
+        <div><button id="submit">Submit</button></div>
+
+        <div id="summary" class="summary"></div>
+        <button id="share">Share</button>
+    </p>
+</div>
 
 <script>
+function requestIsDone(request) {
+    return request.readyState === XMLHttpRequest.DONE && request.status >= 200 && request.status < 300;
+}
+
 (function() {
-    let httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = function() {
-        let startingWord = document.getElementById('starting-word');
-        if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
-            startingWord.innerText = httpRequest.responseText;
+    let startingWord = document.getElementById('starting-word');
+    let userArea = document.getElementById('user-area');
+    let userInput = document.getElementById('user');
+    let setUserButton = document.getElementById('set-user');
+    let resultsArea = document.getElementById('results-area');
+    let resultsTextarea = document.getElementById('results');
+    let submitButton = document.getElementById('submit');
+    let summaryArea = document.getElementById('summary');
+    let shareButton = document.getElementById('share');
+
+    let date = null;
+    let results = [];
+
+    function addResult(result) {
+        let resultParagraph = document.createElement('p');
+        resultParagraph.innerHTML = result.replaceAll('\n', '<br>');
+        summaryArea.appendChild(resultParagraph);
+    }
+
+    function setUserInfo(user) {
+        userInput.value = user;
+
+        if (!date) {
+            return;
+        }
+
+        let summaryRequest = new XMLHttpRequest();
+        summaryRequest.onreadystatechange = function() {
+            if (requestIsDone(summaryRequest)) {
+                let newResults = JSON.parse(summaryRequest.responseText);
+
+                results = newResults;
+
+                while (summaryArea.children.length) {
+                    let child = summaryArea.children[0];
+                    child.remove();
+                }
+
+                newResults.forEach((newResult) => {
+                    addResult(newResult.result);
+                });
+
+                resultsArea.classList.remove('hidden');
+            }
+        }
+
+        summaryRequest.open('GET', '/api/wordle/daily-result/' + user + '/' + date, false);
+        summaryRequest.send();
+    }
+
+    let dailyWordRequest = new XMLHttpRequest();
+    dailyWordRequest.onreadystatechange = function() {
+        if (requestIsDone(dailyWordRequest)) {
+            var response = JSON.parse(dailyWordRequest.responseText);
+            startingWord.innerText = response.word;
+            date = response.date;
+            userArea.classList.remove('hidden');
+
+            let user = localStorage.getItem('user');
+            if (user) {
+                setUserInfo(user);
+            }
         }
     }
 
-    httpRequest.open('GET', '/api/wordle/daily-word', false);
-    httpRequest.send();
+    dailyWordRequest.open('GET', '/api/wordle/daily-word', false);
+    dailyWordRequest.send();
+
+    setUserButton.addEventListener('click', function() {
+        if (!userInput.value) {
+            return;
+        }
+
+        localStorage.setItem('user', userInput.value);
+
+        setUserInfo(userInput.value);
+    });
+
+    submitButton.addEventListener('click', function() {
+        if (!date || !userInput.value || !resultsTextarea.value) {
+            return;
+        }
+
+        let submitRequest = new XMLHttpRequest();
+        submitRequest.onreadystatechange = function() {
+            if (requestIsDone(submitRequest)) {
+                resultsTextarea.value = '';
+                setUserInfo(userInput.value);
+            }
+        }
+
+        submitRequest.open('POST', '/api/wordle/daily-result/' + userInput.value + '/' + date, false);
+        submitRequest.setRequestHeader('Content-Type', 'application/json');
+        submitRequest.send(JSON.stringify(resultsTextarea.value));
+    });
+
+    shareButton.addEventListener('click', function() {
+        if (results.length == 0) {
+            return;
+        }
+
+        navigator.clipboard.writeText(results.map(r => r.result).join('\n\n'));
+    });
 })();
 </script>
 </body>

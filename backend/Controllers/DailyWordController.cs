@@ -35,7 +35,10 @@ public class DailyWordController : ControllerBase
             _context.SaveChanges();
         }
 
-        return Ok(dailyWord.Word);
+        return Ok(new {
+            Word = dailyWord.Word,
+            Date = dailyWord.Date.ToString("yyyy-MM-dd")
+        });
     }
 
     [HttpGet("{dateString}")]

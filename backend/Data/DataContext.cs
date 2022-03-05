@@ -8,6 +8,8 @@ namespace backend.Data
         public DataContext(DbContextOptions<DataContext> options) : base (options)
         { }
 
+        public DbSet<DailyResult> DailyResult { get; set; }
+
         public DbSet<DailyWord> DailyWord { get; set; }
     }
 }
