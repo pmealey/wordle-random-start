@@ -7,33 +7,21 @@
     <style>
         body {
             margin: 40px auto;
-            max-width: 650px;
+            max-width: 350px;
             line-height: 1.6;
             font-size: 18px;
             color: #444;
             padding: 0 10px
         }
-
-        h1,
-        h2,
-        h3 {
-            line-height: 1.2;
-        }
-
-        .hidden {
-            display: none;
-            visibility: hidden;
-        }
-
-        textarea {
-            width: 50%;
-            min-height: 150px;
-            min-width: 200px;
-        }
-        
-        .summary {
-            font-size: 14px;
-        }
+        h1, h2, h3 {line-height: 1.2;}
+        textarea {width: 100%;min-height: 150px;}
+        .summary {font-size: 14px;}
+        .input-row, textarea {min-width: 200px;}
+        .input-row {display: flex;flex-direction: row;}
+        .input-row label, .input-row button {flex: 0 0 auto;}
+        .input-row label + input, .input-row input + button {margin-left: 5px;}
+        .input-row input {flex: 1 1 auto;}
+        .hidden {display: none;visibility: hidden;}
     </style>
     <meta name="robots" content="noindex" />
 </head>
@@ -41,20 +29,20 @@
     <h2>Wordle: Random Start</h2>
     <p>Today's random word: <span id="starting-word">Loading...</span></p>
 
-    <p id="user-area" class="hidden">
-        <label for="user">Name: </label>
+    <p id="user-area" class="hidden input-row">
+        <label for="user">Name:</label>
         <input id="user" type="text" />
         <button id="set-user">Set Name</button>
     </p>
 
-    <p id="date-area" class="hidden">
-        <label for="date">Date: </label>
+    <p id="date-area" class="hidden input-row">
+        <label for="date">Date:</label>
         <input id="date" type="text" />
         <button id="refresh">Refresh</button>
     </p>
 
-    <p id="result-id-area" class="hidden">
-        <label for="result-id">Result ID: </label>
+    <p id="result-id-area" class="hidden input-row">
+        <label for="result-id">Result ID:</label>
         <input id="result-id" type="number" />
         <button id="view">View</button>
     </p>
@@ -65,7 +53,7 @@
 
     <div id="results-area" class="hidden">
         <p>
-            <label for="results">Results: </label>
+            <label for="results">Results:</label>
             <br>
             <textarea id="results"></textarea>
             <br>
