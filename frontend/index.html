@@ -19,8 +19,8 @@
         .input-row, textarea {min-width: 200px;}
         .input-row {display: flex;flex-direction: row;}
         .input-row label, .input-row button {flex: 0 0 auto;}
-        .input-row label + input, .input-row input + button {margin-left: 5px;}
-        .input-row input {flex: 1 1 auto;}
+        .input-row * + input, .input-row * + button {margin-left: 5px;}
+        .input-row input {flex: 1 1 auto;min-width: 0;}
         .hidden {display: none;visibility: hidden;}
     </style>
     <meta name="robots" content="noindex" />
@@ -33,6 +33,7 @@
         <label for="user">Name:</label>
         <input id="user" type="text" />
         <button id="set-user">Set Name</button>
+        <button id="clear-user" class="hidden">Clear</button>
     </p>
 
     <p id="date-area" class="hidden input-row">
@@ -86,6 +87,7 @@ function enterListener(func) {
     let userArea = document.getElementById('user-area');
     let userInput = document.getElementById('user');
     let setUserButton = document.getElementById('set-user');
+    let clearUserButton = document.getElementById('clear-user');
     let dateArea = document.getElementById('date-area');
     let dateInput = document.getElementById('date');
     let refreshButton = document.getElementById('refresh');
@@ -103,9 +105,18 @@ function enterListener(func) {
     let results = [];
 
     if (advancedModeEnabled()) {
+        clearUserButton.classList.remove('hidden');
         dateArea.classList.remove('hidden');
         deleteArea.classList.remove('hidden');
         resultIdArea.classList.remove('hidden');
+
+        shareButton.classList.add('hidden');
+
+        clearUserButton.addEventListener('click', function() {
+            userInput.value = '';
+            localStorage.removeItem('user');
+            refreshData();
+        });
 
         deleteButton.addEventListener('click', function () {
             if (!userInput.value && !resultIdInput.value) {
@@ -154,21 +165,45 @@ function enterListener(func) {
         });
 
         refreshButton.addEventListener('click', refreshData);
-        dateInput.addEventListener('keyup', enterListener(setUser));
+        dateInput.addEventListener('keyup', enterListener(refreshData));
 
         viewButton.addEventListener('click', viewResult);
         resultIdInput.addEventListener('keyup', enterListener(viewResult));
     }
 
     function addResult(result) {
-        if (advancedModeEnabled()) {
-            let idParagraph = document.createElement('p');
-            idParagraph.innerText = 'ID: ' + result.id.toString();
-            summaryArea.appendChild(idParagraph);
+        let resultParagraph = document.createElement('p');
+
+        function addLineBreak() {
+            resultParagraph.appendChild(document.createElement('br'));
         }
 
-        let resultParagraph = document.createElement('p');
-        resultParagraph.innerHTML = result.result.replaceAll('\n', '<br>');
+        if (advancedModeEnabled()) {
+            let idSpan = document.createElement('span');
+            idSpan.innerText = 'ID: ' + result.id.toString();
+            resultParagraph.appendChild(idSpan);
+            addLineBreak();
+
+            // no user is set, so we are processing all results for a date: include the user info
+            if (!userInput.value) {
+                let userSpan = document.createElement('span');
+                userSpan.innerText = 'User: ' + result.user.toString();
+                resultParagraph.appendChild(userSpan);
+                addLineBreak();
+            }
+
+            // no date is set, so we are processing all results for a user: include the date info
+            if (!dateInput.value) {
+                let dateSpan = document.createElement('span');
+                dateSpan.innerText = 'Date: ' + new Date(result.date).toDateString().toString();
+                resultParagraph.appendChild(dateSpan);
+                addLineBreak();
+            }
+        }
+
+        let resultSpan = document.createElement('span');
+        resultSpan.innerHTML = result.result.replaceAll('\n', '<br>');
+        resultParagraph.appendChild(resultSpan);
 
         summaryArea.appendChild(resultParagraph);
     }
@@ -181,7 +216,7 @@ function enterListener(func) {
     }
 
     function refreshData() {
-        if (!dateInput.value) {
+        if (!dateInput.value && !userInput.value || !advancedModeEnabled() && !userInput.value) {
             clearData();
             results = [];
             return;
@@ -203,7 +238,17 @@ function enterListener(func) {
             }
         }
 
-        summaryRequest.open('GET', '/api/wordle/daily-result/' + userInput.value + '/' + dateInput.value, false);
+        let url = '/api/wordle/daily-result';
+
+        if (userInput.value) {
+            url += '/' + userInput.value;
+        }
+
+        if (dateInput.value) {
+            url += '/' + dateInput.value;
+        }
+
+        summaryRequest.open('GET', url, false);
         summaryRequest.send();
     }
 
@@ -236,8 +281,9 @@ function enterListener(func) {
                 let user = localStorage.getItem('user');
                 if (user) {
                     userInput.value = user;
-                    refreshData();
                 }
+
+                refreshData();
             }
         }
 
@@ -246,11 +292,9 @@ function enterListener(func) {
     })();
 
     function setUser() {
-        if (!userInput.value) {
-            return;
+        if (userInput.value) {
+            localStorage.setItem('user', userInput.value);
         }
-
-        localStorage.setItem('user', userInput.value);
 
         refreshData();
     }

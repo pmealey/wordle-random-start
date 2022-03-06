@@ -35,6 +35,29 @@ public class DailyResultController : ControllerBase
         return Ok(dailyResult);
     }
 
+    [HttpGet("{dateOrUser}")]
+    public IActionResult GetDailySummary([FromRoute] string dateOrUser)
+    {
+        var query = _context.DailyResult.AsQueryable();
+
+        if (DateTime.TryParse(dateOrUser, out var date))
+        {
+            query = query.Where(dr => dr.Date.Date == date.Date);
+        } 
+        else
+        {
+            query = query.Where(dr => dr.User == dateOrUser);
+        }
+
+        var results = query
+            .OrderBy(dr => dr.Game)
+            .ThenBy(dr => dr.Date)
+            .ThenBy(dr => dr.User)
+            .ToList();
+
+        return Ok(results);
+    }
+
     [HttpGet("{user}/{dateString}")]
     public IActionResult GetDailySummary([FromRoute] string user, [FromRoute] string dateString)
     {
