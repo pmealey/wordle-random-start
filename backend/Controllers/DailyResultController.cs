@@ -12,10 +12,10 @@ namespace backend.Controllers;
 public class DailyResultController : ControllerBase
 {
     private readonly DataContext _context;
-    private readonly ILogger<DailyWordController> _logger;
+    private readonly ILogger<DailyResultController> _logger;
     private readonly IEnumerable<ResultParser> _resultParsers;
  
-    public DailyResultController(DataContext context, ILogger<DailyWordController> logger, IEnumerable<ResultParser> resultParsers)
+    public DailyResultController(DataContext context, ILogger<DailyResultController> logger, IEnumerable<ResultParser> resultParsers)
     {
         _context = context;
         _logger = logger;
@@ -46,7 +46,7 @@ public class DailyResultController : ControllerBase
         } 
         else
         {
-            query = query.Where(dr => dr.User == dateOrUser);
+            query = query.Where(dr => dr.User.ToLower() == dateOrUser.ToLower());
         }
 
         var results = query
@@ -67,7 +67,7 @@ public class DailyResultController : ControllerBase
         }
 
         var dailyResults = _context.DailyResult
-            .Where(dr => dr.User == user && dr.Date == date.Date)
+            .Where(dr => dr.User.ToLower() == user.ToLower() && dr.Date == date.Date)
             .AsEnumerable()
             .Join(
                 _resultParsers,
@@ -92,7 +92,7 @@ public class DailyResultController : ControllerBase
             return BadRequest("Invalid Date");
         }
 
-        var dailyResult = _context.DailyResult.SingleOrDefault(dr => dr.User == user && dr.Date == date.Date && dr.Game == game);
+        var dailyResult = _context.DailyResult.SingleOrDefault(dr => dr.User.ToLower() == user.ToLower() && dr.Date == date.Date && dr.Game == game);
 
         if (dailyResult == null)
         {
@@ -120,7 +120,7 @@ public class DailyResultController : ControllerBase
     public IActionResult Delete([FromRoute] string user)
     {
         var dailyResults = _context.DailyResult
-            .Where(dr => dr.User == user)
+            .Where(dr => dr.User.ToLower() == user.ToLower())
             .ToArray();
 
         if (dailyResults.Length > 0)
@@ -141,7 +141,7 @@ public class DailyResultController : ControllerBase
         }
 
         var dailyResults = _context.DailyResult
-            .Where(dr => dr.User == user && dr.Date == date.Date)
+            .Where(dr => dr.User.ToLower() == user.ToLower() && dr.Date == date.Date)
             .ToArray();
 
         if (dailyResults.Length > 0)
@@ -185,7 +185,7 @@ public class DailyResultController : ControllerBase
             return BadRequest("The game results could not be parsed");
         }
 
-        var existingResult = _context.DailyResult.SingleOrDefault(dr => dr.User == dailyResult.User && dr.Date.Date == dailyResult.Date.Date && dr.Game == dailyResult.Game);
+        var existingResult = _context.DailyResult.SingleOrDefault(dr => dr.User.ToLower() == dailyResult.User.ToLower() && dr.Date.Date == dailyResult.Date.Date && dr.Game == dailyResult.Game);
         if (existingResult != null)
         {
             _context.Entry(existingResult).State = EntityState.Detached;

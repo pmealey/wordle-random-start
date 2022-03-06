@@ -28,6 +28,11 @@ namespace backend.Services
             }
         }
 
+        public override string? GetScoreValue(DailyResult dailyResult)
+        {
+            return dailyResult.Score?.ToString();
+        }
+
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
             if (!parserResults.Groups.ContainsKey(ScoreGroup))

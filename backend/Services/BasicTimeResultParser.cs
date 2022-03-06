@@ -28,13 +28,17 @@ namespace backend.Services
                 return GameName;
             }
 
-            var formatted = string.Format("{0}{1}{2}{3}",
-                time.Value.Duration().Days > 0 ? string.Format("{0:0} day{1}, ", time.Value.Days, time.Value.Days == 1 ? string.Empty : "s") : string.Empty,
+            var formatted = string.Format("{0}{1}{2}",
                 time.Value.Duration().Hours > 0 ? string.Format("{0:0} hour{1}, ", time.Value.Hours, time.Value.Hours == 1 ? string.Empty : "s") : string.Empty,
                 time.Value.Duration().Minutes > 0 ? string.Format("{0:0} minute{1}, ", time.Value.Minutes, time.Value.Minutes == 1 ? string.Empty : "s") : string.Empty,
                 time.Value.Duration().Seconds > 0 ? string.Format("{0:0} second{1}", time.Value.Seconds, time.Value.Seconds == 1 ? string.Empty : "s") : string.Empty);
 
             return GameName + "\n" + formatted;
+        }
+
+        public override string? GetScoreValue(DailyResult dailyResult)
+        {
+            return dailyResult.Time?.ToString("hh\\:mm\\:ss");
         }
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)

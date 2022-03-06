@@ -20,6 +20,8 @@ namespace backend.Services
 
         protected abstract string GetCleanResult(string result, Match parserResults);
 
+        public abstract string? GetScoreValue(DailyResult dailyResult);
+
         protected abstract DailyResult SetScore(DailyResult dailyResult, Match parserResults);
 
         public bool TryParse(string user, DateTime date, string result, out DailyResult? dailyResult)

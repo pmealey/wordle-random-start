@@ -28,6 +28,11 @@ namespace backend.Services.Parsers
             return quordleUrlIndex > -1 ? result.Substring(0, quordleUrlIndex).Trim() : result.Trim();
         }
 
+        public override string? GetScoreValue(DailyResult dailyResult)
+        {
+            return dailyResult.Scores?.Average().ToString();
+        }
+
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
             var scores = ScoreGroups
