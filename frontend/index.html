@@ -300,7 +300,11 @@ function enterListener(func) {
     }
 
     setUserButton.addEventListener('click', setUser);
-    userInput.addEventListener('keyup', enterListener(setUser));
+    if (advancedModeEnabled()) {
+        userInput.addEventListener('keyup', enterListener(refreshData));
+    } else {
+        userInput.addEventListener('keyup', enterListener(setUser));
+    }
 
     let submittingResult = false;
 
