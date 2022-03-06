@@ -20,7 +20,7 @@ namespace backend.Services
         {
             if (string.IsNullOrWhiteSpace(ExtraContent))
             {
-                return result;
+                return result.Trim();
             }
             else
             {

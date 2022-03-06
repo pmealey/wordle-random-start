@@ -1,7 +1,7 @@
-using System.IO;
 using backend.Data;
 using backend.Models;
 using backend.Services;
+using backend.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +20,19 @@ public class DailyResultController : ControllerBase
         _context = context;
         _logger = logger;
         _resultParsers = resultParsers;
+    }
+
+    [HttpGet("{id:int}")]
+    public IActionResult Get([FromRoute] int id)
+    {
+        var dailyResult = _context.DailyResult.SingleOrDefault(dr => dr.Id == id);
+
+        if (dailyResult == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(dailyResult);
     }
 
     [HttpGet("{user}/{dateString}")]
@@ -66,27 +79,65 @@ public class DailyResultController : ControllerBase
         return Ok(dailyResult);
     }
 
-    [HttpGet("{id}")]
-    public IActionResult Get([FromRoute] int id)
+    [HttpDelete("{id:int}")]
+    public IActionResult Delete([FromRoute] int id)
     {
         var dailyResult = _context.DailyResult.SingleOrDefault(dr => dr.Id == id);
 
-        if (dailyResult == null)
+        if (dailyResult != null)
         {
-            return NotFound();
+            _context.DailyResult.Remove(dailyResult);
+            _context.SaveChanges();
         }
 
-        return Ok(dailyResult);
+        return NoContent();
     }
 
-    [HttpPost("{user}")]
-    public IActionResult Post([FromRoute] string user, [FromBody] string result)
+    [HttpDelete("{user}")]
+    public IActionResult Delete([FromRoute] string user)
     {
-        return CreateDailyResult(user, new DateTime().Date, result);
+        var dailyResults = _context.DailyResult
+            .Where(dr => dr.User == user)
+            .ToArray();
+
+        if (dailyResults.Length > 0)
+        {
+            _context.DailyResult.RemoveRange(dailyResults);
+            _context.SaveChanges();
+        }
+
+        return NoContent();
     }
 
-    [HttpPost("{user}/{dateString}")]
-    public IActionResult Post([FromRoute] string user, [FromRoute] string dateString, [FromBody] string result)
+    [HttpDelete("{user}/{dateString}")]
+    public IActionResult Delete([FromRoute] string user, [FromRoute] string dateString)
+    {
+        if (!DateTime.TryParse(dateString, out var date))
+        {
+            return BadRequest("Invalid Date");
+        }
+
+        var dailyResults = _context.DailyResult
+            .Where(dr => dr.User == user && dr.Date == date.Date)
+            .ToArray();
+
+        if (dailyResults.Length > 0)
+        {
+            _context.DailyResult.RemoveRange(dailyResults);
+            _context.SaveChanges();
+        }
+
+        return NoContent();
+    }
+
+    [HttpPut("{user}")]
+    public IActionResult Set([FromRoute] string user, [FromBody] string result)
+    {
+        return CreateDailyResult(user, TimeUtility.GetNowEasternStandardTime().Date, result);
+    }
+
+    [HttpPut("{user}/{dateString}")]
+    public IActionResult Set([FromRoute] string user, [FromRoute] string dateString, [FromBody] string result)
     {
         if (!DateTime.TryParse(dateString, out var date))
         {
@@ -114,12 +165,18 @@ public class DailyResultController : ControllerBase
         var existingResult = _context.DailyResult.SingleOrDefault(dr => dr.User == dailyResult.User && dr.Date.Date == dailyResult.Date.Date && dr.Game == dailyResult.Game);
         if (existingResult != null)
         {
-            _context.Remove(existingResult);
+            _context.Entry(existingResult).State = EntityState.Detached;
+            dailyResult.Id = existingResult.Id;
+            _context.DailyResult.Attach(dailyResult);
+            _context.Entry(dailyResult).State = EntityState.Modified;
+        }
+        else
+        {
+            _context.DailyResult.Add(dailyResult);
         }
 
-        _context.DailyResult.Add(dailyResult);
         _context.SaveChanges();
 
-        return Ok();
+        return NoContent();
     }
 }

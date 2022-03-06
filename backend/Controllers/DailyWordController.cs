@@ -1,6 +1,7 @@
 using System.IO;
 using backend.Data;
 using backend.Models;
+using backend.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,13 +23,13 @@ public class DailyWordController : ControllerBase
     [HttpGet()]
     public IActionResult Get()
     {
-        var dailyWord = _context.DailyWord.SingleOrDefault(dw => dw.Date == GetNowEasternStandardTime().Date);
+        var dailyWord = _context.DailyWord.SingleOrDefault(dw => dw.Date == TimeUtility.GetNowEasternStandardTime().Date);
 
         if (dailyWord == null)
         {
             dailyWord = new DailyWord
             {
-                Date = GetNowEasternStandardTime().Date,
+                Date = TimeUtility.GetNowEasternStandardTime().Date,
                 Word = GetNewRandomWord()
             };
             _context.DailyWord.Add(dailyWord);
@@ -82,11 +83,6 @@ public class DailyWordController : ControllerBase
         _context.SaveChanges();
 
         return Ok(dailyWord.Word);
-    }
-
-    private DateTime GetNowEasternStandardTime()
-    {
-        return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
     }
 
     private string GetNewRandomWord()
