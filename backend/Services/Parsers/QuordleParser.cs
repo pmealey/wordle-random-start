@@ -20,7 +20,7 @@ namespace backend.Services.Parsers
 
         private const string _gameName = "Quordle";
         public override string GameName => _gameName;
-        protected override Regex Parser => new Regex($"Daily {_gameName} #\\d+[\\s\n\r]+{string.Join("[^\\d]*", ScoreGroups.Select(g => $"(?<{g}>\\d)"))}");
+        protected override Regex Parser => new Regex($"Daily {_gameName} #\\d+[\\s\n\r]+{string.Join("[^\\d]*", ScoreGroups.Select(g => $"(?<{g}>[\\d|🟥])"))}");
 
         protected override string GetCleanResult(string result, Match parserResults)
         {
@@ -30,7 +30,7 @@ namespace backend.Services.Parsers
 
         public override string? GetScoreValue(DailyResult dailyResult)
         {
-            return dailyResult.Scores?.Average().ToString();
+            return dailyResult.Scores == null || dailyResult.Scores.Count != 4 ? null : dailyResult.Scores.Average().ToString();
         }
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
