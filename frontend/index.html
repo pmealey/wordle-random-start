@@ -22,6 +22,9 @@
         .input-row * + input, .input-row * + button {margin-left: 5px;}
         .input-row input {flex: 1 1 auto;min-width: 0;}
         .hidden {display: none;visibility: hidden;}
+        .result-container { display: flex; }
+        .result-container div { margin-right: auto; border: solid 2px #444; padding: 5px; border-radius: 4px; cursor: pointer; }
+        .result-container + .result-container { margin-top: 5px; }
     </style>
     <meta name="robots" content="noindex" />
 </head>
@@ -171,24 +174,24 @@ function enterListener(func) {
         resultIdInput.addEventListener('keyup', enterListener(viewResult));
     }
 
-    function addResult(result) {
-        let resultParagraph = document.createElement('p');
+    function addResult(result, index) {
+        let container = document.createElement('div');
 
         function addLineBreak() {
-            resultParagraph.appendChild(document.createElement('br'));
+            container.appendChild(document.createElement('br'));
         }
 
         if (advancedModeEnabled()) {
             let idSpan = document.createElement('span');
             idSpan.innerText = 'ID: ' + result.id.toString();
-            resultParagraph.appendChild(idSpan);
+            container.appendChild(idSpan);
             addLineBreak();
 
             // no user is set, so we are processing all results for a date: include the user info
             if (!userInput.value) {
                 let userSpan = document.createElement('span');
                 userSpan.innerText = 'User: ' + result.user.toString();
-                resultParagraph.appendChild(userSpan);
+                container.appendChild(userSpan);
                 addLineBreak();
             }
 
@@ -196,16 +199,22 @@ function enterListener(func) {
             if (!dateInput.value) {
                 let dateSpan = document.createElement('span');
                 dateSpan.innerText = 'Date: ' + new Date(result.date).toDateString().toString();
-                resultParagraph.appendChild(dateSpan);
+                container.appendChild(dateSpan);
                 addLineBreak();
             }
         }
 
         let resultSpan = document.createElement('span');
         resultSpan.innerHTML = result.result.replaceAll('\n', '<br>');
-        resultParagraph.appendChild(resultSpan);
+        container.appendChild(resultSpan);
+        container.addEventListener('click', () => {
+            setClipboard(index);
+        });
 
-        summaryArea.appendChild(resultParagraph);
+        let outerContainer = document.createElement('div');
+        outerContainer.appendChild(container);
+        outerContainer.classList.add('result-container');
+        summaryArea.appendChild(outerContainer);
     }
 
     function clearData() {
@@ -230,9 +239,7 @@ function enterListener(func) {
                 clearData();
                 results = newResults;
 
-                newResults.forEach((newResult) => {
-                    addResult(newResult);
-                });
+                newResults.forEach(addResult);
 
                 resultsArea.classList.remove('hidden');
             }
@@ -371,12 +378,16 @@ function enterListener(func) {
         oldLength = newLength;
     });
 
-    function setClipboard() {
+    function setClipboard(index) {
         if (results.length == 0) {
             return;
         }
 
-        navigator.clipboard.writeText(results.map(r => r.result).join('\n\n'));
+        if (index == null) {
+            navigator.clipboard.writeText(results.map(r => r.result).join('\n\n'));
+        } else {
+            navigator.clipboard.writeText(results[index].result);
+        }
     }
 
     shareButton.addEventListener('click', setClipboard);
