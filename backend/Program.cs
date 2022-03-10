@@ -20,6 +20,7 @@ builder.Services.AddControllers(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(p => p.UseNpgsql(connectionString));
 builder.Services.AddScoped<ResultParser, GlobleParser>();
+builder.Services.AddScoped<ResultParser, HeardleParser>();
 builder.Services.AddScoped<ResultParser, LewdleParser>();
 builder.Services.AddScoped<ResultParser, NerdleParser>();
 builder.Services.AddScoped<ResultParser, NytCrosswordParser>();
