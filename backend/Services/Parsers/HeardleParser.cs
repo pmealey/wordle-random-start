@@ -27,7 +27,7 @@ namespace backend.Services.Parsers
                 return dailyResult;
             }
 
-            if (parserResults.Groups[ScoreGroup].Value.Length > 0)
+            if (parserResults.Groups[ScoreGroup].Value.Length > 0 && parserResults.Groups[ScoreGroup].Value.EndsWith("🟩"))
             {
                 dailyResult.Score = parserResults.Groups[ScoreGroup].Value.Length / 2;
             }
