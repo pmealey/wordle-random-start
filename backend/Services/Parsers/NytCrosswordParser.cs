@@ -17,5 +17,7 @@ namespace backend.Services.Parsers
         public override string GameName => _gameName;
         private readonly Regex _parser = new Regex($"NYTC (?<{TimeGroup}>[:\\d]+)", RegexOptions.IgnoreCase);
         protected override Regex Parser => _parser;
+        private const string _url = null;
+        public override string Url => _url;
     }
 }

@@ -17,6 +17,8 @@ namespace backend.Services.Parsers
         public override string GameName => _gameName;
         private readonly Regex _parser = new Regex($"🌎.*?🌍[\\s\n\r]+Today's guesses: (?<{ScoreGroup}>\\d)");
         protected override Regex Parser => _parser;
-        protected override string? ExtraContent => "https://globle-game.com";
+        protected override string? ExtraContent => _url;
+        private const string _url = "https://globle-game.com";
+        public override string Url => _url;
     }
 }

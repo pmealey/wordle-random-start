@@ -49,13 +49,13 @@ public class DailyResultController : ControllerBase
             query = query.Where(dr => dr.User.ToLower() == dateOrUser.ToLower());
         }
 
-        var results = query
+        var dailyResults = query
             .OrderBy(dr => dr.Game)
             .ThenBy(dr => dr.Date)
             .ThenBy(dr => dr.User)
             .ToList();
 
-        return Ok(results);
+        return GetDailySummaryWithGameInfo(dailyResults);
     }
 
     [HttpGet("{user}/{dateString}")]
@@ -66,22 +66,12 @@ public class DailyResultController : ControllerBase
             return BadRequest("Invalid Date");
         }
 
-        var dailyResults = _context.DailyResult
+        var dailyResults =
+            _context.DailyResult
             .Where(dr => dr.User.ToLower() == user.ToLower() && dr.Date == date.Date)
-            .AsEnumerable()
-            .Join(
-                _resultParsers,
-                (dr) => dr.Game,
-                (rp) => rp.GameName,
-                (dr, rp) => new {
-                    DailyResult = dr,
-                    Priority = rp.Priority
-                })
-            .OrderBy(o => o.Priority)
-            .Select(o => o.DailyResult)
             .ToList();
 
-        return Ok(dailyResults);
+        return GetDailySummaryWithGameInfo(dailyResults);
     }
 
     [HttpGet("{user}/{dateString}/{game}")]
@@ -201,5 +191,24 @@ public class DailyResultController : ControllerBase
         _context.SaveChanges();
 
         return NoContent();
+    }
+
+    private IActionResult GetDailySummaryWithGameInfo(IEnumerable<DailyResult> dailyResults)
+    {
+        var dailyResultWithGameInfo = _resultParsers
+            .GroupJoin(
+                dailyResults,
+                (rp) => rp.GameName,
+                (dr) => dr.Game,
+                (rp, dr) => new {
+                    DailyResult = dr.SingleOrDefault(),
+                    GameName = rp.GameName,
+                    Priority = rp.Priority,
+                    Url = rp.Url
+                })
+            .OrderBy(o => o.Priority)
+            .ToList();
+
+        return Ok(dailyResultWithGameInfo);
     }
 }

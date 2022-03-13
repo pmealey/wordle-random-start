@@ -17,6 +17,8 @@ namespace backend.Services.Parsers
         public override string GameName => _gameName;
         private readonly Regex _parser = new Regex($"{_gameName.ToLower()}game \\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override Regex Parser => _parser;
-        protected override string? ExtraContent => "https://nerdlegame.com #nerdle";
+        protected override string? ExtraContent => $"{_url} #nerdle";
+        private const string _url = "https://nerdlegame.com";
+        public override string Url => _url;
     }
 }

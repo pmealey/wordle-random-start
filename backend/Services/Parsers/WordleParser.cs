@@ -18,5 +18,7 @@ namespace backend.Services.Parsers
         private readonly Regex _parser = new Regex($"{_gameName} \\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override Regex Parser => _parser;
         protected override string? ExtraContent => null;
+        private const string _url = "https://www.nytimes.com/games/wordle/index.html";
+        public override string Url => _url;
     }
 }

@@ -18,6 +18,8 @@ namespace backend.Services
 
         protected abstract Regex Parser { get; }
 
+        public abstract string Url { get; }
+
         protected abstract string GetCleanResult(string result, Match parserResults);
 
         public abstract string? GetScoreValue(DailyResult dailyResult);

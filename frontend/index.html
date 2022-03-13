@@ -3,7 +3,7 @@
 <head>
     <base href="wordle" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Wordle: Random Start</title>
+    <title>Daily Games</title>
     <style>
         body {
             margin: 40px auto;
@@ -23,13 +23,15 @@
         .input-row input {flex: 1 1 auto;min-width: 0;}
         .hidden {display: none;visibility: hidden;}
         .result-container { display: flex; }
-        .result-container div { margin-right: auto; border: solid 2px #444; padding: 5px; border-radius: 4px; cursor: pointer; }
+        .result-container div { margin-right: auto; border: solid 2px #444; padding: 5px; border-radius: 4px; }
+        .result-container.copyable div { cursor: pointer; }
         .result-container + .result-container { margin-top: 5px; }
     </style>
     <meta name="robots" content="noindex" />
 </head>
 <body>
-    <h2>Wordle: Random Start</h2>
+    <h2>Daily Games</h2>
+    <p><i>It's all fun and games until I lose my job because I spend all day every day playing these.</i></p>
     <p>Today's random word: <span id="starting-word">Loading...</span></p>
 
     <p id="user-area" class="hidden input-row">
@@ -174,46 +176,63 @@ function enterListener(func) {
         resultIdInput.addEventListener('keyup', enterListener(viewResult));
     }
 
-    function addResult(result, index) {
+    function addResult(summary, index) {
+        let outerContainer = document.createElement('div');
+        outerContainer.classList.add('result-container');
+
         let container = document.createElement('div');
 
         function addLineBreak() {
             container.appendChild(document.createElement('br'));
         }
 
-        if (advancedModeEnabled()) {
-            let idSpan = document.createElement('span');
-            idSpan.innerText = 'ID: ' + result.id.toString();
-            container.appendChild(idSpan);
-            addLineBreak();
+        if (summary.dailyResult) {
+            outerContainer.classList.add('copyable');
 
-            // no user is set, so we are processing all results for a date: include the user info
-            if (!userInput.value) {
-                let userSpan = document.createElement('span');
-                userSpan.innerText = 'User: ' + result.user.toString();
-                container.appendChild(userSpan);
+            if (advancedModeEnabled()) {
+                let idSpan = document.createElement('span');
+                idSpan.innerText = 'ID: ' + summary.dailyResult.id.toString();
+                container.appendChild(idSpan);
                 addLineBreak();
+
+                // no user is set, so we are processing all results for a date: include the user info
+                if (!userInput.value) {
+                    let userSpan = document.createElement('span');
+                    userSpan.innerText = 'User: ' + summary.dailyResult.user.toString();
+                    container.appendChild(userSpan);
+                    addLineBreak();
+                }
+
+                // no date is set, so we are processing all results for a user: include the date info
+                if (!dateInput.value) {
+                    let dateSpan = document.createElement('span');
+                    dateSpan.innerText = 'Date: ' + new Date(summary.dailyResult.date).toDateString().toString();
+                    container.appendChild(dateSpan);
+                    addLineBreak();
+                }
             }
 
-            // no date is set, so we are processing all results for a user: include the date info
-            if (!dateInput.value) {
-                let dateSpan = document.createElement('span');
-                dateSpan.innerText = 'Date: ' + new Date(result.date).toDateString().toString();
-                container.appendChild(dateSpan);
-                addLineBreak();
+            let resultSpan = document.createElement('span');
+            resultSpan.innerHTML = summary.dailyResult.result.replaceAll('\n', '<br>');
+            container.appendChild(resultSpan);
+            container.addEventListener('click', () => {
+                setClipboard(index);
+            });
+        } else {
+            if (summary.url) {
+                let link = document.createElement('a');
+                link.href = summary.url;
+                link.target = '_blank';
+                link.innerText = 'Play ' + summary.gameName;
+                container.appendChild(link);
+            } else {
+                let textSpan = document.createElement('span');
+                textSpan.innerText = 'Play ' + summary.gameName;
+                container.appendChild(textSpan);
             }
         }
 
-        let resultSpan = document.createElement('span');
-        resultSpan.innerHTML = result.result.replaceAll('\n', '<br>');
-        container.appendChild(resultSpan);
-        container.addEventListener('click', () => {
-            setClipboard(index);
-        });
-
-        let outerContainer = document.createElement('div');
         outerContainer.appendChild(container);
-        outerContainer.classList.add('result-container');
         summaryArea.appendChild(outerContainer);
     }
 
