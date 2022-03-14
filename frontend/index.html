@@ -122,7 +122,7 @@ function enterListener(func) {
         dateArea.classList.remove('hidden');
         deleteArea.classList.remove('hidden');
         resultIdArea.classList.remove('hidden');
-
+        seeAllButton.classList.add('hidden');
         shareButton.classList.add('hidden');
 
         clearUserButton.addEventListener('click', function() {
@@ -224,7 +224,7 @@ function enterListener(func) {
             resultSpan.innerHTML = summary.dailyResult.result.replaceAll('\n', '<br>');
             container.appendChild(resultSpan);
             container.addEventListener('click', () => {
-                setClipboard(index);
+                setClipboard(summary);
             });
         } else {
             if (summary.url) {
@@ -252,7 +252,7 @@ function enterListener(func) {
         }
     }
 
-    function refreshData(searchByUser = true, searchByDate = true) {
+    function refreshData() {
         if (!dateInput.value && !userInput.value || !advancedModeEnabled() && !userInput.value) {
             clearData();
             summaries = [];
@@ -303,11 +303,11 @@ function enterListener(func) {
 
         let url = '/api/wordle/daily-result';
 
-        if (searchByUser && userInput.value) {
+        if (localStorage.getItem('seeAll') !== 'true' && userInput.value) {
             url += '/' + userInput.value;
         }
 
-        if (searchByDate && dateInput.value) {
+        if (dateInput.value) {
             url += '/' + dateInput.value;
         }
 
@@ -376,21 +376,22 @@ function enterListener(func) {
         localStorage.setItem('seeAll', 'false');
     }
 
-    var viewingAll = localStorage.getItem('seeAll') === 'true';
-    if (viewingAll) {
-        viewAll();
+    if (!advancedModeEnabled()) {
+        let viewingAll = localStorage.getItem('seeAll') === 'true';
+        if (viewingAll) {
+            viewAll();
+        }
+
+        seeAllButton.addEventListener('click', () => {
+            viewAll();
+            refreshData();
+        });
+
+        seeMineButton.addEventListener('click', () => {
+            viewMine();
+            refreshData();
+        });
     }
-
-    seeAllButton.addEventListener('click', () => {
-        refreshData(false);
-        viewAll();
-    });
-
-    seeMineButton.addEventListener('click', () => {
-        refreshData();
-        viewMine();
-    });
-
 
     setUserButton.addEventListener('click', setUser);
     if (advancedModeEnabled()) {
@@ -412,7 +413,7 @@ function enterListener(func) {
         submitRequest.onreadystatechange = function() {
             submittingResult = submitRequest.readyState !== XMLHttpRequest.DONE;
             if (requestIsDone(submitRequest)) {
-                refreshData();
+                refreshData(localStorage.getItem('seeAll') !== 'true');
 
                 // keep the content around until the user does something
                 let handler = function() {
@@ -464,19 +465,17 @@ function enterListener(func) {
         oldLength = newLength;
     });
 
-    function setClipboard(index) {
-        if (summaries.length == 0) {
-            return;
-        }
-
-        if (index == null) {
-            navigator.clipboard.writeText(summaries.map(r => r.result).join('\n\n'));
+    function setClipboard(summary) {
+        if (summary == null) {
+            navigator.clipboard.writeText(summaries
+                .filter(s => s.dailyResult)
+                .map(s => s.dailyResult.result).join('\n\n'));
         } else {
-            navigator.clipboard.writeText(summaries[index].result);
+            navigator.clipboard.writeText(summary.dailyResult.result);
         }
     }
 
-    shareButton.addEventListener('click', setClipboard);
+    shareButton.addEventListener('click', () => setClipboard());
 })();
 </script>
 </body>
