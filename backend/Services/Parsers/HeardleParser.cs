@@ -16,7 +16,7 @@ namespace backend.Services.Parsers
         public override int Priority => _priority;
         private const string _gameName = "Heardle";
         public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"#{_gameName} #\\d+[\\s\\S]*?[🔈🔉🔊](?<{ScoreGroup}>[🟥🟩]+)");
+        private readonly Regex _parser = new Regex($"#{_gameName} #\\d+.*?[🔈🔉🔊](?<{ScoreGroup}>[🟥🟩]+)", RegexOptions.Singleline);
         protected override Regex Parser => _parser;
         protected override string? ExtraContent => _url;
         private const string _url = "https://heardle.app";
