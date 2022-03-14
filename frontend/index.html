@@ -17,13 +17,13 @@
         textarea {width: 100%;min-height: 150px;}
         .summary {font-size: 14px;}
         .input-row, textarea {min-width: 200px;}
-        .input-row {display: flex;flex-direction: row;}
+        .input-row {display: flex; flex-direction: row;}
         .input-row label, .input-row button {flex: 0 0 auto;}
         .input-row * + input, .input-row * + button {margin-left: 5px;}
         .input-row input {flex: 1 1 auto;min-width: 0;}
         .hidden {display: none;visibility: hidden;}
         .result-container, .user-container { border: solid 2px #444; padding: 5px; border-radius: 4px; }
-        .result-container { display: flex; }
+        .result-container { display: flex; flex-flow: column; }
         .result-container div { margin-right: auto; }
         .result-container.copyable div { cursor: pointer; }
         .user-container + .user-container, .result-container + .result-container { margin-top: 5px; }
@@ -184,9 +184,15 @@ function enterListener(func) {
         resultIdInput.addEventListener('keyup', enterListener(viewResult));
     }
 
-    function addResult(summary, index) {
+    function addResult(summary, label) {
         let outerContainer = document.createElement('div');
         outerContainer.classList.add('result-container');
+
+        if (label) {
+            let labelContainer = document.createElement('div');
+            labelContainer.innerText = label;
+            outerContainer.appendChild(labelContainer);
+        }
 
         let container = document.createElement('div');
 
@@ -259,6 +265,8 @@ function enterListener(func) {
             return;
         }
 
+        let viewAll = localStorage.getItem('seeAll') === 'true';
+
         let summaryRequest = new XMLHttpRequest();
         summaryRequest.onreadystatechange = function() {
             if (requestIsDone(summaryRequest)) {
@@ -267,34 +275,44 @@ function enterListener(func) {
                 clearData();
                 summaries = newSummaries;
 
-                let allUsers = newSummaries
-                    .filter((summary) => summary.dailyResult)
-                    .map((summary) => summary.dailyResult.user);
-                let users = allUsers.filter((user, index) => allUsers.indexOf(user) === index);
-
-                if (users.length <= 1) {
+                if (!viewAll) {
                     newSummaries.forEach((summary) => {
-                        var container = addResult(summary);
+                        let container = addResult(summary);
                         summaryArea.appendChild(container);
                     });
                 } else {
-                    users.sort()
-                        .forEach((user) => {
-                            let userContainer = document.createElement('div');
-                            userContainer.classList.add('user-container');
-                            let userName = document.createElement('div');
-                            userName.innerText = user;
-                            userContainer.appendChild(userName);
+                    let allGames = newSummaries
+                        .map((summary) => summary.gameName);
+                    let games = allGames.filter((game, index) => allGames.indexOf(game) === index);
 
-                            newSummaries
-                                .filter((summary) => summary.dailyResult.user === user)
-                                .forEach((summary) => {
-                                    var container = addResult(summary);
-                                    userContainer.appendChild(container);
-                                });
+                    games.forEach((game) => {
+                        let summariesForGame = newSummaries
+                            .filter((summary) => summary.gameName == game);
 
-                            summaryArea.appendChild(userContainer);
+                        let allUsersForGame = summariesForGame
+                            .filter((summary) => summary.dailyResult)
+                            .map((summary) => summary.dailyResult.user);
+                        let users = allUsersForGame.filter((user, index) => allUsersForGame.indexOf(user) === index);
+
+                        let gameContainer = document.createElement('div');
+                        gameContainer.classList.add('user-container');
+                        let gameName = document.createElement('div');
+                        gameName.innerText = game;
+                        gameContainer.appendChild(gameName);
+
+                        users.sort()
+                            .forEach((user) => {
+                                summariesForGame
+                                    .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
+                                    .forEach((summary) => {
+                                        let container = addResult(summary, user);
+                                        gameContainer.appendChild(container);
+                                    });
+                        });
+
+                        summaryArea.appendChild(gameContainer);
                     });
+
                 }
 
                 resultsArea.classList.remove('hidden');
@@ -303,7 +321,7 @@ function enterListener(func) {
 
         let url = '/api/wordle/daily-result';
 
-        if (localStorage.getItem('seeAll') !== 'true' && userInput.value) {
+        if (viewAll && userInput.value) {
             url += '/' + userInput.value;
         }
 
@@ -336,7 +354,7 @@ function enterListener(func) {
         let dailyWordRequest = new XMLHttpRequest();
         dailyWordRequest.onreadystatechange = function() {
             if (requestIsDone(dailyWordRequest)) {
-                var response = JSON.parse(dailyWordRequest.responseText);
+                let response = JSON.parse(dailyWordRequest.responseText);
                 startingWord.innerText = response.word;
                 dateInput.value = response.date;
                 userArea.classList.remove('hidden');
