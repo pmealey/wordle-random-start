@@ -19,6 +19,7 @@ builder.Services.AddControllers(options =>
 });
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(p => p.UseNpgsql(connectionString));
+builder.Services.AddScoped<ResultParser, BoxOfficeGameParser>();
 builder.Services.AddScoped<ResultParser, GlobleParser>();
 builder.Services.AddScoped<ResultParser, HeardleParser>();
 builder.Services.AddScoped<ResultParser, LewdleParser>();
