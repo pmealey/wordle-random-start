@@ -39,13 +39,16 @@ public class DailyResultController : ControllerBase
     public IActionResult GetDailySummary([FromRoute] string dateOrUser)
     {
         var query = _context.DailyResult.AsQueryable();
+        bool includeAllGames;
 
         if (DateTime.TryParse(dateOrUser, out var date))
         {
+            includeAllGames = false;
             query = query.Where(dr => dr.Date.Date == date.Date);
         } 
         else
         {
+            includeAllGames = true;
             query = query.Where(dr => dr.User.ToLower() == dateOrUser.ToLower());
         }
 
@@ -55,7 +58,7 @@ public class DailyResultController : ControllerBase
             .ThenBy(dr => dr.User)
             .ToList();
 
-        return GetDailySummaryWithGameInfo(dailyResults);
+        return GetDailySummaryWithGameInfo(dailyResults, includeAllGames);
     }
 
     [HttpGet("{user}/{dateString}")]
@@ -71,7 +74,7 @@ public class DailyResultController : ControllerBase
             .Where(dr => dr.User.ToLower() == user.ToLower() && dr.Date == date.Date)
             .ToList();
 
-        return GetDailySummaryWithGameInfo(dailyResults);
+        return GetDailySummaryWithGameInfo(dailyResults, true);
     }
 
     [HttpGet("{user}/{dateString}/{game}")]
@@ -193,19 +196,26 @@ public class DailyResultController : ControllerBase
         return NoContent();
     }
 
-    private IActionResult GetDailySummaryWithGameInfo(IEnumerable<DailyResult> dailyResults)
+    private IActionResult GetDailySummaryWithGameInfo(IEnumerable<DailyResult> dailyResults, bool includeAllGames)
     {
-        var dailyResultWithGameInfo = _resultParsers
+        var list = _resultParsers
             .GroupJoin(
                 dailyResults,
                 (rp) => rp.GameName,
                 (dr) => dr.Game,
-                (rp, dr) => new {
-                    DailyResult = dr.SingleOrDefault(),
+                (rp, dr) => dr.DefaultIfEmpty().Select((dailyResult) => new {
+                    DailyResult = dailyResult,
                     GameName = rp.GameName,
                     Priority = rp.Priority,
                     Url = rp.Url
-                })
+                }))
+            .SelectMany(g => g);
+
+        if (!includeAllGames) {
+            list = list.Where(o => o.DailyResult != null);
+        }
+
+        var dailyResultWithGameInfo = list
             .OrderBy(o => o.Priority)
             .ToList();
 

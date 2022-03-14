@@ -22,10 +22,11 @@
         .input-row * + input, .input-row * + button {margin-left: 5px;}
         .input-row input {flex: 1 1 auto;min-width: 0;}
         .hidden {display: none;visibility: hidden;}
+        .result-container, .user-container { border: solid 2px #444; padding: 5px; border-radius: 4px; }
         .result-container { display: flex; }
-        .result-container div { margin-right: auto; border: solid 2px #444; padding: 5px; border-radius: 4px; }
+        .result-container div { margin-right: auto; }
         .result-container.copyable div { cursor: pointer; }
-        .result-container + .result-container { margin-top: 5px; }
+        .user-container + .user-container, .result-container + .result-container { margin-top: 5px; }
     </style>
     <meta name="robots" content="noindex" />
 </head>
@@ -33,6 +34,11 @@
     <h2>Daily Games</h2>
     <p><i>It's all fun and games until I lose my job because I spend all day every day playing these.</i></p>
     <p>Today's random word: <span id="starting-word">Loading...</span></p>
+
+    <p>
+        <button id="see-all">See everyone's results for today</button>
+        <button id="see-mine" class="hidden">See my results for today</button>
+    </p>
 
     <p id="user-area" class="hidden input-row">
         <label for="user">Name:</label>
@@ -89,6 +95,8 @@ function enterListener(func) {
 
 (function() {
     let startingWord = document.getElementById('starting-word');
+    let seeAllButton = document.getElementById('see-all');
+    let seeMineButton = document.getElementById('see-mine');
     let userArea = document.getElementById('user-area');
     let userInput = document.getElementById('user');
     let setUserButton = document.getElementById('set-user');
@@ -107,7 +115,7 @@ function enterListener(func) {
     let summaryArea = document.getElementById('summary');
     let shareButton = document.getElementById('share');
 
-    let results = [];
+    let summaries = [];
 
     if (advancedModeEnabled()) {
         clearUserButton.classList.remove('hidden');
@@ -233,7 +241,8 @@ function enterListener(func) {
         }
 
         outerContainer.appendChild(container);
-        summaryArea.appendChild(outerContainer);
+
+        return outerContainer;
     }
 
     function clearData() {
@@ -243,22 +252,50 @@ function enterListener(func) {
         }
     }
 
-    function refreshData() {
+    function refreshData(searchByUser = true, searchByDate = true) {
         if (!dateInput.value && !userInput.value || !advancedModeEnabled() && !userInput.value) {
             clearData();
-            results = [];
+            summaries = [];
             return;
         }
 
         let summaryRequest = new XMLHttpRequest();
         summaryRequest.onreadystatechange = function() {
             if (requestIsDone(summaryRequest)) {
-                let newResults = JSON.parse(summaryRequest.responseText);
+                let newSummaries = JSON.parse(summaryRequest.responseText);
 
                 clearData();
-                results = newResults;
+                summaries = newSummaries;
 
-                newResults.forEach(addResult);
+                let allUsers = newSummaries
+                    .filter((summary) => summary.dailyResult)
+                    .map((summary) => summary.dailyResult.user);
+                let users = allUsers.filter((user, index) => allUsers.indexOf(user) === index);
+
+                if (users.length <= 1) {
+                    newSummaries.forEach((summary) => {
+                        var container = addResult(summary);
+                        summaryArea.appendChild(container);
+                    });
+                } else {
+                    users.sort()
+                        .forEach((user) => {
+                            let userContainer = document.createElement('div');
+                            userContainer.classList.add('user-container');
+                            let userName = document.createElement('div');
+                            userName.innerText = user;
+                            userContainer.appendChild(userName);
+
+                            newSummaries
+                                .filter((summary) => summary.dailyResult.user === user)
+                                .forEach((summary) => {
+                                    var container = addResult(summary);
+                                    userContainer.appendChild(container);
+                                });
+
+                            summaryArea.appendChild(userContainer);
+                    });
+                }
 
                 resultsArea.classList.remove('hidden');
             }
@@ -266,11 +303,11 @@ function enterListener(func) {
 
         let url = '/api/wordle/daily-result';
 
-        if (userInput.value) {
+        if (searchByUser && userInput.value) {
             url += '/' + userInput.value;
         }
 
-        if (dateInput.value) {
+        if (searchByDate && dateInput.value) {
             url += '/' + dateInput.value;
         }
 
@@ -324,6 +361,36 @@ function enterListener(func) {
 
         refreshData();
     }
+
+    function viewAll() {
+        seeAllButton.classList.add('hidden');
+        seeMineButton.classList.remove('hidden');
+        shareButton.classList.add('hidden');
+        localStorage.setItem('seeAll', 'true');
+    }
+
+    function viewMine() {
+        seeAllButton.classList.remove('hidden');
+        seeMineButton.classList.add('hidden');
+        shareButton.classList.remove('hidden');
+        localStorage.setItem('seeAll', 'false');
+    }
+
+    var viewingAll = localStorage.getItem('seeAll') === 'true';
+    if (viewingAll) {
+        viewAll();
+    }
+
+    seeAllButton.addEventListener('click', () => {
+        refreshData(false);
+        viewAll();
+    });
+
+    seeMineButton.addEventListener('click', () => {
+        refreshData();
+        viewMine();
+    });
+
 
     setUserButton.addEventListener('click', setUser);
     if (advancedModeEnabled()) {
@@ -398,14 +465,14 @@ function enterListener(func) {
     });
 
     function setClipboard(index) {
-        if (results.length == 0) {
+        if (summaries.length == 0) {
             return;
         }
 
         if (index == null) {
-            navigator.clipboard.writeText(results.map(r => r.result).join('\n\n'));
+            navigator.clipboard.writeText(summaries.map(r => r.result).join('\n\n'));
         } else {
-            navigator.clipboard.writeText(results[index].result);
+            navigator.clipboard.writeText(summaries[index].result);
         }
     }
 
