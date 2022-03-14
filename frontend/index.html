@@ -22,11 +22,11 @@
         .input-row * + input, .input-row * + button {margin-left: 5px;}
         .input-row input {flex: 1 1 auto;min-width: 0;}
         .hidden {display: none;visibility: hidden;}
-        .result-container, .user-container { border: solid 2px #444; padding: 5px; border-radius: 4px; }
+        .result-container, .game-container { border: solid 2px #444; padding: 5px; border-radius: 4px; }
         .result-container { display: flex; flex-flow: column; }
         .result-container div { margin-right: auto; }
         .result-container.copyable div { cursor: pointer; }
-        .user-container + .user-container, .result-container + .result-container { margin-top: 5px; }
+        .game-container + .game-container, .result-container + .result-container { margin-top: 5px; }
     </style>
     <meta name="robots" content="noindex" />
 </head>
@@ -184,6 +184,24 @@ function enterListener(func) {
         resultIdInput.addEventListener('keyup', enterListener(viewResult));
     }
 
+    function addGameLink(summary, container) {
+        if (summary.dailyResult) {
+            let textContainer = document.createElement('div');
+            textContainer.innerText = summary.gameName;
+            container.appendChild(textContainer);
+        } else if (summary.url) {
+            let link = document.createElement('a');
+            link.href = summary.url;
+            link.target = '_blank';
+            link.innerText = 'Play ' + summary.gameName;
+            container.appendChild(link);
+        } else {
+            let textContainer = document.createElement('div');
+            textContainer.innerText = 'Play ' + summary.gameName;
+            container.appendChild(textContainer);
+        }
+    }
+
     function addResult(summary, label) {
         let outerContainer = document.createElement('div');
         outerContainer.classList.add('result-container');
@@ -233,17 +251,7 @@ function enterListener(func) {
                 setClipboard(summary);
             });
         } else {
-            if (summary.url) {
-                let link = document.createElement('a');
-                link.href = summary.url;
-                link.target = '_blank';
-                link.innerText = 'Play ' + summary.gameName;
-                container.appendChild(link);
-            } else {
-                let textSpan = document.createElement('span');
-                textSpan.innerText = 'Play ' + summary.gameName;
-                container.appendChild(textSpan);
-            }
+            addGameLink(summary, container);
         }
 
         outerContainer.appendChild(container);
@@ -294,11 +302,12 @@ function enterListener(func) {
                             .map((summary) => summary.dailyResult.user);
                         let users = allUsersForGame.filter((user, index) => allUsersForGame.indexOf(user) === index);
 
+                        let mySummary = summariesForGame.find(summary => summary.dailyResult && summary.dailyResult.user === userInput.value) ||
+                              Object.assign({}, summariesForGame[0], { dailyResult: undefined });
+
                         let gameContainer = document.createElement('div');
-                        gameContainer.classList.add('user-container');
-                        let gameName = document.createElement('div');
-                        gameName.innerText = game;
-                        gameContainer.appendChild(gameName);
+                        gameContainer.classList.add('game-container');
+                        addGameLink(mySummary, gameContainer);
 
                         users.sort()
                             .forEach((user) => {

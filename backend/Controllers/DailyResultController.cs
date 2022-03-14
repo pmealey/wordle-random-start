@@ -39,16 +39,13 @@ public class DailyResultController : ControllerBase
     public IActionResult GetDailySummary([FromRoute] string dateOrUser)
     {
         var query = _context.DailyResult.AsQueryable();
-        bool includeAllGames;
 
         if (DateTime.TryParse(dateOrUser, out var date))
         {
-            includeAllGames = false;
             query = query.Where(dr => dr.Date.Date == date.Date);
         } 
         else
         {
-            includeAllGames = true;
             query = query.Where(dr => dr.User.ToLower() == dateOrUser.ToLower());
         }
 
@@ -58,7 +55,7 @@ public class DailyResultController : ControllerBase
             .ThenBy(dr => dr.User)
             .ToList();
 
-        return GetDailySummaryWithGameInfo(dailyResults, false);
+        return GetDailySummaryWithGameInfo(dailyResults, true);
     }
 
     [HttpGet("{user}/{dateString}")]
