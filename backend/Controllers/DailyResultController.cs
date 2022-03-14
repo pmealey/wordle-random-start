@@ -58,7 +58,7 @@ public class DailyResultController : ControllerBase
             .ThenBy(dr => dr.User)
             .ToList();
 
-        return GetDailySummaryWithGameInfo(dailyResults, includeAllGames);
+        return GetDailySummaryWithGameInfo(dailyResults, false);
     }
 
     [HttpGet("{user}/{dateString}")]

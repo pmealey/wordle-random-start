@@ -321,7 +321,7 @@ function enterListener(func) {
 
         let url = '/api/wordle/daily-result';
 
-        if (viewAll && userInput.value) {
+        if (!viewAll && userInput.value) {
             url += '/' + userInput.value;
         }
 
