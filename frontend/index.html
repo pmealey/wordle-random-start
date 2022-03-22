@@ -442,8 +442,11 @@ function enterListener(func) {
             if (requestIsDone(submitRequest)) {
                 refreshData(localStorage.getItem('seeAll') !== 'true');
 
+                let timeout;
+
                 // keep the content around until the user does something
                 let handler = function() {
+                    clearTimeout(timeout);
                     resultsTextarea.style.color = '';
                     resultsTextarea.value = '';
                     resultsTextarea.removeEventListener('blur', handler);
@@ -452,6 +455,7 @@ function enterListener(func) {
                 }
 
                 resultsTextarea.style.color = '#a0a0a0';
+                timeout = setTimeout(handler, 5 * 1000);
                 resultsTextarea.addEventListener('blur', handler);
                 resultsTextarea.addEventListener('click', handler);
                 resultsTextarea.addEventListener('keydown', handler);
