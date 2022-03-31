@@ -22,8 +22,8 @@
         .input-row * + input, .input-row * + button {margin-left: 5px;}
         .input-row input {flex: 1 1 auto;min-width: 0;}
         .hidden {display: none;visibility: hidden;}
-        .result-container, .game-container { border: solid 2px #444; padding: 5px; border-radius: 4px; }
-        .result-container { display: flex; flex-flow: column; }
+        .result-container, .game-container { border: solid 2px #AAA; padding: 5px; border-radius: 4px; }
+        .result-container { display: flex; flex-flow: column; border-color: #444; }
         .result-container div { margin-right: auto; }
         .result-container.copyable div { cursor: pointer; }
         .game-container + .game-container, .result-container + .result-container { margin-top: 5px; }
@@ -92,6 +92,21 @@ function enterListener(func) {
         }
     }
 }
+
+function stringToColor(str) {
+    if (!str || !str.length) return '#000';
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var colour = '#';
+    for (var i = 0; i < 3; i++) {
+        var value = (hash >> (i * 8)) & 0xFF;
+        colour += ('00' + value.toString(16)).substr(-2);
+    }
+    return colour + '44';
+}
+
 
 (function() {
     let startingWord = document.getElementById('starting-word');
@@ -205,6 +220,7 @@ function enterListener(func) {
     function addResult(summary, label) {
         let outerContainer = document.createElement('div');
         outerContainer.classList.add('result-container');
+        outerContainer.style.backgroundColor = stringToColor(summary.dailyResult.user);
 
         if (label) {
             let labelContainer = document.createElement('div');
@@ -293,7 +309,7 @@ function enterListener(func) {
                         .map((summary) => summary.gameName);
                     let games = allGames.filter((game, index) => allGames.indexOf(game) === index);
 
-                    games.forEach((game) => {
+                    games.forEach((game, index) => {
                         let summariesForGame = newSummaries
                             .filter((summary) => summary.gameName == game);
 
@@ -307,6 +323,7 @@ function enterListener(func) {
 
                         let gameContainer = document.createElement('div');
                         gameContainer.classList.add('game-container');
+                        gameContainer.style.backgroundColor = stringToColor(mySummary.gameName);
                         addGameLink(mySummary, gameContainer);
 
                         users.sort()
