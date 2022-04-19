@@ -23,11 +23,12 @@
         .input-row * + input, .input-row * + button {margin-left: 5px;}
         .input-row input {flex: 1 1 auto;min-width: 0;}
         .hidden {display: none;visibility: hidden;}
-        .result-container, .game-container { border: solid 2px #AAA; padding: 5px; border-radius: 4px; }
-        .result-container { display: flex; flex-flow: column; border-color: #444; }
-        .result-container div { margin-right: auto; }
-        .result-container.copyable div { cursor: pointer; }
-        .game-container + .game-container, .result-container + .result-container { margin-top: 5px; }
+        .result, .game { padding: 5px; border-radius: 4px; }
+        .result { display: flex; flex-flow: column; margin: 5px; }
+        .result div { margin-right: auto; }
+        .result.copyable div { cursor: pointer; }
+        .results { display: flex; flex-flow: row wrap; align-items: flex-start; }
+        .game + .game { margin-top: 5px; }
     </style>
     <meta name="robots" content="noindex" />
 </head>
@@ -228,7 +229,7 @@ function stringToColor(str) {
 
     function addResult(summary, label) {
         let outerContainer = document.createElement('div');
-        outerContainer.classList.add('result-container');
+        outerContainer.classList.add('result');
         outerContainer.style.backgroundColor = stringToColor(summary.dailyResult.user);
 
         if (label) {
@@ -331,9 +332,12 @@ function stringToColor(str) {
                               Object.assign({}, summariesForGame[0], { dailyResult: undefined });
 
                         let gameContainer = document.createElement('div');
-                        gameContainer.classList.add('game-container');
-                        gameContainer.style.backgroundColor = stringToColor(mySummary.gameName);
+                        gameContainer.classList.add('game');
+                        //gameContainer.style.backgroundColor = stringToColor(mySummary.gameName);
                         addGameLink(mySummary, gameContainer);
+                        let resultsList = document.createElement('div');
+                        resultsList.classList.add('results');
+                        gameContainer.appendChild(resultsList);
 
                         users.sort()
                             .forEach((user) => {
@@ -341,7 +345,7 @@ function stringToColor(str) {
                                     .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
                                     .forEach((summary) => {
                                         let container = addResult(summary, user);
-                                        gameContainer.appendChild(container);
+                                        resultsList.appendChild(container);
                                     });
                         });
 
