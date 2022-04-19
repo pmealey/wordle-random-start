@@ -1,11 +1,4 @@
-body {
-    margin: 40px auto;
-    max-width: 450px;
-    line-height: 1.6;
-    font-size: 18px;
-    color: #444;
-    padding: 0 10px
-}
+body { margin: 40px auto; max-width: 450px; line-height: 1.6; font-size: 18px; color: #444; padding: 0 10px }
 h1, h2, h3 {line-height: 1.2;}
 textarea {width: 100%;min-height: 150px;}
 .help { font-style: italic; }
@@ -17,8 +10,19 @@ textarea {width: 100%;min-height: 150px;}
 .input-row input {flex: 1 1 auto;min-width: 0;}
 .hidden {display: none;visibility: hidden;}
 .result, .game { padding: 5px; border-radius: 4px; }
-.result { display: flex; flex-flow: column; margin: 5px; }
+.result-wrapper { position: relative; padding: 5px; border-radius: 4px; overflow: hidden; }
+.result { display: flex; flex-flow: column; }
 .result div { margin-right: auto; }
 .result.copyable div { cursor: pointer; }
 .results { display: flex; flex-flow: row wrap; align-items: flex-start; }
 .game + .game { margin-top: 5px; }
+
+.winner-border {
+  position: absolute; display: block; overflow: hidden;
+  top: -75%; left: -75%; z-index: -9;
+  height: 250%; width: 250%; transform: rotate(-45deg);
+  background: linear-gradient(to right, #fff 20%, #fff 40%, #ECD08C 50%, #ECD08C 55%, #fff 70%, #fff 100%);
+  background-size: 200% auto; animation: shine 3s linear infinite;
+}
+
+@keyframes shine { to { background-position: 200% center; } }

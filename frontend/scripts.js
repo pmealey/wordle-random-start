@@ -15,6 +15,23 @@ function enterListener(func) {
     }
 }
 
+function getScore(dailyResult) {
+    if (dailyResult.score) {
+        return dailyResult.score;
+    }
+
+    if (Array.isArray(dailyResult.scores)) {
+        let sum = dailyResult.scores.reduce((a, b) => a + b, 0);
+        return (sum / dailyResult.scores.length) || 0;
+    }
+
+    if (dailyResult.time) {
+        return new Date(dailyResult.date.replace('00:00:00', dailyResult.time)) - new Date(dailyResult.date);
+    }
+
+    return Infinity;
+}
+
 function stringToColor(str) {
     if (!str || !str.length) return '#000';
     var hash = 0;
@@ -139,7 +156,16 @@ function stringToColor(str) {
         }
     }
 
-    function addResult(summary, label) {
+    function addResult(summary, label, winner) {
+        let wrapper = document.createElement('div');
+        wrapper.classList.add('result-wrapper');
+
+        if (winner) {
+            let winnerBorder = document.createElement('div');
+            winnerBorder.classList.add('winner-border');
+            wrapper.append(winnerBorder);
+        }
+
         let outerContainer = document.createElement('div');
         outerContainer.classList.add('result');
         outerContainer.style.backgroundColor = stringToColor(summary.dailyResult.user);
@@ -193,8 +219,9 @@ function stringToColor(str) {
         }
 
         outerContainer.appendChild(container);
+        wrapper.appendChild(outerContainer);
 
-        return outerContainer;
+        return wrapper;
     }
 
     function clearData() {
@@ -256,7 +283,8 @@ function stringToColor(str) {
                                 summariesForGame
                                     .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
                                     .forEach((summary) => {
-                                        let container = addResult(summary, user);
+                                        let winner = Math.min(...summariesForGame.map(s => getScore(s.dailyResult))) === getScore(summary.dailyResult);
+                                        let container = addResult(summary, user, winner);
                                         resultsList.appendChild(container);
                                     });
                         });
