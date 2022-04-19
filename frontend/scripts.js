@@ -46,9 +46,19 @@ function stringToColor(str) {
   return colour + '44';
 }
 
+function checkNotificationPromise() {
+  try {
+    Notification.requestPermission().then();
+  } catch (e) {
+    return false;
+  }
+
+  return true;
+}
 
 (function () {
   let startingWord = document.getElementById('starting-word');
+  let notificationButton = document.getElementById('allow-notifications');
   let seeAllButton = document.getElementById('see-all');
   let seeMineButton = document.getElementById('see-mine');
   let userArea = document.getElementById('user-area');
@@ -138,6 +148,43 @@ function stringToColor(str) {
     resultIdInput.addEventListener('keyup', enterListener(viewResult));
   }
 
+  function initializeWorker() {
+    let worker = new Worker('worker.js');
+
+    worker.onmessage = function() {
+      refreshData(true);
+    };
+  }
+
+  function askNotificationPermission() {
+    // function to actually ask the permissions
+    function handlePermission(permission) {
+      // set the button to shown or hidden, depending on what the user answers
+      if (Notification.permission === 'denied' || Notification.permission === 'default') {
+        notificationButton.style.display = 'block';
+      } else {
+        notificationButton.style.display = 'none';
+        initializeWorker();
+      }
+    }
+  
+    // Let's check if the browser supports notifications
+    if (!('Notification' in window)) {
+      console.log("This browser does not support notifications.");
+    } else {
+      if (checkNotificationPromise()) {
+        Notification.requestPermission()
+          .then((permission) => {
+            handlePermission(permission);
+          });
+      } else {
+        Notification.requestPermission(function (permission) {
+          handlePermission(permission);
+        });
+      }
+    }
+  }
+  
   function addGameLink(summary, container) {
     if (summary.dailyResult) {
       let textContainer = document.createElement('div');
@@ -231,7 +278,7 @@ function stringToColor(str) {
     }
   }
 
-  function refreshData() {
+  function refreshData(notify) {
     if (!dateInput.value && !userInput.value || !advancedModeEnabled() && !userInput.value) {
       clearData();
       summaries = [];
@@ -244,6 +291,24 @@ function stringToColor(str) {
     summaryRequest.onreadystatechange = function () {
       if (requestIsDone(summaryRequest)) {
         let newSummaries = JSON.parse(summaryRequest.responseText);
+
+        if (notify && newSummaries.length !== summaries.length) {
+          let netNewSummaries = newSummaries.filter(sO => sO.dailyResult != null && !summaries.map(sI => sI.dailyResult?.id).includes(sO.dailyResult.id));
+          let names = netNewSummaries.map(s => s.dailyResult.user);
+          let uniqueNames = names.filter((n, i) => names.indexOf(n) === i);
+          let title = 'New Daily Game Results!'
+          let body;
+          if (uniqueNames.length === 1) {
+            body = uniqueNames[0] + ' has posted their results.'
+          } else {
+            let allNames = uniqueNames.length === 2
+              ? uniqueNames[0] + ' and ' + uniqueNames[1]
+              : uniqueNames.slice(0, uniqueNames.length - 1).join(', ') + ', and ' + uniqueNames[uniqueNames.length];
+            body = allNames + ' have posted their results.';
+          }
+
+          new Notification(title, { body });
+        }
 
         clearData();
         summaries = newSummaries;
@@ -349,6 +414,16 @@ function stringToColor(str) {
 
     dailyWordRequest.open('GET', '/api/wordle/daily-word', false);
     dailyWordRequest.send();
+
+    if (Notification.permission === 'default') {
+      notificationButton.addEventListener('click', askNotificationPermission);
+    } else {
+      if (Notification.permission === 'granted') {
+        initializeWorker();
+      }
+
+      notificationButton.style.display = 'none';
+    }
   })();
 
   function setUser() {
