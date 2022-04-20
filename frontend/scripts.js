@@ -292,22 +292,24 @@ function checkNotificationPromise() {
       if (requestIsDone(summaryRequest)) {
         let newSummaries = JSON.parse(summaryRequest.responseText);
 
-        if (notify && newSummaries.length !== summaries.length) {
+        if (notify) {
           let netNewSummaries = newSummaries.filter(sO => sO.dailyResult != null && !summaries.map(sI => sI.dailyResult?.id).includes(sO.dailyResult.id));
-          let names = netNewSummaries.map(s => s.dailyResult.user);
-          let uniqueNames = names.filter((n, i) => names.indexOf(n) === i);
-          let title = 'New Daily Game Results!'
-          let body;
-          if (uniqueNames.length === 1) {
-            body = uniqueNames[0] + ' has posted their results.'
-          } else {
-            let allNames = uniqueNames.length === 2
-              ? uniqueNames[0] + ' and ' + uniqueNames[1]
-              : uniqueNames.slice(0, uniqueNames.length - 1).join(', ') + ', and ' + uniqueNames[uniqueNames.length];
-            body = allNames + ' have posted their results.';
-          }
+          if (netNewSummaries.length) {
+            let names = netNewSummaries.map(s => s.dailyResult.user);
+            let uniqueNames = names.filter((n, i) => names.indexOf(n) === i);
+            let title = 'New Daily Game Results!'
+            let body;
+            if (uniqueNames.length === 1) {
+              body = uniqueNames[0] + ' has posted their results.'
+            } else {
+              let allNames = uniqueNames.length === 2
+                ? uniqueNames[0] + ' and ' + uniqueNames[1]
+                : uniqueNames.slice(0, uniqueNames.length - 1).join(', ') + ', and ' + uniqueNames[uniqueNames.length];
+              body = allNames + ' have posted their results.';
+            }
 
-          new Notification(title, { body });
+            new Notification(title, { body });
+          }
         }
 
         clearData();
