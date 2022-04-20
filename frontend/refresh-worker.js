@@ -45,12 +45,13 @@ function getData(notify, date) {
   summaryRequest.send();
 }
 
-const period = 5 * 60 * 1000; // 5 minutes
+const thirtySeconds = 30 * 1000; // 30 seconds
+const fiveMinutes = 5 * 60 * 1000; // 5 minutes
 
 function periodicallyRefreshData(date) {
   setTimeout(() => {
     getData(true, date);
-  }, period) 
+  }, fiveMinutes);
 }
 
 onmessage = function(e) {
@@ -58,5 +59,12 @@ onmessage = function(e) {
     getData(false, e.data.date)
   } else if (e.data.type === 'notify') {
     periodicallyRefreshData(e.data.date);
+  } else if (e.data.type === 'test-notification') {
+    setTimeout(() => {
+      new Notification('Test Notification 1', { body: 'Hi Patrick! Did you get this notification?',  })
+    }, thirtySeconds);
+    setTimeout(() => {
+      new Notification('Test Notification 2', { body: 'Hi Patrick! Did you get this notification?',  })
+    }, fiveMinutes);
   }
 }
