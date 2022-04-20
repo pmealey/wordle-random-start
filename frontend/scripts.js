@@ -59,8 +59,6 @@ function checkNotificationPromise() {
 (function () {
   let startingWord = document.getElementById('starting-word');
   let notificationButton = document.getElementById('allow-notifications');
-  let seeAllButton = document.getElementById('see-all');
-  let seeMineButton = document.getElementById('see-mine');
   let userArea = document.getElementById('user-area');
   let userInput = document.getElementById('user');
   let setUserButton = document.getElementById('set-user');
@@ -77,7 +75,6 @@ function checkNotificationPromise() {
   let resultsTextarea = document.getElementById('results');
   let submitButton = document.getElementById('submit');
   let summaryArea = document.getElementById('summary');
-  let shareButton = document.getElementById('share');
 
   let summaries = [];
 
@@ -86,8 +83,6 @@ function checkNotificationPromise() {
     dateArea.classList.remove('hidden');
     deleteArea.classList.remove('hidden');
     resultIdArea.classList.remove('hidden');
-    seeAllButton.classList.add('hidden');
-    shareButton.classList.add('hidden');
 
     clearUserButton.addEventListener('click', function () {
       userInput.value = '';
@@ -285,8 +280,6 @@ function checkNotificationPromise() {
       return;
     }
 
-    let viewAll = localStorage.getItem('seeAll') === 'true';
-
     let summaryRequest = new XMLHttpRequest();
     summaryRequest.onreadystatechange = function () {
       if (requestIsDone(summaryRequest)) {
@@ -315,51 +308,43 @@ function checkNotificationPromise() {
         clearData();
         summaries = newSummaries;
 
-        if (!viewAll) {
-          newSummaries.forEach((summary) => {
-            let container = addResult(summary);
-            summaryArea.appendChild(container);
-          });
-        } else {
-          let allGames = newSummaries
-            .map((summary) => summary.gameName);
-          let games = allGames.filter((game, index) => allGames.indexOf(game) === index);
+        let allGames = newSummaries
+          .map((summary) => summary.gameName);
+        let games = allGames.filter((game, index) => allGames.indexOf(game) === index);
 
-          games.forEach((game, index) => {
-            let summariesForGame = newSummaries
-              .filter((summary) => summary.gameName == game);
+        games.forEach((game, index) => {
+          let summariesForGame = newSummaries
+            .filter((summary) => summary.gameName == game);
 
-            let allUsersForGame = summariesForGame
-              .filter((summary) => summary.dailyResult)
-              .map((summary) => summary.dailyResult.user);
-            let users = allUsersForGame.filter((user, index) => allUsersForGame.indexOf(user) === index);
+          let allUsersForGame = summariesForGame
+            .filter((summary) => summary.dailyResult)
+            .map((summary) => summary.dailyResult.user);
+          let users = allUsersForGame.filter((user, index) => allUsersForGame.indexOf(user) === index);
 
-            let mySummary = summariesForGame.find(summary => summary.dailyResult && summary.dailyResult.user === userInput.value) ||
-              Object.assign({}, summariesForGame[0], { dailyResult: undefined });
+          let mySummary = summariesForGame.find(summary => summary.dailyResult && summary.dailyResult.user === userInput.value) ||
+            Object.assign({}, summariesForGame[0], { dailyResult: undefined });
 
-            let gameContainer = document.createElement('div');
-            gameContainer.classList.add('game');
-            //gameContainer.style.backgroundColor = stringToColor(mySummary.gameName);
-            addGameLink(mySummary, gameContainer);
-            let resultsList = document.createElement('div');
-            resultsList.classList.add('results');
-            gameContainer.appendChild(resultsList);
+          let gameContainer = document.createElement('div');
+          gameContainer.classList.add('game');
+          //gameContainer.style.backgroundColor = stringToColor(mySummary.gameName);
+          addGameLink(mySummary, gameContainer);
+          let resultsList = document.createElement('div');
+          resultsList.classList.add('results');
+          gameContainer.appendChild(resultsList);
 
-            users.sort()
-              .forEach((user) => {
-                summariesForGame
-                  .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
-                  .forEach((summary) => {
-                    let winner = Math.min(...summariesForGame.map(s => getScore(s.dailyResult))) === getScore(summary.dailyResult);
-                    let container = addResult(summary, user, winner);
-                    resultsList.appendChild(container);
-                  });
-              });
+          users.sort()
+            .forEach((user) => {
+              summariesForGame
+                .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
+                .forEach((summary) => {
+                  let winner = Math.min(...summariesForGame.map(s => getScore(s.dailyResult))) === getScore(summary.dailyResult);
+                  let container = addResult(summary, user, winner);
+                  resultsList.appendChild(container);
+                });
+            });
 
-            summaryArea.appendChild(gameContainer);
-          });
-
-        }
+          summaryArea.appendChild(gameContainer);
+        });
 
         resultsArea.classList.remove('hidden');
       }
@@ -436,37 +421,6 @@ function checkNotificationPromise() {
     refreshData();
   }
 
-  function viewAll() {
-    seeAllButton.classList.add('hidden');
-    seeMineButton.classList.remove('hidden');
-    shareButton.classList.add('hidden');
-    localStorage.setItem('seeAll', 'true');
-  }
-
-  function viewMine() {
-    seeAllButton.classList.remove('hidden');
-    seeMineButton.classList.add('hidden');
-    shareButton.classList.remove('hidden');
-    localStorage.setItem('seeAll', 'false');
-  }
-
-  if (!advancedModeEnabled()) {
-    let viewingAll = localStorage.getItem('seeAll') === 'true';
-    if (viewingAll) {
-      viewAll();
-    }
-
-    seeAllButton.addEventListener('click', () => {
-      viewAll();
-      refreshData();
-    });
-
-    seeMineButton.addEventListener('click', () => {
-      viewMine();
-      refreshData();
-    });
-  }
-
   setUserButton.addEventListener('click', setUser);
   if (advancedModeEnabled()) {
     userInput.addEventListener('keyup', enterListener(refreshData));
@@ -487,7 +441,7 @@ function checkNotificationPromise() {
     submitRequest.onreadystatechange = function () {
       submittingResult = submitRequest.readyState !== XMLHttpRequest.DONE;
       if (requestIsDone(submitRequest)) {
-        refreshData(localStorage.getItem('seeAll') !== 'true');
+        refreshData();
 
         let timeout;
 
@@ -544,14 +498,6 @@ function checkNotificationPromise() {
   });
 
   function setClipboard(summary) {
-    if (summary == null) {
-      navigator.clipboard.writeText(summaries
-        .filter(s => s.dailyResult)
-        .map(s => s.dailyResult.result).join('\n\n'));
-    } else {
-      navigator.clipboard.writeText(summary.dailyResult.result);
-    }
+    navigator.clipboard.writeText(summary.dailyResult.result);
   }
-
-  shareButton.addEventListener('click', () => setClipboard());
 })();
