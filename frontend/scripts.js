@@ -62,7 +62,6 @@ function checkNotificationPromise() {
   let userArea = document.getElementById('user-area');
   let userInput = document.getElementById('user');
   let setUserButton = document.getElementById('set-user');
-  let clearUserButton = document.getElementById('clear-user');
   let dateArea = document.getElementById('date-area');
   let dateInput = document.getElementById('date');
   let refreshButton = document.getElementById('refresh');
@@ -76,19 +75,21 @@ function checkNotificationPromise() {
   let submitButton = document.getElementById('submit');
   let summaryArea = document.getElementById('summary');
 
-  let summaries = [];
+  let refreshWorker = new Worker('refresh-worker.js');
+  refreshWorker.onmessage = setData;
+
+  function turnOnNotifications() {
+    refreshWorker.postMessage({ type: 'notify', date: dateInput.value });
+  }
+
+  function refreshData() {
+    refreshWorker.postMessage({ type: 'refresh', date: dateInput.value });
+  }
 
   if (advancedModeEnabled()) {
-    clearUserButton.classList.remove('hidden');
     dateArea.classList.remove('hidden');
     deleteArea.classList.remove('hidden');
     resultIdArea.classList.remove('hidden');
-
-    clearUserButton.addEventListener('click', function () {
-      userInput.value = '';
-      localStorage.removeItem('user');
-      refreshData();
-    });
 
     deleteButton.addEventListener('click', function () {
       if (!userInput.value && !resultIdInput.value) {
@@ -143,23 +144,61 @@ function checkNotificationPromise() {
     resultIdInput.addEventListener('keyup', enterListener(viewResult));
   }
 
-  function initializeWorker() {
-    let worker = new Worker('worker.js');
+  function setData(e) {
+    clearData();
+    let summaries = e.data;
 
-    worker.onmessage = function() {
-      refreshData(true);
-    };
+    let allGames = summaries
+      .map((summary) => summary.gameName);
+    let games = allGames.filter((game, index) => allGames.indexOf(game) === index);
+
+    games.forEach((game, index) => {
+      let summariesForGame = summaries
+        .filter((summary) => summary.gameName == game);
+
+      let allUsersForGame = summariesForGame
+        .filter((summary) => summary.dailyResult)
+        .map((summary) => summary.dailyResult.user);
+      let users = allUsersForGame.filter((user, index) => allUsersForGame.indexOf(user) === index);
+
+      let mySummary = summariesForGame.find(summary => summary.dailyResult && summary.dailyResult.user === userInput.value) ||
+        Object.assign({}, summariesForGame[0], { dailyResult: undefined });
+
+      let gameContainer = document.createElement('div');
+      gameContainer.classList.add('game');
+      //gameContainer.style.backgroundColor = stringToColor(mySummary.gameName);
+      addGameLink(mySummary, gameContainer);
+      let resultsList = document.createElement('div');
+      resultsList.classList.add('results');
+      gameContainer.appendChild(resultsList);
+
+      users.sort()
+        .forEach((user) => {
+          summariesForGame
+            .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
+            .forEach((summary) => {
+              let winner = Math.min(...summariesForGame.map(s => getScore(s.dailyResult))) === getScore(summary.dailyResult);
+              let container = addResult(summary, user, winner);
+              resultsList.appendChild(container);
+            });
+        });
+
+      summaryArea.appendChild(gameContainer);
+    });
+
+    resultsArea.classList.remove('hidden');
   }
 
   function askNotificationPermission() {
     // function to actually ask the permissions
     function handlePermission(permission) {
       // set the button to shown or hidden, depending on what the user answers
-      if (Notification.permission === 'denied' || Notification.permission === 'default') {
-        notificationButton.style.display = 'block';
-      } else {
-        notificationButton.style.display = 'none';
-        initializeWorker();
+      if (Notification.permission === 'granted') {
+        if (!advancedModeEnabled()) {
+          turnOnNotifications();
+        }
+
+        notificationButton.parentElement.classList.add('hidden');
       }
     }
   
@@ -232,22 +271,6 @@ function checkNotificationPromise() {
         idSpan.innerText = 'ID: ' + summary.dailyResult.id.toString();
         container.appendChild(idSpan);
         addLineBreak();
-
-        // no user is set, so we are processing all results for a date: include the user info
-        if (!userInput.value) {
-          let userSpan = document.createElement('span');
-          userSpan.innerText = 'User: ' + summary.dailyResult.user.toString();
-          container.appendChild(userSpan);
-          addLineBreak();
-        }
-
-        // no date is set, so we are processing all results for a user: include the date info
-        if (!dateInput.value) {
-          let dateSpan = document.createElement('span');
-          dateSpan.innerText = 'Date: ' + new Date(summary.dailyResult.date).toDateString().toString();
-          container.appendChild(dateSpan);
-          addLineBreak();
-        }
       }
 
       let resultSpan = document.createElement('span');
@@ -271,97 +294,6 @@ function checkNotificationPromise() {
       let child = summaryArea.children[0];
       child.remove();
     }
-  }
-
-  function refreshData(notify) {
-    if (!dateInput.value && !userInput.value || !advancedModeEnabled() && !userInput.value) {
-      clearData();
-      summaries = [];
-      return;
-    }
-
-    let summaryRequest = new XMLHttpRequest();
-    summaryRequest.onreadystatechange = function () {
-      if (requestIsDone(summaryRequest)) {
-        let newSummaries = JSON.parse(summaryRequest.responseText);
-
-        if (notify) {
-          let netNewSummaries = newSummaries.filter(sO => sO.dailyResult != null && !summaries.map(sI => sI.dailyResult?.id).includes(sO.dailyResult.id));
-          if (netNewSummaries.length) {
-            let names = netNewSummaries.map(s => s.dailyResult.user);
-            let uniqueNames = names.filter((n, i) => names.indexOf(n) === i);
-            let title = 'New Daily Game Results!'
-            let body;
-            if (uniqueNames.length === 1) {
-              body = uniqueNames[0] + ' has posted their results.'
-            } else {
-              let allNames = uniqueNames.length === 2
-                ? uniqueNames[0] + ' and ' + uniqueNames[1]
-                : uniqueNames.slice(0, uniqueNames.length - 1).join(', ') + ', and ' + uniqueNames[uniqueNames.length];
-              body = allNames + ' have posted their results.';
-            }
-
-            new Notification(title, { body });
-          }
-        }
-
-        clearData();
-        summaries = newSummaries;
-
-        let allGames = newSummaries
-          .map((summary) => summary.gameName);
-        let games = allGames.filter((game, index) => allGames.indexOf(game) === index);
-
-        games.forEach((game, index) => {
-          let summariesForGame = newSummaries
-            .filter((summary) => summary.gameName == game);
-
-          let allUsersForGame = summariesForGame
-            .filter((summary) => summary.dailyResult)
-            .map((summary) => summary.dailyResult.user);
-          let users = allUsersForGame.filter((user, index) => allUsersForGame.indexOf(user) === index);
-
-          let mySummary = summariesForGame.find(summary => summary.dailyResult && summary.dailyResult.user === userInput.value) ||
-            Object.assign({}, summariesForGame[0], { dailyResult: undefined });
-
-          let gameContainer = document.createElement('div');
-          gameContainer.classList.add('game');
-          //gameContainer.style.backgroundColor = stringToColor(mySummary.gameName);
-          addGameLink(mySummary, gameContainer);
-          let resultsList = document.createElement('div');
-          resultsList.classList.add('results');
-          gameContainer.appendChild(resultsList);
-
-          users.sort()
-            .forEach((user) => {
-              summariesForGame
-                .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
-                .forEach((summary) => {
-                  let winner = Math.min(...summariesForGame.map(s => getScore(s.dailyResult))) === getScore(summary.dailyResult);
-                  let container = addResult(summary, user, winner);
-                  resultsList.appendChild(container);
-                });
-            });
-
-          summaryArea.appendChild(gameContainer);
-        });
-
-        resultsArea.classList.remove('hidden');
-      }
-    }
-
-    let url = '/api/wordle/daily-result';
-
-    if (!viewAll && userInput.value) {
-      url += '/' + userInput.value;
-    }
-
-    if (dateInput.value) {
-      url += '/' + dateInput.value;
-    }
-
-    summaryRequest.open('GET', url, false);
-    summaryRequest.send();
   }
 
   function viewResult() {
@@ -396,22 +328,21 @@ function checkNotificationPromise() {
         }
 
         refreshData();
+
+        if (!advancedModeEnabled() && Notification.permission === 'granted') {
+          turnOnNotifications();
+        }
       }
     }
 
     dailyWordRequest.open('GET', '/api/wordle/daily-word', false);
     dailyWordRequest.send();
-
-    if (Notification.permission === 'default') {
-      notificationButton.addEventListener('click', askNotificationPermission);
-    } else {
-      if (Notification.permission === 'granted') {
-        initializeWorker();
-      }
-
-      notificationButton.style.display = 'none';
-    }
   })();
+
+  if (Notification.permission === 'default') {
+    notificationButton.parentElement.classList.remove('hidden');
+    notificationButton.addEventListener('click', askNotificationPermission);
+  }
 
   function setUser() {
     if (userInput.value) {
@@ -422,11 +353,7 @@ function checkNotificationPromise() {
   }
 
   setUserButton.addEventListener('click', setUser);
-  if (advancedModeEnabled()) {
-    userInput.addEventListener('keyup', enterListener(refreshData));
-  } else {
-    userInput.addEventListener('keyup', enterListener(setUser));
-  }
+  userInput.addEventListener('keyup', enterListener(setUser));
 
   let submittingResult = false;
 
@@ -439,7 +366,6 @@ function checkNotificationPromise() {
 
     let submitRequest = new XMLHttpRequest();
     submitRequest.onreadystatechange = function () {
-      submittingResult = submitRequest.readyState !== XMLHttpRequest.DONE;
       if (requestIsDone(submitRequest)) {
         refreshData();
 
@@ -447,6 +373,7 @@ function checkNotificationPromise() {
 
         // keep the content around until the user does something
         let handler = function () {
+          submittingResult = false;
           clearTimeout(timeout);
           resultsTextarea.style.color = '';
           resultsTextarea.value = '';
@@ -456,7 +383,7 @@ function checkNotificationPromise() {
         }
 
         resultsTextarea.style.color = '#a0a0a0';
-        timeout = setTimeout(handler, 5 * 1000);
+        timeout = setTimeout(handler, 2 * 1000); // 2 seconds
         resultsTextarea.addEventListener('blur', handler);
         resultsTextarea.addEventListener('click', handler);
         resultsTextarea.addEventListener('keydown', handler);
