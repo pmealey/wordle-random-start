@@ -80,10 +80,6 @@ function checkNotificationPromise() {
 
   function turnOnNotifications() {
     refreshWorker.postMessage({ type: 'notify', date: dateInput.value });
-
-    if (userInput.value === 'Patrick') {
-      refreshWorker.postMessage({ type: 'test-notification' });
-    }
   }
 
   function refreshData() {

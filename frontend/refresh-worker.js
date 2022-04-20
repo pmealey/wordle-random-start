@@ -47,6 +47,7 @@ function getData(notify, date) {
 
 const thirtySeconds = 30 * 1000; // 30 seconds
 const fiveMinutes = 5 * 60 * 1000; // 5 minutes
+const thirtyMinutes = 30 * 60 * 1000; // 30 minutes
 
 function periodicallyRefreshData(date) {
   setTimeout(() => {
@@ -59,12 +60,5 @@ onmessage = function(e) {
     getData(false, e.data.date)
   } else if (e.data.type === 'notify') {
     periodicallyRefreshData(e.data.date);
-  } else if (e.data.type === 'test-notification') {
-    setTimeout(() => {
-      new Notification('Test Notification 1', { body: 'Hi Patrick! Did you get this notification?',  })
-    }, thirtySeconds);
-    setTimeout(() => {
-      new Notification('Test Notification 2', { body: 'Hi Patrick! Did you get this notification?',  })
-    }, fiveMinutes);
   }
 }
