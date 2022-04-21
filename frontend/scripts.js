@@ -46,19 +46,19 @@ function stringToColor(str) {
   return colour + '44';
 }
 
-function checkNotificationPromise() {
-  try {
-    Notification.requestPermission().then();
-  } catch (e) {
-    return false;
-  }
+// function checkNotificationPromise() {
+//   try {
+//     Notification.requestPermission().then();
+//   } catch (e) {
+//     return false;
+//   }
 
-  return true;
-}
+//   return true;
+// }
 
 (function () {
   let startingWord = document.getElementById('starting-word');
-  let notificationButton = document.getElementById('allow-notifications');
+  //let notificationButton = document.getElementById('allow-notifications');
   let userArea = document.getElementById('user-area');
   let userInput = document.getElementById('user');
   let setUserButton = document.getElementById('set-user');
@@ -78,9 +78,9 @@ function checkNotificationPromise() {
   let refreshWorker = new Worker('refresh-worker.js');
   refreshWorker.onmessage = setData;
 
-  function turnOnNotifications() {
-    refreshWorker.postMessage({ type: 'notify', date: dateInput.value });
-  }
+  // function turnOnNotifications() {
+  //   refreshWorker.postMessage({ type: 'notify', date: dateInput.value });
+  // }
 
   function refreshData() {
     refreshWorker.postMessage({ type: 'refresh', date: dateInput.value });
@@ -189,36 +189,36 @@ function checkNotificationPromise() {
     resultsArea.classList.remove('hidden');
   }
 
-  function askNotificationPermission() {
-    // function to actually ask the permissions
-    function handlePermission(permission) {
-      // set the button to shown or hidden, depending on what the user answers
-      if (Notification.permission === 'granted') {
-        if (!advancedModeEnabled()) {
-          turnOnNotifications();
-        }
+  // function askNotificationPermission() {
+  //   // function to actually ask the permissions
+  //   function handlePermission(permission) {
+  //     // set the button to shown or hidden, depending on what the user answers
+  //     if (Notification.permission === 'granted') {
+  //       if (!advancedModeEnabled()) {
+  //         turnOnNotifications();
+  //       }
 
-        notificationButton.parentElement.classList.add('hidden');
-      }
-    }
+  //       notificationButton.parentElement.classList.add('hidden');
+  //     }
+  //   }
   
-    // Let's check if the browser supports notifications
-    if (!('Notification' in window)) {
-      console.log("This browser does not support notifications.");
-    } else {
-      if (checkNotificationPromise()) {
-        Notification.requestPermission()
-          .then((permission) => {
-            handlePermission(permission);
-          });
-      } else {
-        Notification.requestPermission(function (permission) {
-          handlePermission(permission);
-        });
-      }
-    }
-  }
-  
+  //   // Let's check if the browser supports notifications
+  //   if (!('Notification' in window)) {
+  //     console.log("This browser does not support notifications.");
+  //   } else {
+  //     if (checkNotificationPromise()) {
+  //       Notification.requestPermission()
+  //         .then((permission) => {
+  //           handlePermission(permission);
+  //         });
+  //     } else {
+  //       Notification.requestPermission(function (permission) {
+  //         handlePermission(permission);
+  //       });
+  //     }
+  //   }
+  // }
+
   function addGameLink(summary, container) {
     if (summary.dailyResult) {
       let textContainer = document.createElement('div');
@@ -329,9 +329,9 @@ function checkNotificationPromise() {
 
         refreshData();
 
-        if (!advancedModeEnabled() && Notification.permission === 'granted') {
-          turnOnNotifications();
-        }
+        // if (!advancedModeEnabled() && Notification.permission === 'granted') {
+        //   turnOnNotifications();
+        // }
       }
     }
 
@@ -339,10 +339,10 @@ function checkNotificationPromise() {
     dailyWordRequest.send();
   })();
 
-  if (Notification.permission === 'default') {
-    notificationButton.parentElement.classList.remove('hidden');
-    notificationButton.addEventListener('click', askNotificationPermission);
-  }
+  // if (Notification.permission === 'default') {
+  //   notificationButton.parentElement.classList.remove('hidden');
+  //   notificationButton.addEventListener('click', askNotificationPermission);
+  // }
 
   function setUser() {
     if (userInput.value) {
