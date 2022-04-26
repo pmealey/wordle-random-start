@@ -251,7 +251,9 @@ function stringToColor(str) {
               let container = addResult(summary, user, winner);
               resultsList.appendChild(container);
 
-              logResult(user, winner);
+              if (game !== 'NYT Crossword' && game !== 'NYT Mini') {
+                logResult(user, winner);
+              }
             });
         });
 
