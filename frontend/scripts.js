@@ -75,7 +75,9 @@ function stringToColor(str) {
   let resultsArea = document.getElementById('results-area');
   let resultsTextarea = document.getElementById('results');
   let submitButton = document.getElementById('submit');
+  let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
+  let crownColumn2 = document.getElementById('crown2');
   let summaryArea = document.getElementById('summary');
 
   let refreshWorker = new Worker('refresh-worker.js');
@@ -156,8 +158,17 @@ function stringToColor(str) {
     }
   }
 
+  function createCrown() {
+    let crown = document.createElement('div');
+    crown.innerHTML = '&#x1F451;'; // 👑
+    crown.classList.add('crown');
+    return crown;
+  }
+
   function displayLeaderboard() {
     clearData(leaderboardArea);
+    clearData(crownColumn1);
+    clearData(crownColumn2);
 
     let leaderboardByWinner = [];
     for (let user in leaderboard) {
@@ -169,7 +180,12 @@ function stringToColor(str) {
 
     leaderboardByWinner = leaderboardByWinner.sort((a, b) => b.wins - a.wins);
 
-    for (let entry of leaderboardByWinner) {
+    let topScore = 0;
+
+    leaderboardByWinner.forEach((entry, i)=> {
+      if (i === 0) topScore = entry.wins;
+      let winner = entry.wins === topScore;
+
       let wrapper = document.createElement('div');
       wrapper.classList.add('leaderboard-wrapper');
   
@@ -187,11 +203,17 @@ function stringToColor(str) {
       wins.textContent = entry.wins.toString();
       wrapper.appendChild(wins);
 
+      if (winner) {
+        crownColumn1.appendChild(createCrown());
+        crownColumn2.appendChild(createCrown());
+      }
+
       leaderboardArea.appendChild(wrapper);
-    };
+    });
   }
 
   function setData(e) {
+    leaderboard = {};
     clearData(summaryArea);
     let summaries = e.data;
 
