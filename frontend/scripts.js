@@ -75,6 +75,7 @@ function stringToColor(str) {
   let resultsArea = document.getElementById('results-area');
   let resultsTextarea = document.getElementById('results');
   let submitButton = document.getElementById('submit');
+  let leaderboardArea = document.getElementById('leaderboard');
   let summaryArea = document.getElementById('summary');
 
   let refreshWorker = new Worker('refresh-worker.js');
@@ -146,8 +147,52 @@ function stringToColor(str) {
     resultIdInput.addEventListener('keyup', enterListener(viewResult));
   }
 
+  let leaderboard = {};
+
+  function logResult(user, winner) {
+    leaderboard[user] = leaderboard[user] || 0;
+    if (winner) {
+      leaderboard[user]++;
+    }
+  }
+
+  function displayLeaderboard() {
+    clearData(leaderboardArea);
+
+    let leaderboardByWinner = [];
+    for (let user in leaderboard) {
+      leaderboardByWinner.push({
+        user,
+        wins: leaderboard[user]
+      });
+    }
+
+    leaderboardByWinner = leaderboardByWinner.sort((a, b) => b.wins - a.wins);
+
+    for (let entry of leaderboardByWinner) {
+      let wrapper = document.createElement('div');
+      wrapper.classList.add('leaderboard-wrapper');
+  
+      // if (winner) {
+      //   let winnerBorder = document.createElement('div');
+      //   winnerBorder.classList.add('winner-border');
+      //   wrapper.append(winnerBorder);
+      // }
+
+      let name = document.createElement('div');
+      name.textContent = entry.user;
+      wrapper.appendChild(name);
+
+      let wins = document.createElement('div');
+      wins.textContent = entry.wins.toString();
+      wrapper.appendChild(wins);
+
+      leaderboardArea.appendChild(wrapper);
+    };
+  }
+
   function setData(e) {
-    clearData();
+    clearData(summaryArea);
     let summaries = e.data;
 
     let allGames = summaries
@@ -182,6 +227,8 @@ function stringToColor(str) {
               let winner = Math.min(...summariesForGame.map(s => getScore(s.dailyResult))) === getScore(summary.dailyResult);
               let container = addResult(summary, user, winner);
               resultsList.appendChild(container);
+
+              logResult(user, winner);
             });
         });
 
@@ -189,6 +236,8 @@ function stringToColor(str) {
     });
 
     resultsArea.classList.remove('hidden');
+
+    displayLeaderboard();
   }
 
   // function askNotificationPermission() {
@@ -291,9 +340,9 @@ function stringToColor(str) {
     return wrapper;
   }
 
-  function clearData() {
-    while (summaryArea.children.length) {
-      let child = summaryArea.children[0];
+  function clearData(area) {
+    while (area.children.length) {
+      let child = area.children[0];
       child.remove();
     }
   }
