@@ -246,7 +246,8 @@ function stringToColor(str) {
           summariesForGame
             .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
             .forEach((summary) => {
-              let winner = Math.min(...summariesForGame.map(s => getScore(s.dailyResult))) === getScore(summary.dailyResult);
+              let scores = summariesForGame.map(s => getScore(s.dailyResult));
+              let winner = (game === 'Box Office Game' ? Math.max(...scores) : Math.min(...scores)) === getScore(summary.dailyResult);
               let container = addResult(summary, user, winner);
               resultsList.appendChild(container);
 
