@@ -21,7 +21,9 @@ function getScore(dailyResult) {
   }
 
   if (Array.isArray(dailyResult.scores)) {
-    let sum = dailyResult.scores.reduce((a, b) => a + b, 0);
+    // special & lazy handling for quordle - more wordles failed should score after less wordles failed
+    let sum = 10 * (4 - dailyResult.scores.length);
+    sum = dailyResult.scores.reduce((a, b) => a + b, sum);
     return (sum / dailyResult.scores.length) || 0;
   }
 
