@@ -21,6 +21,7 @@ namespace backend.Services.Parsers
         // \uD83D\uDD09 = 🔉
         // \UD83D\uDD0A = 🔊
         // \uD83D\uDFE9 = 🟩
+        // \uD83D\uDFE8 = 🟨
         // \uD83D\uDFE5 = 🟥
         // \u2B1C\uFE0F = ⬜️
         // \u2B1B\uFE0F = ⬛️
