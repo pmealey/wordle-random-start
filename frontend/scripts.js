@@ -15,8 +15,10 @@ function enterListener(func) {
   }
 }
 
-function getScore(dailyResult) {
-  if (dailyResult.score) {
+function getScore(dailyResult, golfScoring) {
+  let defaultScore = golfScoring ? Infinity : 0;
+
+  if (dailyResult.score != null) {
     return dailyResult.score;
   }
 
@@ -24,25 +26,25 @@ function getScore(dailyResult) {
     // special & lazy handling for quordle - more wordles failed should score after less wordles failed
     let sum = 100 * (4 - dailyResult.scores.length);
     sum = dailyResult.scores.reduce((a, b) => a + b, sum);
-    return sum || Infinity;
+    return sum || defaultScore;
   }
 
   if (dailyResult.time) {
     return new Date(dailyResult.date.replace('00:00:00', dailyResult.time)) - new Date(dailyResult.date);
   }
 
-  return Infinity;
+  return defaultScore;
 }
 
 function stringToColor(str) {
   if (!str || !str.length) return '#000';
-  var hash = 0;
-  for (var i = 0; i < str.length; i++) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  var colour = '#';
-  for (var i = 0; i < 3; i++) {
-    var value = (hash >> (i * 8)) & 0xFF;
+  let colour = '#';
+  for (let i = 0; i < 3; i++) {
+    let value = (hash >> (i * 8)) & 0xFF;
     colour += ('00' + value.toString(16)).substr(-2);
   }
   return colour + '44';
@@ -188,12 +190,6 @@ function stringToColor(str) {
 
       let wrapper = document.createElement('div');
       wrapper.classList.add('leaderboard-wrapper');
-  
-      // if (winner) {
-      //   let winnerBorder = document.createElement('div');
-      //   winnerBorder.classList.add('winner-border');
-      //   wrapper.append(winnerBorder);
-      // }
 
       let name = document.createElement('div');
       name.textContent = entry.user;
@@ -246,8 +242,8 @@ function stringToColor(str) {
           summariesForGame
             .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
             .forEach((summary) => {
-              let scores = summariesForGame.map(s => getScore(s.dailyResult));
-              let winner = (game === 'Box Office Game' ? Math.max(...scores) : Math.min(...scores)) === getScore(summary.dailyResult);
+              let scores = summariesForGame.map(s => getScore(s.dailyResult, s.golfScoring));
+              let winner = (!summary.golfScoring ? Math.min(...scores) : Math.max(...scores)) === getScore(summary.dailyResult, summary.golfScoring);
               let container = addResult(summary, user, winner);
               resultsList.appendChild(container);
 

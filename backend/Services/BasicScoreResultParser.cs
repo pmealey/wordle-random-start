@@ -12,7 +12,7 @@ namespace backend.Services
             _logger = logger;
         }
 
-
+        public override bool GolfScoring => true;
         protected const string ScoreGroup = "score";
         protected abstract string? ExtraContent { get; }
 

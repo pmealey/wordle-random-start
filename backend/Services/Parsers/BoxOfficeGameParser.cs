@@ -16,6 +16,7 @@ namespace backend.Services.Parsers
         public override int Priority => _priority;
         private const string _gameName = "Box Office Game";
         public override string GameName => _gameName;
+        public override bool GolfScoring => false;
         protected override Regex Parser => new Regex($"boxofficega\\.me.*🏆 (?<{ScoreGroup}>[\\d]+)", RegexOptions.Singleline);
         private const string _url = "https://boxofficega.me/";
         public override string Url => _url;

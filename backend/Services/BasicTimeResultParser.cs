@@ -12,6 +12,8 @@ namespace backend.Services
             _logger = logger;
         }
 
+        public override bool GolfScoring => true;
+
         protected const string TimeGroup = "time";
 
         protected override string GetCleanResult(string result, Match parserResults)

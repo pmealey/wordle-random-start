@@ -203,6 +203,7 @@ public class DailyResultController : ControllerBase
                 (rp, dr) => dr.DefaultIfEmpty().Select((dailyResult) => new {
                     DailyResult = dailyResult,
                     GameName = rp.GameName,
+                    GolfScoring = rp.GolfScoring,
                     Priority = rp.Priority,
                     Url = rp.Url
                 }))

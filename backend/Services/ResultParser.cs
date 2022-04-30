@@ -16,6 +16,8 @@ namespace backend.Services
 
         public abstract string GameName { get; }
 
+        public abstract bool GolfScoring { get; }
+
         protected abstract Regex Parser { get; }
 
         public abstract string Url { get; }

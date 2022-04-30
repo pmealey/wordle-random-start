@@ -28,7 +28,7 @@ namespace backend.Services.Parsers
         private readonly Regex _parser = new Regex($"#{_gameName} #\\d+\\s+\uD83D[\uDD07-\uDD0A](?<{ScoreGroup}>[^\\s]+)", RegexOptions.Singleline);
         protected override Regex Parser => _parser;
         protected override string? ExtraContent => _url;
-        private const string _url = "https://heardle.app";
+        private const string _url = "https://www.heardle.app";
         public override string Url => _url;
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
