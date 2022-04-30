@@ -12,6 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override bool CountWinner => true;
         private const int _priority = 4;
         public override int Priority => _priority;
         private List<string> ScoreGroups = new [] { 1, 2, 3, 4 }

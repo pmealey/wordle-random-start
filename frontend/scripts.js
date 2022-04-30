@@ -247,7 +247,7 @@ function stringToColor(str) {
               let container = addResult(summary, user, winner);
               resultsList.appendChild(container);
 
-              if (game !== 'NYT Crossword' && game !== 'NYT Mini') {
+              if (summary.countWinner) {
                 logResult(user, winner);
               }
             });
@@ -313,7 +313,7 @@ function stringToColor(str) {
     let wrapper = document.createElement('div');
     wrapper.classList.add('result-wrapper');
 
-    if (winner) {
+    if (summary.countWinner && winner) {
       let winnerBorder = document.createElement('div');
       winnerBorder.classList.add('winner-border');
       wrapper.append(winnerBorder);
