@@ -243,7 +243,7 @@ function stringToColor(str) {
             .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
             .forEach((summary) => {
               let scores = summariesForGame.map(s => getScore(s.dailyResult, s.golfScoring));
-              let winner = (!summary.golfScoring ? Math.min(...scores) : Math.max(...scores)) === getScore(summary.dailyResult, summary.golfScoring);
+              let winner = (summary.golfScoring ? Math.min(...scores) : Math.max(...scores)) === getScore(summary.dailyResult, summary.golfScoring);
               let container = addResult(summary, user, winner);
               resultsList.appendChild(container);
 
