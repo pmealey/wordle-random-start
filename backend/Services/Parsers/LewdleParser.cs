@@ -17,8 +17,8 @@ namespace backend.Services.Parsers
         public override string GameName => _gameName;
         private readonly Regex _parser = new Regex($"{_gameName}.*?(?<{ScoreGroup}>[\\d|X])/\\d");
         protected override Regex Parser => _parser;
-        protected override string? ExtraContent => null;
-        private const string _url = "lewdlegame.com";
+        protected override string? ExtraContent => "lewdlegame.com";
+        private const string _url = "https://www.lewdlegame.com";
         public override string Url => _url;
     }
 }
