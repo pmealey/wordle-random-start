@@ -87,7 +87,7 @@ public class DailyWordController : ControllerBase
 
     private string GetNewRandomWord()
     {
-        const string dictionaryPath = "Resources/allowed.txt";
+        const string dictionaryPath = "Resources/combined.txt";
         if (!System.IO.File.Exists(dictionaryPath))
         {
             throw new Exception("DICTIONARY NOT FOUND");
