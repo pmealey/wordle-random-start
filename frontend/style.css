@@ -30,7 +30,7 @@ button:hover { background-color: #e0e0e0;}
 .leaderboard-wrapper, .game-header { display: flex; flex-direction: row; justify-content: space-between; }
 
 .dialog-overlay { position: fixed; top: 0; left: 0; background: #0006; height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: flex-start; flex-direction: column; padding-top: 10vh; }
-.dialog { width: 425px; max-width: 90vw; height: 600px; max-height: 60vh; background: white; border-radius: 4px; display: flex; flex-direction: column; pointer-events: initial; }
+.dialog { width: 425px; max-width: 90vw; height: 600px; max-height: 80vh; background: white; border-radius: 4px; display: flex; flex-direction: column; pointer-events: initial; }
 .dialog h4 { margin: 0; }
 .dialog-header, .dialog-footer, .dialog-body { margin: 5px; padding: 5px; }
 .dialog-header { flex: 0 0 auto; display: flex; flex-direction: row; justify-content: space-between; border-bottom: 1px solid #444; }
