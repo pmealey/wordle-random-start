@@ -86,7 +86,8 @@ function stringToColor(str) {
   let refreshWorker = new Worker('refresh-worker.js');
   refreshWorker.onmessage = setData;
 
-  comments = {};
+  let comments = {};
+  let readComments = {};
 
   // function turnOnNotifications() {
   //   refreshWorker.postMessage({ type: 'notify', date: dateInput.value });
@@ -262,6 +263,8 @@ function stringToColor(str) {
     resultsArea.classList.remove('hidden');
 
     displayLeaderboard();
+
+    checkForUnreadComments();
   }
 
   // function askNotificationPermission() {
@@ -294,6 +297,10 @@ function stringToColor(str) {
   //   }
   // }
 
+  function getCommentButtonName(category) {
+    return category.replace(' ', '-').toLowerCase() + '-comments';
+  }
+
   function addGameLink(summary, container) {
     let header = document.createElement('div');
     header.classList.add('game-header');
@@ -317,7 +324,7 @@ function stringToColor(str) {
     let commentButton = document.createElement('button');
     commentButton.innerHTML = '&#x1F4AC' // 💬
     commentButton.addEventListener('click', createViewCommentsHandler(summary.gameName, !!summary.dailyResult))
-    commentButton.id = summary.gameName.replace(' ', '-') + '-comments';
+    commentButton.id = getCommentButtonName(summary.gameName);
     header.appendChild(commentButton);
 
     container.appendChild(header);
@@ -399,6 +406,35 @@ function stringToColor(str) {
     viewRequest.send();
   }
 
+  function checkForUnreadComments(category) {
+    if (!category) {
+      for(let category in comments) {
+        checkForUnreadComments(category);
+      }
+      return;
+    }
+
+    if (!comments[category]) {
+      return;
+    }
+
+    readComments[category] = readComments[category] || [];
+    let categoryHasUnreadComments = false;
+
+    for (let comment of comments[category]) {
+      if (!readComments[category].includes(comment.id)) {
+        categoryHasUnreadComments = true;
+      }
+    }
+
+    let button = document.getElementById(getCommentButtonName(category));
+    if (categoryHasUnreadComments) {
+      button.classList.add('unread-comments');
+    } else {
+      button.classList.remove('unread-comments');
+    }
+  }
+
   function getComments(category, renderComments) {
     if (!dateInput.value) return;
 
@@ -418,9 +454,10 @@ function stringToColor(str) {
         if (requestIsDone(commentsRequest)) {
           comments[category] = JSON.parse(commentsRequest.responseText);
           renderComments();
+          checkForUnreadComments(category);
         }
       }
-  
+
       commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value + '/' + encodeURIComponent(category), false);
       commentsRequest.send();
     }
@@ -509,6 +546,7 @@ function stringToColor(str) {
     clearData(dialogBody);
 
     let relevantComments = comments[category] || [];
+    readComments[category] = readComments[category] || []
 
     let hiddenComments = false;
 
@@ -516,6 +554,10 @@ function stringToColor(str) {
       if (!playedGame && comment.postGame) {
         hiddenComments = true;
         return;
+      }
+
+      if (!readComments[category].includes(comment.id)) {
+        readComments[category].push(comment.id);
       }
 
       let commentRow = document.createElement('div');
@@ -558,15 +600,22 @@ function stringToColor(str) {
       hiddenCommentsRow.appendChild(hiddenComments);
       dialogBody.appendChild(hiddenCommentsRow);
     }
+
+    checkForUnreadComments(category);
+    setCache();
   }
+
+  let submittingComment = false;
 
   function createSubmitCommentHandler(dialogBody, category, commentTextarea, postGameCheckbox, playedGame) {
     return (event) => {
       event.preventDefault();
 
-      if (!commentTextarea.value || !dateInput.value || !userInput.value) {
+      if (!commentTextarea.value || !dateInput.value || !userInput.value || submittingComment) {
         return false;
       }
+
+      submittingComment = true;
 
       let postGame = !postGameCheckbox?.checked && playedGame;
 
@@ -575,6 +624,8 @@ function stringToColor(str) {
         if (requestIsDone(submitRequest)) {
           if (postGameCheckbox) postGameCheckbox.checked = false;
           getComments(category, () => appendComments(dialogBody, category, playedGame));
+          commentTextarea.value = null;
+          submittingComment = false;
         }
       };
 
@@ -585,10 +636,20 @@ function stringToColor(str) {
         postGame: postGame
       }));
 
-      commentTextarea.value = null;
-
       return false;
     };
+  }
+
+  function clearCache() {
+    localStorage.setItem('readComments', null);
+  }
+
+  function initializeFromCache() {
+    readComments = JSON.parse(localStorage.getItem('readComments')) || {};
+  }
+
+  function setCache() {
+    localStorage.setItem('readComments', JSON.stringify(readComments));
   }
 
   (function initialize() {
@@ -607,6 +668,13 @@ function stringToColor(str) {
 
         getComments();
         refreshData();
+
+        if (localStorage.getItem('today') !== dateInput.value) {
+          clearCache();
+          localStorage.setItem('today', dateInput.value)
+        }
+
+        initializeFromCache();
 
         // if (!advancedModeEnabled() && Notification.permission === 'granted') {
         //   turnOnNotifications();
