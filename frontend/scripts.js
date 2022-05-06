@@ -464,7 +464,7 @@ function stringToColor(str) {
   }
 
   function freeze(e) {
-    if (!document.getElementsByClassName('dialog-overlay')[0].contains(e.target)) {
+    if (!document.getElementsByClassName('dialog-overlay').contains(e.target)) {
       e.preventDefault();
     }
   }
