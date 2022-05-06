@@ -55,7 +55,7 @@ button:hover { background-color: #e0e0e0;}
 
 .winner-border {
   position: absolute; display: block; overflow: hidden;
-  top: -100%; left: -100%; z-index: -9; height: 300%; width: 300%;
+  top: -150%; left: -100%; z-index: -9; height: 400%; width: 300%;
   background: linear-gradient(to right, #fff 20%, #fff 40%, #ECD08C 50%, #ECD08C 55%, #fff 70%, #fff 100%);
   transform: rotate(-45deg); background-size: 200% auto; animation: shine 3s linear infinite;
 }
