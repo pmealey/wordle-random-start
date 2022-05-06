@@ -9,12 +9,12 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CommentController : ControllerBase
+public class CommentsController : ControllerBase
 {
     private readonly DataContext _context;
-    private readonly ILogger<CommentController> _logger;
+    private readonly ILogger<CommentsController> _logger;
  
-    public CommentController(DataContext context, ILogger<CommentController> logger)
+    public CommentsController(DataContext context, ILogger<CommentsController> logger)
     {
         _context = context;
         _logger = logger;
@@ -33,7 +33,7 @@ public class CommentController : ControllerBase
         return Ok(comment);
     }
 
-    [HttpGet("{date}")]
+    [HttpGet("{dateString}")]
     public IActionResult GetComments([FromRoute] string dateString)
     {
         if (!DateTime.TryParse(dateString, out var date))
@@ -44,10 +44,12 @@ public class CommentController : ControllerBase
         return Ok(_context.Comment
             .Where(c => c.Date.Date == date.Date)
             .OrderBy(c => c.Timestamp)
-            .ToList());
+            .ToList()
+            .GroupBy(c => c.Category)
+            .ToDictionary(g => g.Key, g => g.ToList()));
     }
 
-    [HttpGet("{date}/{category}")]
+    [HttpGet("{dateString}/{category}")]
     public IActionResult GetComments([FromRoute] string dateString, [FromRoute] string category)
     {
         if (!DateTime.TryParse(dateString, out var date))
