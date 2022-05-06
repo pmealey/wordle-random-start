@@ -504,6 +504,7 @@ function stringToColor(str) {
       commentInputRow1 = document.createElement('div');
 
       let commentTextarea = document.createElement('textarea');
+      commentTextarea.enterKeyHint = 'send';
       let submitCommentButton = document.createElement('button');
       submitCommentButton.innerHTML = '&#x27A2;' // ➢
       submitCommentButton.type = 'submit';
