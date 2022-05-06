@@ -470,14 +470,19 @@ function stringToColor(str) {
   }
 
   function disableScroll() {
-    // Only accept touchmove from fixed-element
-    document.addEventListener('touchmove', freeze, false);
-    document.body.classList.add('prevent-scroll');
+    document.body.style.top = `-${window.scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.position = 'fixed';
   }
 
   function enableScroll() {
-    document.removeEventListener('touchmove', freeze);
-    document.body.classList.remove('prevent-scroll');
+    const scrollY = document.body.style.top;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    window.scrollTo(0, parseInt(scrollY || '0') * -1);
   }
 
   function createViewCommentsHandler(category, playedGame) {
