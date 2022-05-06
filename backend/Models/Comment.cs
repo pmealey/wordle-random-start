@@ -17,5 +17,10 @@ namespace backend.Models
         [Required]
         [MaxLength(128)]
         public string User { get; set; } = null!;
+
+        public Comment()
+        {
+            Timestamp = DateTime.UtcNow;
+        }
     }
 }
