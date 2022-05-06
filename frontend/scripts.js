@@ -79,11 +79,14 @@ function stringToColor(str) {
   let submitButton = document.getElementById('submit');
   let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
+  let leaderboardComments = document.getElementById('leaderboard-comments');
   let crownColumn2 = document.getElementById('crown2');
   let summaryArea = document.getElementById('summary');
 
   let refreshWorker = new Worker('refresh-worker.js');
   refreshWorker.onmessage = setData;
+
+  comments = {};
 
   // function turnOnNotifications() {
   //   refreshWorker.postMessage({ type: 'notify', date: dateInput.value });
@@ -292,21 +295,32 @@ function stringToColor(str) {
   // }
 
   function addGameLink(summary, container) {
+    let header = document.createElement('div');
+    header.classList.add('game-header');
+
     if (summary.dailyResult) {
-      let textContainer = document.createElement('div');
+      let textContainer = document.createElement('a');
       textContainer.innerText = summary.gameName;
-      container.appendChild(textContainer);
+      header.appendChild(textContainer);
     } else if (summary.url) {
       let link = document.createElement('a');
       link.href = summary.url;
       link.target = '_blank';
       link.innerText = 'Play ' + summary.gameName;
-      container.appendChild(link);
+      header.appendChild(link);
     } else {
       let textContainer = document.createElement('div');
       textContainer.innerText = 'Play ' + summary.gameName;
-      container.appendChild(textContainer);
+      header.appendChild(textContainer);
     }
+
+    let commentButton = document.createElement('button');
+    commentButton.innerHTML = '&#x1F4AC' // 💬
+    commentButton.addEventListener('click', createViewCommentsHandler(summary.gameName, !!summary.dailyResult))
+    commentButton.id = summary.gameName.replace(' ', '-') + '-comments';
+    header.appendChild(commentButton);
+
+    container.appendChild(header);
   }
 
   function addResult(summary, label, winner) {
@@ -385,6 +399,198 @@ function stringToColor(str) {
     viewRequest.send();
   }
 
+  function getComments(category, renderComments) {
+    if (!dateInput.value) return;
+
+    if (category == null) {
+      let commentsRequest = new XMLHttpRequest();
+      commentsRequest.onreadystatechange = function () {
+        if (requestIsDone(commentsRequest)) {
+          comments = JSON.parse(commentsRequest.responseText);
+        }
+      }
+
+      commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value, false);
+      commentsRequest.send();
+    } else if (appendComments != null) {
+      let commentsRequest = new XMLHttpRequest();
+      commentsRequest.onreadystatechange = function () {
+        if (requestIsDone(commentsRequest)) {
+          comments[category] = JSON.parse(commentsRequest.responseText);
+          renderComments();
+        }
+      }
+  
+      commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value + '/' + encodeURIComponent(category), false);
+      commentsRequest.send();
+    }
+  }
+
+  function createViewCommentsHandler(category, playedGame) {
+    return () => {
+      document.body.style.overflow = 'hidden';
+
+      let dialogOverlay = document.createElement('div');
+      dialogOverlay.classList.add('dialog-overlay');
+
+      let dialog = document.createElement('div');
+      dialog.classList.add('dialog');
+
+      let dialogTitle = document.createElement('h4');
+      dialogTitle.textContent = category;
+
+      let closeDialogButton = document.createElement('button');
+      closeDialogButton.innerHTML = '&#x274c;' // ❌
+      closeDialogButton.addEventListener('click', () => {
+        dialogOverlay.remove();
+        document.body.style.overflow = '';
+      });
+
+      let dialogHeader = document.createElement('div');
+      dialogHeader.classList.add('dialog-header');
+      dialogHeader.appendChild(dialogTitle);
+      dialogHeader.appendChild(closeDialogButton);
+      dialog.appendChild(dialogHeader);
+
+      let dialogBody = document.createElement('div');
+      dialogBody.classList.add('dialog-body');
+      if (playedGame) {
+        dialogBody.classList.add('played-game');
+      }
+
+      appendComments(dialogBody, category, playedGame);
+
+      dialog.appendChild(dialogBody);
+
+      let commentInputContainer = document.createElement('form');
+      commentInputContainer.classList.add('comment-input');
+      commentInputRow1 = document.createElement('div');
+
+      let commentTextarea = document.createElement('textarea');
+      let submitCommentButton = document.createElement('button');
+      submitCommentButton.innerHTML = '&#x27A2;' // ➢
+      submitCommentButton.type = 'submit';
+
+      commentInputRow1.appendChild(commentTextarea);
+      commentInputRow1.appendChild(submitCommentButton);
+      commentInputContainer.appendChild(commentInputRow1);
+
+      let postGameCheckbox;
+      if (playedGame) {
+        postGameCheckbox = document.createElement('input');
+        postGameCheckbox.type = 'checkbox';
+
+        let postGameCheckboxText = document.createElement('span');
+        postGameCheckboxText.textContent = 'Share with everyone';
+
+        let postGameCheckboxLabel = document.createElement('label');
+        postGameCheckboxLabel.appendChild(postGameCheckboxText);
+        postGameCheckboxLabel.appendChild(postGameCheckbox);
+
+        commentInputRow2 = document.createElement('div');
+        commentInputRow2.appendChild(postGameCheckboxLabel);
+        commentInputContainer.appendChild(commentInputRow2);
+      }
+
+      commentInputContainer.addEventListener('submit', createSubmitCommentHandler(dialogBody, category, commentTextarea, postGameCheckbox, playedGame))
+
+      let dialogFooter = document.createElement('div');
+      dialogFooter.classList.add('dialog-footer');
+      dialogFooter.appendChild(commentInputContainer);
+      dialog.appendChild(dialogFooter);
+
+      dialogOverlay.appendChild(dialog);
+      document.body.appendChild(dialogOverlay);
+      commentTextarea.focus();
+    }
+  }
+
+  function appendComments(dialogBody, category, playedGame) {
+    clearData(dialogBody);
+
+    let relevantComments = comments[category] || [];
+
+    let hiddenComments = false;
+
+    relevantComments.forEach(comment => {
+      if (!playedGame && comment.postGame) {
+        hiddenComments = true;
+        return;
+      }
+
+      let commentRow = document.createElement('div');
+      commentRow.classList.add('comment-row');
+
+      if (comment.postGame) {
+        commentRow.classList.add('post-game');
+      }
+
+      let commentContainer = document.createElement('div');
+      commentContainer.classList.add('comment');
+      commentContainer.style.backgroundColor = stringToColor(comment.user);
+
+      if (comment.user === userInput.value) {
+        commentRow.classList.add('mine');
+      }
+
+      let user = document.createElement('div');
+      user.classList.add('user');
+      user.textContent = comment.user;
+      commentContainer.appendChild(user);
+
+      let commentText = document.createElement('div');
+      commentText.classList.add('comment-text');
+      commentText.textContent = comment.commentText;
+      commentContainer.appendChild(commentText);
+
+      commentRow.appendChild(commentContainer);
+
+      dialogBody.appendChild(commentRow);
+    });
+
+    if (hiddenComments) {
+      let hiddenComments = document.createElement('div');
+      hiddenComments.classList.add('hidden-comments');
+      hiddenComments.textContent = 'Some comments are hidden. Complete today\'s game to see them!';
+
+      let hiddenCommentsRow = document.createElement('div');
+      hiddenCommentsRow.classList.add('comment-row');
+      hiddenCommentsRow.appendChild(hiddenComments);
+      dialogBody.appendChild(hiddenCommentsRow);
+    }
+  }
+
+  function createSubmitCommentHandler(dialogBody, category, commentTextarea, postGameCheckbox, playedGame) {
+    return (event) => {
+      event.preventDefault();
+
+      if (!commentTextarea.value || !dateInput.value || !userInput.value) {
+        return false;
+      }
+
+      let postGame = !postGameCheckbox?.checked && playedGame;
+
+      let submitRequest = new XMLHttpRequest();
+      submitRequest.onreadystatechange = function () {
+        if (requestIsDone(submitRequest)) {
+          if (postGameCheckbox) postGameCheckbox.checked = false;
+          getComments(category, () => appendComments(dialogBody, category, playedGame));
+        }
+      };
+
+      submitRequest.open('POST', '/api/wordle/comments/' + dateInput.value + '/' + encodeURIComponent(category) +  '/' + userInput.value);
+      submitRequest.setRequestHeader('Content-Type', 'application/json');
+      submitRequest.send(JSON.stringify({
+        commentText: commentTextarea.value,
+        postGame: postGame
+      }));
+
+      commentTextarea.value = null;
+
+      return false;
+    };
+  }
+
   (function initialize() {
     let dailyWordRequest = new XMLHttpRequest();
     dailyWordRequest.onreadystatechange = function () {
@@ -399,6 +605,7 @@ function stringToColor(str) {
           userInput.value = user;
         }
 
+        getComments();
         refreshData();
 
         // if (!advancedModeEnabled() && Notification.permission === 'granted') {
@@ -472,6 +679,8 @@ function stringToColor(str) {
     submitRequest.setRequestHeader('Content-Type', 'application/json');
     submitRequest.send(JSON.stringify(resultsTextarea.value));
   }
+
+  leaderboardComments.addEventListener('click', createViewCommentsHandler('Leaderboard', false));
 
   // submit when clicking submit, when pressing enter, or when pasting into the text area
   submitButton.addEventListener('click', submitResult);

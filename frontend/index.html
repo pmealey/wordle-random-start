@@ -4,12 +4,12 @@
     <base href="wordle">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Daily Games</title>
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
     <meta name="robots" content="noindex">
 </head>
 <body>
     <h2>Daily Games</h2>
-    <p><i>Now more competitive than ever. Hooray.</i></p>
+    <p><i>Every thought you have is important and absolutely must be shared so click that &#x1F4AC<!--💬--> button and sound off!</i></p>
     <p>Today's random word: <span id="starting-word">Loading...</span></p>
 
     <p id="user-area" class="hidden input-row">
@@ -54,6 +54,9 @@
                 <div id="leaderboard" class="leaderboard"></div>
                 <div id="crown2"></div>
             </div>
+            <div class="leaderboard-comments">
+                <button id="leaderboard-comments">&#x1F4AC</button> <!--💬-->
+            </div>
         </div>
 
         <p class="summary">
@@ -65,6 +68,6 @@
 
     <!-- <p class="hidden"><button id="allow-notifications">&#128276 Allow Notifications &#128276</button></p> -->
 
-    <script src="scripts.js?v=11"></script>
+    <script src="scripts.js?v=12"></script>
 </body>
 </html>

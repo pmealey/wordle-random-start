@@ -1,4 +1,4 @@
-body { margin: 40px auto; max-width: 450px; line-height: 1.6; font-size: 18px; color: #444; padding: 0 10px }
+body { margin: 40px auto; max-width: 450px; line-height: 1.6; font-size: 18px; color: #444; padding: 0 10px; }
 h1, h2, h3 {line-height: 1.2;}
 textarea {width: 100%;min-height: 150px;}
 .help { font-style: italic; }
@@ -18,12 +18,36 @@ textarea {width: 100%;min-height: 150px;}
 .game + .game { margin-top: 5px; }
 .leaderboard { width: 100px; }
 .leaderboard-container {
-  background-color: #e0e0e0; padding: 5px; border-radius: 4px; z-index: -10;
+  background-color: #e0e0e0; padding: 5px; border-radius: 4px;
   display: flex; flex-direction: column; align-items: center; width: 170px; margin: auto;
+  position: relative;
 }
+.leaderboard-comments { position: absolute; top: 1px; right: 3px; }
 .leaderboard-list { display: flex; flex-direction: row; }
 .leaderboard-list .crown { padding: 5px; }
-.leaderboard-wrapper { display: flex; flex-direction: row; justify-content: space-between; }
+.leaderboard-wrapper, .game-header { display: flex; flex-direction: row; justify-content: space-between; }
+
+.dialog-overlay { position: fixed; top: 0; left: 0; background: #0006; height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+.dialog { width: 425px; max-width: 90vw; height: 600px; max-height: 80vh; background: white; border-radius: 4px; display: flex; flex-direction: column; }
+.dialog h4 { margin: 0; }
+.dialog-header, .dialog-footer, .dialog-body { margin: 5px; padding: 5px; }
+.dialog-header { flex: 0 0 auto; display: flex; flex-direction: row; justify-content: space-between; border-bottom: 1px solid #444; }
+.dialog-footer { flex: 0 0 auto; border-top: 1px solid #444; }
+.dialog-body { flex: 1 1 100%; overflow-y: auto; }
+
+.comment-input { display: flex; flex-direction: column; }
+.comment-input > div { display: flex; flex-direction: row; justify-content: flex-end; }
+.comment-input textarea { min-height: 75px; height: 75px; resize: none; }
+.comment-input textarea + button { margin-left: 5px; }
+.comment-row { display: flex; justify-content: flex-end; }
+.comment-row.mine { justify-content: flex-start; }
+.comment-row.mine .comment { text-align: left; }
+.comment { border: solid 1px #444; padding: 5px; border-radius: 4px; text-align: right; max-width: 75%; }
+.played-game .comment { border: dashed 1.5px #444; }
+.played-game .comment-row.post-game .comment { border: solid 1px #444; }
+.comment-row + .comment-row { margin-top: 5px; }
+.comment .user { font-size: 0.75em; }
+.hidden-comments { text-align: center; justify-self: center; font-size: 0.75em; padding-left: 20px; padding-right: 20px; }
 
 .winner-border {
   position: absolute; display: block; overflow: hidden;
