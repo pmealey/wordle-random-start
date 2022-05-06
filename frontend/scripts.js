@@ -466,6 +466,7 @@ function stringToColor(str) {
   function createViewCommentsHandler(category, playedGame) {
     return () => {
       document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
 
       let dialogOverlay = document.createElement('div');
       dialogOverlay.classList.add('dialog-overlay');
@@ -481,6 +482,7 @@ function stringToColor(str) {
       closeDialogButton.addEventListener('click', () => {
         dialogOverlay.remove();
         document.body.style.overflow = '';
+        document.body.style.touchAction = '';
       });
 
       let dialogHeader = document.createElement('div');
