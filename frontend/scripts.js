@@ -515,7 +515,7 @@ function stringToColor(str) {
         dialogBody.classList.add('played-game');
       }
 
-      appendComments(dialogBody, category, playedGame);
+      let firstUnread = appendComments(dialogBody, category, playedGame);
 
       dialog.appendChild(dialogBody);
 
@@ -559,6 +559,12 @@ function stringToColor(str) {
       dialogOverlay.appendChild(dialog);
       document.body.appendChild(dialogOverlay);
       commentTextarea.focus();
+      if (firstUnread) {
+        firstUnread.scrollIntoView();
+      } else {
+        // scroll to the bottom
+        dialogBody.scrollTop = dialogBody.scrollHeight;
+      }
       disableScroll();
     }
   }
@@ -570,15 +576,12 @@ function stringToColor(str) {
     readComments[category] = readComments[category] || []
 
     let hiddenComments = false;
+    let firstUnread = null;
 
     relevantComments.forEach(comment => {
       if (!playedGame && comment.postGame) {
         hiddenComments = true;
         return;
-      }
-
-      if (!readComments[category].includes(comment.id)) {
-        readComments[category].push(comment.id);
       }
 
       let commentRow = document.createElement('div');
@@ -609,6 +612,11 @@ function stringToColor(str) {
       commentRow.appendChild(commentContainer);
 
       dialogBody.appendChild(commentRow);
+
+      if (!readComments[category].includes(comment.id)) {
+        firstUnread = commentRow;
+        readComments[category].push(comment.id);
+      }
     });
 
     if (hiddenComments) {
@@ -624,6 +632,8 @@ function stringToColor(str) {
 
     checkForUnreadComments(category);
     setCache();
+
+    return firstUnread;
   }
 
   let submittingComment = false;
