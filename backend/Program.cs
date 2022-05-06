@@ -27,7 +27,9 @@ builder.Services.AddScoped<ResultParser, LewdleParser>();
 builder.Services.AddScoped<ResultParser, NerdleParser>();
 builder.Services.AddScoped<ResultParser, NytCrosswordParser>();
 builder.Services.AddScoped<ResultParser, NytMiniParser>();
+builder.Services.AddScoped<ResultParser, PimantleParser>();
 builder.Services.AddScoped<ResultParser, QuordleParser>();
+builder.Services.AddScoped<ResultParser, SemantleParser>();
 builder.Services.AddScoped<ResultParser, WordleParser>();
 builder.Services.AddScoped<ResultParser, WorldleParser>();
 
