@@ -498,8 +498,6 @@ function stringToColor(str) {
 
   function createViewCommentsHandler(category, playedGame) {
     return () => {
-      disableScroll();
-
       let dialogOverlay = document.createElement('div');
       dialogOverlay.classList.add('dialog-overlay');
 
@@ -572,6 +570,7 @@ function stringToColor(str) {
       dialogOverlay.appendChild(dialog);
       document.body.appendChild(dialogOverlay);
       commentTextarea.focus();
+      disableScroll();
     }
   }
 
