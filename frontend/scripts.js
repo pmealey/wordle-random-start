@@ -463,9 +463,42 @@ function stringToColor(str) {
     }
   }
 
+  function freeze(e) {
+    if (!document.getElementsByClassName('dialog-overlay')[0].contains(e.target)) {
+      e.preventDefault();
+    }
+  }
+
+  function disableScroll() {
+    document.body.classList.add('prevent-scroll');
+  
+    // Only accept touchmove from fixed-element
+    document.addEventListener('touchmove', freeze, false);
+  
+    // Prevent background scrolling
+    document.getElementsByClassName('dialog-overlay')[0].addEventListener('touchmove', function(e) {
+      let top = this.scrollTop;
+      let totalScroll = this.scrollHeight;
+      let currentScroll = top + this.offsetHeight;
+  
+      if (top === 0 && currentScroll === totalScroll) {
+        e.preventDefault();
+      } else if (top === 0) {
+        this.scrollTop = 1;
+      } else if (currentScroll === totalScroll) {
+        this.scrollTop = top - 1;
+      }
+    });
+  }
+
+  function enableScroll() {
+    document.removeEventListener('touchmove', freeze);
+    document.body.classList.remove('prevent-scroll');
+  }
+
   function createViewCommentsHandler(category, playedGame) {
     return () => {
-      document.body.classList.add('prevent-scroll');
+      disableScroll();
 
       let dialogOverlay = document.createElement('div');
       dialogOverlay.classList.add('dialog-overlay');
@@ -480,7 +513,7 @@ function stringToColor(str) {
       closeDialogButton.innerHTML = '&#x274c;' // ❌
       closeDialogButton.addEventListener('click', () => {
         dialogOverlay.remove();
-        document.body.classList.remove('prevent-scroll');
+        enableScroll();
       });
 
       let dialogHeader = document.createElement('div');
