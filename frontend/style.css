@@ -1,6 +1,8 @@
 body { margin: 40px auto; max-width: 450px; line-height: 1.6; font-size: 18px; color: #444; padding: 0 10px; }
 h1, h2, h3 {line-height: 1.2;}
 textarea {width: 100%;min-height: 150px;}
+button { border: solid 1px #e0e0e0; padding: 5px; border-radius: 4px; background-color: #EFEFEF; }
+button:hover { background-color: #e0e0e0;}
 .help { font-style: italic; }
 .summary, .help {font-size: 14px;}
 .input-row, textarea {min-width: 200px;}
