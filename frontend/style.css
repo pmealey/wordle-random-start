@@ -52,6 +52,7 @@ button:hover { background-color: #e0e0e0;}
 .comment .user { font-size: 0.75em; }
 .hidden-comments { text-align: center; justify-self: center; font-size: 0.75em; padding-left: 20px; padding-right: 20px; }
 .unread-comments { background-color: #f003 }
+.comment-input button { font-size: 1.25em; }
 
 .winner-border {
   position: absolute; display: block; overflow: hidden;
