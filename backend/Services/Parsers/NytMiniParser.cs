@@ -11,6 +11,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override bool CountWinner => true;
         private const int _priority = 5;
         public override int Priority => _priority;
         private const string _gameName = "NYT Mini";
