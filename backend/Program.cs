@@ -24,6 +24,7 @@ builder.Services.AddDbContext<DataContext>(p => p.UseNpgsql(connectionString));
 builder.Services.AddScoped<ResultParser, WordleParser>();
 builder.Services.AddScoped<ResultParser, WorldleParser>();
 builder.Services.AddScoped<ResultParser, GlobleParser>();
+builder.Services.AddScoped<ResultParser, CloudleParser>();
 builder.Services.AddScoped<ResultParser, NerdleParser>();
 builder.Services.AddScoped<ResultParser, QuordleParser>();
 builder.Services.AddScoped<ResultParser, NytMiniParser>();
