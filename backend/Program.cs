@@ -22,17 +22,17 @@ builder.Services.AddDbContext<DataContext>(p => p.UseNpgsql(connectionString));
 
 // order here matters - this is how we display the games
 builder.Services.AddScoped<ResultParser, WordleParser>();
+builder.Services.AddScoped<ResultParser, QuordleParser>();
+builder.Services.AddScoped<ResultParser, LewdleParser>();
 builder.Services.AddScoped<ResultParser, WorldleParser>();
 builder.Services.AddScoped<ResultParser, GlobleParser>();
 builder.Services.AddScoped<ResultParser, CloudleParser>();
 builder.Services.AddScoped<ResultParser, NerdleParser>();
-builder.Services.AddScoped<ResultParser, QuordleParser>();
-builder.Services.AddScoped<ResultParser, NytMiniParser>();
-builder.Services.AddScoped<ResultParser, NytCrosswordParser>();
-builder.Services.AddScoped<ResultParser, LewdleParser>();
 builder.Services.AddScoped<ResultParser, HeardleParser>();
 builder.Services.AddScoped<ResultParser, BoxOfficeGameParser>();
 builder.Services.AddScoped<ResultParser, FramedParser>();
+builder.Services.AddScoped<ResultParser, NytMiniParser>();
+builder.Services.AddScoped<ResultParser, NytCrosswordParser>();
 builder.Services.AddScoped<ResultParser, PimantleParser>();
 builder.Services.AddScoped<ResultParser, SemantleParser>();
 
