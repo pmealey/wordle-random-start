@@ -12,7 +12,7 @@ namespace backend.Services.Parsers
         }
         private const string _gameName = "Waffle";
         public override string GameName => _gameName;
-        public override bool GolfScoring => true;
+        public override bool GolfScoring => false;
 
         private readonly Regex _parser = new Regex($"#{_gameName.ToLower()}\\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override Regex Parser => _parser;
