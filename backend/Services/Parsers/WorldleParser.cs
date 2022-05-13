@@ -11,8 +11,6 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const int _priority = 1;
-        public override int Priority => _priority;
         private const string _gameName = "Worldle";
         public override string GameName => _gameName;
         private readonly Regex _parser = new Regex($"#{_gameName} #\\d+ (?<{ScoreGroup}>[\\d|X])/\\d");

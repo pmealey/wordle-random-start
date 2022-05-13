@@ -13,8 +13,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        private const int _priority = 12;
-        public override int Priority => _priority;
         private const string _gameName = "Pimantle";
         public override string GameName => _gameName;
         public override bool GolfScoring => true;

@@ -18,7 +18,7 @@ public class ResultsController : ControllerBase
     {
         _context = context;
         _logger = logger;
-        _resultParsers = resultParsers.OrderBy(rp => rp.Priority);
+        _resultParsers = resultParsers;
     }
 
     [HttpGet()]

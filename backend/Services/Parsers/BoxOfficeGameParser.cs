@@ -12,8 +12,6 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const int _priority = 9;
-        public override int Priority => _priority;
         private const string _gameName = "Box Office Game";
         public override string GameName => _gameName;
         public override bool GolfScoring => false;

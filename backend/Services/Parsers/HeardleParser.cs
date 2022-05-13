@@ -12,8 +12,6 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const int _priority = 8;
-        public override int Priority => _priority;
         private const string _gameName = "Heardle";
         public override string GameName => _gameName;
         // \uD83D\uDD07 = 🔇

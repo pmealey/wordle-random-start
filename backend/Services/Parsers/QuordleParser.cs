@@ -13,8 +13,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        private const int _priority = 4;
-        public override int Priority => _priority;
         private List<string> ScoreGroups = new [] { 1, 2, 3, 4 }
             .Select(i => "score" + i.ToString())
             .ToList();

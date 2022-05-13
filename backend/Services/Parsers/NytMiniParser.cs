@@ -11,9 +11,6 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override bool CountWinner => true;
-        private const int _priority = 5;
-        public override int Priority => _priority;
         private const string _gameName = "NYT Mini";
         public override string GameName => _gameName;
         private readonly Regex _parser = new Regex($"NYTM (?<{TimeGroup}>[:\\d]+)", RegexOptions.IgnoreCase);
