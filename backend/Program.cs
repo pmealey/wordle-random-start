@@ -26,6 +26,7 @@ builder.Services.AddScoped<ResultParser, QuordleParser>();
 builder.Services.AddScoped<ResultParser, WaffleParser>();
 builder.Services.AddScoped<ResultParser, Crosswordle1Parser>();
 builder.Services.AddScoped<ResultParser, Crosswordle2Parser>();
+builder.Services.AddScoped<ResultParser, AbsurdleParser>();
 builder.Services.AddScoped<ResultParser, LewdleParser>();
 builder.Services.AddScoped<ResultParser, AntiwordleParser>();
 builder.Services.AddScoped<ResultParser, WorldleParser>();
