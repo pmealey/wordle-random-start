@@ -13,10 +13,10 @@ namespace backend.Services.Parsers
 
         private const string _gameName = "Crosswordle 2";
         public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"$Crosswordle \\d+ .*? (?<{ScoreGroup}>[\\d]+)/");
+        private readonly Regex _parser = new Regex($"^Crosswordle \\d+ .*? (?<{ScoreGroup}>[\\d]+)/");
         protected override Regex Parser => _parser;
-        protected override string? ExtraContent => "crosswordle.serializer.ca";
-        private const string _url = "https://crosswordle.serializer.ca";
+        protected override string? ExtraContent => _url;
+        private const string _url = "https://crosswordle.serializer.ca/";
         public override string Url => _url;
     }
 }

@@ -15,7 +15,7 @@ namespace backend.Services.Parsers
         public override string GameName => _gameName;
         private readonly Regex _parser = new Regex($"{_gameName} (?<{ScoreGroup}>\\d+)/");
         protected override Regex Parser => _parser;
-        protected override string? ExtraContent => "qntm.org/files/absurdle/absurdle.html";
+        protected override string? ExtraContent => _url;
         private const string _url = "https://qntm.org/files/absurdle/absurdle.html";
         public override string Url => _url;
     }

@@ -17,7 +17,7 @@ namespace backend.Services.Parsers
         public override string GameName => _gameName;
         public override bool GolfScoring => true;
         private const string ScoreGroup = "score";
-        protected override Regex Parser => new Regex($"^I solved today's #{_gameName} \\(#\\d\\) in (?<{ScoreGroup}>\\d+) guesses");
+        protected override Regex Parser => new Regex($"^I solved today's #{_gameName} [^\\s]+ in (?<{ScoreGroup}>\\d+) guesses");
         private const string _url = "https://www.redactle.com/";
         public override string Url => _url;
 
