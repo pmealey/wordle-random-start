@@ -42,6 +42,7 @@ builder.Services.AddScoped<ResultParser, NytCrosswordParser>();
 builder.Services.AddScoped<ResultParser, PimantleParser>();
 builder.Services.AddScoped<ResultParser, SemantleParser>();
 builder.Services.AddScoped<ResultParser, RedactleParser>();
+builder.Services.AddScoped<ResultParser, PoeltlParser>();
 
 var app = builder.Build();
 
