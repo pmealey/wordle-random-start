@@ -12,7 +12,7 @@ namespace backend.Services
             _logger = logger;
         }
 
-        public override bool CountWinner => false;
+        public override bool CountWinner => true;
 
         public override bool GolfScoring => true;
 
@@ -25,7 +25,7 @@ namespace backend.Services
                 return GameName;
             }
 
-            var time = ParseTimeSpanString(parserResults.Groups[TimeGroup].Value);
+            var time = ParseTimeSpanString(parserResults);
 
             if (time == null)
             {
@@ -52,7 +52,7 @@ namespace backend.Services
                 return dailyResult;
             }
 
-            var time = ParseTimeSpanString(parserResults.Groups[TimeGroup].Value);
+            var time = ParseTimeSpanString(parserResults);
             if (time == null)
             {
                 return dailyResult;
@@ -63,8 +63,10 @@ namespace backend.Services
             return dailyResult;
         }
 
-        private TimeSpan? ParseTimeSpanString(string timeSpan)
+        protected virtual TimeSpan? ParseTimeSpanString(Match parserResults)
         {
+            var timeSpan = parserResults.Groups[TimeGroup].Value;
+
             _logger.LogDebug($"Parsing {timeSpan}...");
             var timeDelimiters = timeSpan.ToCharArray().Count(c => c == ':');
 

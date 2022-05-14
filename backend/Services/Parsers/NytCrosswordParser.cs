@@ -11,6 +11,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override bool CountWinner => false;
         private const string _gameName = "NYT Crossword";
         public override string GameName => _gameName;
         private readonly Regex _parser = new Regex($"NYTC (?<{TimeGroup}>[:\\d]+)", RegexOptions.IgnoreCase);
