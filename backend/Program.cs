@@ -33,6 +33,7 @@ builder.Services.AddScoped<ResultParser, WorldleParser>();
 builder.Services.AddScoped<ResultParser, GlobleParser>();
 builder.Services.AddScoped<ResultParser, CloudleParser>();
 builder.Services.AddScoped<ResultParser, NerdleParser>();
+builder.Services.AddScoped<ResultParser, DungleonParser>();
 builder.Services.AddScoped<ResultParser, HeardleParser>();
 builder.Services.AddScoped<ResultParser, BoxOfficeGameParser>();
 builder.Services.AddScoped<ResultParser, FramedParser>();
