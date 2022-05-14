@@ -200,12 +200,11 @@ public class DailyResultController : ControllerBase
                 dailyResults,
                 (rp) => rp.GameName,
                 (dr) => dr.Game,
-                (rp, dr) => dr.DefaultIfEmpty().Select((dailyResult, i) => new {
+                (rp, dr) => dr.DefaultIfEmpty().Select((dailyResult) => new {
                     DailyResult = dailyResult,
                     CountWinner = rp.CountWinner,
                     GameName = rp.GameName,
                     GolfScoring = rp.GolfScoring,
-                    Priority = i,
                     Url = rp.Url
                 }))
             .SelectMany(g => g);
@@ -215,7 +214,6 @@ public class DailyResultController : ControllerBase
         }
 
         var dailyResultWithGameInfo = list
-            .OrderBy(o => o.Priority)
             .ToList();
 
         return Ok(dailyResultWithGameInfo);
