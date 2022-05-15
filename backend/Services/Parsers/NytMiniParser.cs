@@ -11,11 +11,9 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const string _gameName = "NYT Mini";
-        public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"NYTM (?<{TimeGroup}>[:\\d]+)", RegexOptions.IgnoreCase);
-        protected override Regex Parser => _parser;
-        private const string _url = "https://www.nytimes.com/crosswords/game/mini";
-        public override string Url => _url;
+        public override string GameName => "NYT Mini";
+        public override string? HelpText => "Enter \"Nytm 42\", \"Nytm 1:42\", or \"Nytm 1.42\" for example.";
+        protected override Regex Parser => new Regex($"NYTM (?<{TimeGroup}>[:\\d\\.]+)", RegexOptions.IgnoreCase);
+        public override string Url => "https://www.nytimes.com/crosswords/game/mini";
     }
 }

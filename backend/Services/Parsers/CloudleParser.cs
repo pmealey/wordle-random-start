@@ -11,12 +11,10 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const string _gameName = "Cloudle";
-        public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"{_gameName} .*? (?<{ScoreGroup}>[\\d|X])/\\d");
-        protected override Regex Parser => _parser;
-        protected override string? ExtraContent => _url;
-        private const string _url = "https://cogit.fun/cloudle";
-        public override string Url => _url;
+        public override string GameName => "Cloudle";
+        public override string? HelpText => null;
+        protected override Regex Parser => new Regex($"{GameName} .*? (?<{ScoreGroup}>[\\d|X])/\\d");
+        protected override string? ExtraContent => Url;
+        public override string Url => "https://cogit.fun/cloudle";
     }
 }

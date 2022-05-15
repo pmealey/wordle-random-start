@@ -10,14 +10,11 @@ namespace backend.Services.Parsers
         {
             _logger = logger;
         }
-        private const string _gameName = "Waffle";
-        public override string GameName => _gameName;
+        public override string GameName => "Waffle";
         public override bool GolfScoring => false;
-
-        private readonly Regex _parser = new Regex($"#{_gameName.ToLower()}\\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
-        protected override Regex Parser => _parser;
+        public override string? HelpText => null;
+        protected override Regex Parser => new Regex($"#{GameName.ToLower()}\\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override string? ExtraContent => "wafflegame.net";
-        private const string _url = "https://wafflegame.net/";
-        public override string Url => _url;
+        public override string Url => "https://wafflegame.net/";
     }
 }

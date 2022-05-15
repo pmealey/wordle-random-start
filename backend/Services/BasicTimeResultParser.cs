@@ -67,6 +67,8 @@ namespace backend.Services
         {
             var timeSpan = parserResults.Groups[TimeGroup].Value;
 
+            timeSpan = timeSpan.Replace('.', ':');
+
             _logger.LogDebug($"Parsing {timeSpan}...");
             var timeDelimiters = timeSpan.ToCharArray().Count(c => c == ':');
 

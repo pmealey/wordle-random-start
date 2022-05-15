@@ -17,13 +17,12 @@ namespace backend.Services.Parsers
             .Select(i => "score" + i.ToString())
             .ToList();
 
-        private const string _gameName = "Quordle";
-        public override string GameName => _gameName;
+        public override string GameName => "Quordle";
         public override bool GolfScoring => true;
+        public override string? HelpText => null;
 
-        protected override Regex Parser => new Regex($"Daily {_gameName}[^\\d]+\\d+.*?[\\s\n\r]+{string.Join("[^\\d]*", ScoreGroups.Select(g => $"(?<{g}>[\\d|🟥])"))}");
-        private const string _url = "https://www.quordle.com/";
-        public override string Url => _url;
+        protected override Regex Parser => new Regex($"Daily {GameName}[^\\d]+\\d+.*?[\\s\n\r]+{string.Join("[^\\d]*", ScoreGroups.Select(g => $"(?<{g}>[\\d|🟥])"))}");
+        public override string Url => "https://www.quordle.com/";
 
         protected override string GetCleanResult(string result, Match parserResults)
         {

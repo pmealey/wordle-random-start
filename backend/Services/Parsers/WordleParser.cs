@@ -11,12 +11,10 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const string _gameName = "Wordle";
-        public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"{_gameName} \\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
-        protected override Regex Parser => _parser;
+        public override string GameName => "Wordle";
+        public override string? HelpText => null;
+        protected override Regex Parser => new Regex($"{GameName} \\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override string? ExtraContent => null;
-        private const string _url = "https://www.nytimes.com/games/wordle/index.html";
-        public override string Url => _url;
+        public override string Url => "https://www.nytimes.com/games/wordle/index.html";
     }
 }

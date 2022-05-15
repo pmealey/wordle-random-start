@@ -11,12 +11,10 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const string _gameName = "Lewdle";
-        public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"{_gameName}.*?(?<{ScoreGroup}>[\\dxX])/\\d");
-        protected override Regex Parser => _parser;
+        public override string GameName => "Lewdle";
+        public override string? HelpText => null;
+        protected override Regex Parser => new Regex($"{GameName}.*?(?<{ScoreGroup}>[\\dxX])/\\d");
         protected override string? ExtraContent => "lewdlegame.com";
-        private const string _url = "https://www.lewdlegame.com";
-        public override string Url => _url;
+        public override string Url => "https://www.lewdlegame.com";
     }
 }

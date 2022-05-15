@@ -11,12 +11,10 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const string _gameName = "Globle";
-        public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"🌎.*?🌍[\\s\n\r]+[^=]*= (?<{ScoreGroup}>\\d+)");
-        protected override Regex Parser => _parser;
+        public override string GameName => "Globle";
+        public override string? HelpText => null;
+        protected override Regex Parser => new Regex($"🌎.*?🌍[\\s\n\r]+[^=]*= (?<{ScoreGroup}>\\d+)");
         protected override string? ExtraContent => "#globle";
-        private const string _url = "https://globle-game.com";
-        public override string Url => _url;
+        public override string Url => "https://globle-game.com";
     }
 }

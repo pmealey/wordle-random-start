@@ -18,9 +18,11 @@ namespace backend.Services
 
         public abstract bool GolfScoring { get; }
 
+        public abstract string? HelpText { get; }
+
         protected abstract Regex Parser { get; }
 
-        public abstract string Url { get; }
+        public abstract string? Url { get; }
 
         protected abstract string GetCleanResult(string result, Match parserResults);
 

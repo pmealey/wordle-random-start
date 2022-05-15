@@ -12,8 +12,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const string _gameName = "Heardle";
-        public override string GameName => _gameName;
+        public override string GameName => "Heardle";
+        public override string? HelpText => null;
         // \uD83D\uDD07 = 🔇
         // \uD83D\uDD08 = 🔈
         // \uD83D\uDD09 = 🔉
@@ -23,11 +23,9 @@ namespace backend.Services.Parsers
         // \uD83D\uDFE5 = 🟥
         // \u2B1C\uFE0F = ⬜️
         // \u2B1B\uFE0F = ⬛️
-        private readonly Regex _parser = new Regex($"#{_gameName} #\\d+\\s+\uD83D[\uDD07-\uDD0A](?<{ScoreGroup}>[^\\s]+)", RegexOptions.Singleline);
-        protected override Regex Parser => _parser;
-        protected override string? ExtraContent => _url;
-        private const string _url = "https://www.heardle.app";
-        public override string Url => _url;
+        protected override Regex Parser => new Regex($"#{GameName} #\\d+\\s+\uD83D[\uDD07-\uDD0A](?<{ScoreGroup}>[^\\s]+)", RegexOptions.Singleline);
+        protected override string? ExtraContent => Url;
+        public override string Url => "https://www.heardle.app";
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {

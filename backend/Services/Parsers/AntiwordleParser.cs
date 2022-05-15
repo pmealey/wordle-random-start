@@ -11,13 +11,11 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const string _gameName = "Antiwordle";
-        public override string GameName => _gameName;
+        public override string GameName => "Antiwordle";
         public override bool GolfScoring => false;
-        private readonly Regex _parser = new Regex($"{_gameName} #\\d+\\s*(?<{ScoreGroup}>\\d+) guesses", RegexOptions.Singleline);
-        protected override Regex Parser => _parser;
+        public override string? HelpText => null;
+        protected override Regex Parser => new Regex($"{GameName} #\\d+\\s*(?<{ScoreGroup}>\\d+) guesses", RegexOptions.Singleline);
         protected override string? ExtraContent => null;
-        private const string _url = "https://www.antiwordle.com/";
-        public override string Url => _url;
+        public override string Url => "https://www.antiwordle.com/";
     }
 }

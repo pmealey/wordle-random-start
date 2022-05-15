@@ -205,6 +205,7 @@ public class DailyResultController : ControllerBase
                     CountWinner = rp.CountWinner,
                     GameName = rp.GameName,
                     GolfScoring = rp.GolfScoring,
+                    HelpText = rp.HelpText,
                     Url = rp.Url
                 }))
             .SelectMany(g => g);

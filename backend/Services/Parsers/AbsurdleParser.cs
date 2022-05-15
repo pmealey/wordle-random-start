@@ -11,12 +11,10 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        private const string _gameName = "Absurdle";
-        public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"{_gameName} (?<{ScoreGroup}>\\d+)/");
-        protected override Regex Parser => _parser;
-        protected override string? ExtraContent => _url;
-        private const string _url = "https://qntm.org/files/absurdle/absurdle.html";
-        public override string Url => _url;
+        public override string GameName => "Absurdle";
+        public override string? HelpText => "Make sure you start with today's word, and don't retread or retry the puzzle.";
+        protected override Regex Parser => new Regex($"{GameName} (?<{ScoreGroup}>\\d+)/");
+        protected override string? ExtraContent => Url;
+        public override string Url => "https://qntm.org/files/absurdle/absurdle.html";
     }
 }

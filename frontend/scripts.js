@@ -221,7 +221,7 @@ function stringToColor(str) {
       .map((summary) => summary.gameName);
     let games = allGames.filter((game, index) => allGames.indexOf(game) === index);
 
-    games.forEach((game, index) => {
+    games.forEach((game) => {
       let summariesForGame = summaries
         .filter((summary) => summary.gameName == game);
 
@@ -305,27 +305,40 @@ function stringToColor(str) {
     let header = document.createElement('div');
     header.classList.add('game-header');
 
+    let row1 = document.createElement('div');
+    header.appendChild(row1);
+
     if (summary.dailyResult) {
       let textContainer = document.createElement('a');
       textContainer.innerText = summary.gameName;
-      header.appendChild(textContainer);
+      row1.appendChild(textContainer);
     } else if (summary.url) {
       let link = document.createElement('a');
       link.href = summary.url;
       link.target = '_blank';
       link.innerText = 'Play ' + summary.gameName;
-      header.appendChild(link);
+      row1.appendChild(link);
     } else {
       let textContainer = document.createElement('div');
       textContainer.innerText = 'Play ' + summary.gameName;
-      header.appendChild(textContainer);
+      row1.appendChild(textContainer);
     }
 
     let commentButton = document.createElement('button');
     commentButton.innerHTML = '&#x1F4AC' // 💬
     commentButton.addEventListener('click', createViewCommentsHandler(summary.gameName, !!summary.dailyResult))
     commentButton.id = getCommentButtonName(summary.gameName);
-    header.appendChild(commentButton);
+    row1.appendChild(commentButton);
+
+    if (summary.helpText) {
+      let helpText = document.createElement('div');
+      helpText.classList.add('help');
+      helpText.textContent = summary.helpText;
+
+      let row2 = document.createElement('div');
+      row2.appendChild(helpText);
+      header.appendChild(row2);
+    }
 
     container.appendChild(header);
   }

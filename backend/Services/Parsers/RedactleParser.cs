@@ -13,13 +13,12 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        private const string _gameName = "Redactle";
-        public override string GameName => _gameName;
+        public override string GameName => "Redactle";
         public override bool GolfScoring => true;
+        public override string? HelpText => null;
         private const string ScoreGroup = "score";
-        protected override Regex Parser => new Regex($"^I solved today's #{_gameName} [^\\s]+ in (?<{ScoreGroup}>\\d+) guesses");
-        private const string _url = "https://www.redactle.com/";
-        public override string Url => _url;
+        protected override Regex Parser => new Regex($"^I solved today's #{GameName} [^\\s]+ in (?<{ScoreGroup}>\\d+) guesses");
+        public override string Url => "https://www.redactle.com/";
 
         protected override string GetCleanResult(string result, Match parserResults)
         {

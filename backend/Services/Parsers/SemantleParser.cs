@@ -13,18 +13,17 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        private const string _gameName = "Semantle";
-        public override string GameName => _gameName;
+        public override string GameName => "Semantle";
         public override bool GolfScoring => true;
+        public override string? HelpText => null;
         private const string ScoreGroup = "score";
         private const string CompletedGroup = "completed";
-        protected override Regex Parser => new Regex($"^(?<{CompletedGroup}>.+?){_gameName} #\\d+ in (?<{ScoreGroup}>\\d+) guesses");
-        private const string _url = "https://semantle.com/";
-        public override string Url => _url;
+        protected override Regex Parser => new Regex($"^(?<{CompletedGroup}>.+?){GameName} #\\d+ in (?<{ScoreGroup}>\\d+) guesses");
+        public override string Url => "https://semantle.com/";
 
         protected override string GetCleanResult(string result, Match parserResults)
         {
-            return result.Replace(_url, string.Empty).Trim();
+            return result.Replace(Url, string.Empty).Trim();
         }
 
         public override string? GetScoreValue(DailyResult dailyResult)

@@ -12,11 +12,9 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => false;
-        private const string _gameName = "NYT Crossword";
-        public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"NYTC (?<{TimeGroup}>[:\\d]+)", RegexOptions.IgnoreCase);
-        protected override Regex Parser => _parser;
-        private const string _url = null;
-        public override string Url => _url;
+        public override string GameName => "NYT Crossword";
+        public override string? HelpText => "Enter \"Nytc 42:42\", \"Nytc 42.42\", or \"Nytc 1:42:42\" for example.";
+        protected override Regex Parser => new Regex($"NYTC (?<{TimeGroup}>[:\\d]+)", RegexOptions.IgnoreCase);
+        public override string? Url => null;
     }
 }

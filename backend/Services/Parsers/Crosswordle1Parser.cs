@@ -13,16 +13,14 @@ namespace backend.Services.Parsers
 
         private const string TimePart1 = "time1";
         private const string TimePart2 = "time2";
-        private const string _gameName = "Crosswordle 1";
-        public override string GameName => _gameName;
-        private readonly Regex _parser = new Regex($"Daily Crosswordle \\d+: (?<{TimeGroup}>(?<{TimePart1}>\\d+)[ms] ?(?<{TimePart2}>\\d*)s?)");
-        protected override Regex Parser => _parser;
-        private const string _url = "https://crosswordle.vercel.app/";
-        public override string Url => _url;
+        public override string GameName => "Crosswordle 1";
+        public override string? HelpText => null;
+        protected override Regex Parser => new Regex($"Daily Crosswordle \\d+: (?<{TimeGroup}>(?<{TimePart1}>\\d+)[ms] ?(?<{TimePart2}>\\d*)s?)");
+        public override string Url => "https://crosswordle.vercel.app/";
 
         protected override string GetCleanResult(string result, Match parserResults)
         {
-            return result.Replace(_url + "?daily=1", string.Empty).Replace("\n\n", "\n").Trim();
+            return result.Replace(Url + "?daily=1", string.Empty).Replace("\n\n", "\n").Trim();
         }
 
         protected override TimeSpan? ParseTimeSpanString(Match parserResults)
