@@ -3,8 +3,12 @@ function advancedModeEnabled() {
   return location.search.includes('advanced=Y');
 }
 
+function requestHasSucceeded(request) {
+  return requestIsDone(request) && request.status >= 200 && request.status < 300;
+}
+
 function requestIsDone(request) {
-  return request.readyState === XMLHttpRequest.DONE && request.status >= 200 && request.status < 300;
+  return request.readyState === XMLHttpRequest.DONE;
 }
 
 function enterListener(func) {
@@ -61,6 +65,7 @@ function stringToColor(str) {
 // }
 
 (function () {
+  let startSubmitButton = document.getElementById('start-submit');
   let startingWord = document.getElementById('starting-word');
   //let notificationButton = document.getElementById('allow-notifications');
   let userArea = document.getElementById('user-area');
@@ -75,8 +80,6 @@ function stringToColor(str) {
   let deleteArea = document.getElementById('delete-area');
   let deleteButton = document.getElementById('delete');
   let resultsArea = document.getElementById('results-area');
-  let resultsTextarea = document.getElementById('results');
-  let submitButton = document.getElementById('submit');
   let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
   let leaderboardComments = document.getElementById('leaderboard-comments');
@@ -127,7 +130,7 @@ function stringToColor(str) {
 
       let deleteRequest = new XMLHttpRequest();
       deleteRequest.onreadystatechange = function () {
-        if (requestIsDone(deleteRequest)) {
+        if (requestHasSucceeded(deleteRequest)) {
           refreshData();
         }
       }
@@ -409,7 +412,7 @@ function stringToColor(str) {
 
     let viewRequest = new XMLHttpRequest();
     viewRequest.onreadystatechange = function () {
-      if (requestIsDone(viewRequest)) {
+      if (requestHasSucceeded(viewRequest)) {
         let result = JSON.parse(viewRequest.responseText);
         alert(result.result);
       }
@@ -454,7 +457,7 @@ function stringToColor(str) {
     if (category == null) {
       let commentsRequest = new XMLHttpRequest();
       commentsRequest.onreadystatechange = function () {
-        if (requestIsDone(commentsRequest)) {
+        if (requestHasSucceeded(commentsRequest)) {
           comments = JSON.parse(commentsRequest.responseText);
         }
       }
@@ -464,7 +467,7 @@ function stringToColor(str) {
     } else if (appendComments != null) {
       let commentsRequest = new XMLHttpRequest();
       commentsRequest.onreadystatechange = function () {
-        if (requestIsDone(commentsRequest)) {
+        if (requestHasSucceeded(commentsRequest)) {
           comments[category] = JSON.parse(commentsRequest.responseText);
           renderComments();
           checkForUnreadComments(category);
@@ -473,12 +476,6 @@ function stringToColor(str) {
 
       commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value + '/' + encodeURIComponent(category), false);
       commentsRequest.send();
-    }
-  }
-
-  function freeze(e) {
-    if (!e.target.closest('.dialog-overlay')) {
-      e.preventDefault();
     }
   }
 
@@ -498,87 +495,154 @@ function stringToColor(str) {
     window.scrollTo(0, parseInt(scrollY || '0') * -1);
   }
 
+  function createAndAttachDialog(dialogTitleText, populateDialogBody, populateDialogFooter, afterRender) {
+    let dialogOverlay = document.createElement('div');
+    dialogOverlay.classList.add('dialog-overlay');
+
+    let dialog = document.createElement('div');
+    dialog.classList.add('dialog');
+
+    let dialogTitle = document.createElement('h4');
+    dialogTitle.textContent = dialogTitleText;
+
+    let closeDialogButton = document.createElement('button');
+    closeDialogButton.innerHTML = '&#x274c;' // ❌
+    closeDialogButton.addEventListener('click', () => {
+      dialogOverlay.remove();
+      enableScroll();
+    });
+
+    let dialogHeader = document.createElement('div');
+    dialogHeader.classList.add('dialog-header');
+    dialogHeader.appendChild(dialogTitle);
+    dialogHeader.appendChild(closeDialogButton);
+    dialog.appendChild(dialogHeader);
+
+    let dialogBody = document.createElement('div');
+    dialogBody.classList.add('dialog-body');
+    populateDialogBody(dialogBody);
+    dialog.appendChild(dialogBody);
+
+    let dialogFooter = document.createElement('div');
+    dialogFooter.classList.add('dialog-footer');
+    populateDialogFooter(dialogFooter, dialogBody);
+    dialog.appendChild(dialogFooter);
+
+    dialogOverlay.appendChild(dialog);
+    document.body.appendChild(dialogOverlay);
+
+    setTimeout(() => afterRender(dialog));
+  }
+
+  function startSubmit() {
+    createAndAttachDialog(
+      'Submit Result',
+      (dialogBody) => {
+        dialogBody.classList.add('results-dialog');
+
+        let labelContainer = document.createElement('div');
+        let resultsLabel = document.createElement('label');
+        resultsLabel.for = 'results';
+        resultsLabel.textContent = "Paste or enter your result here:";
+        labelContainer.appendChild(resultsLabel);
+        dialogBody.appendChild(labelContainer);
+
+        let resultsInput = document.createElement('div');
+        resultsInput.contentEditable = true;
+        resultsInput.id = 'results';
+        resultsInput.enterKeyHint = 'done';
+
+        let submit = () => submitResult(dialogBody.parentElement.parentElement, resultsInput)
+
+        // submit when clicking submit, when pressing enter, or when pasting into the text area
+        resultsInput.addEventListener('keypress', (ev) => ev.key == 'Enter' ? event.preventDefault() : undefined);
+        resultsInput.addEventListener('keyup', enterListener(submit));
+        resultsInput.addEventListener('paste', function () {
+          let handler = function () {
+            submit();
+            resultsInput.removeEventListener('input', handler);
+          }
+
+          resultsInput.addEventListener('input', handler);
+        });
+
+        // attempt to try and catch pastes from gboard - if a bunch of text gets added at once, auto-submit
+        let oldLength = 0;
+        resultsInput.addEventListener('input', function () {
+          let newLength = resultsInput.innerText.length;
+          if (newLength - oldLength > 20) {
+            submit();
+          }
+          oldLength = newLength;
+        });
+
+        dialogBody.appendChild(resultsInput);
+      },
+      (dialogFooter, dialogBody) => {
+        let submitButton = document.createElement('button');
+        let resultsInput = dialogBody.querySelector('#results');
+        submitButton.addEventListener('click', () => submitResult(dialogBody.parentElement.parentElement, resultsInput));
+        submitButton.textContent = 'Submit';
+        dialogFooter.appendChild(submitButton);
+      },
+      () => {
+        let resultsInput = document.getElementById('results');
+        resultsInput.focus();
+      }
+    )
+  }
+
   function createViewCommentsHandler(category, playedGame) {
     return () => {
-      let dialogOverlay = document.createElement('div');
-      dialogOverlay.classList.add('dialog-overlay');
+      createAndAttachDialog(
+        category,
+        (dialogBody) => {
+          if (playedGame) {
+            dialogBody.classList.add('played-game');
+          }
 
-      let dialog = document.createElement('div');
-      dialog.classList.add('dialog');
+          firstUnread = appendComments(dialogBody, category, playedGame);
+        },
+        (dialogFooter, dialogBody) => {
+          let commentInputContainer = document.createElement('form');
+          commentInputContainer.classList.add('comment-input');
+          commentInputRow1 = document.createElement('div');
 
-      let dialogTitle = document.createElement('h4');
-      dialogTitle.textContent = category;
+          let commentTextarea = document.createElement('textarea');
+          let submitCommentButton = document.createElement('button');
+          submitCommentButton.innerHTML = '	&#x27a4;' // ➤
+          submitCommentButton.type = 'submit';
 
-      let closeDialogButton = document.createElement('button');
-      closeDialogButton.innerHTML = '&#x274c;' // ❌
-      closeDialogButton.addEventListener('click', () => {
-        dialogOverlay.remove();
-        enableScroll();
-      });
+          commentInputRow1.appendChild(commentTextarea);
+          commentInputRow1.appendChild(submitCommentButton);
+          commentInputContainer.appendChild(commentInputRow1);
 
-      let dialogHeader = document.createElement('div');
-      dialogHeader.classList.add('dialog-header');
-      dialogHeader.appendChild(dialogTitle);
-      dialogHeader.appendChild(closeDialogButton);
-      dialog.appendChild(dialogHeader);
+          let postGameCheckbox;
+          if (playedGame) {
+            postGameCheckbox = document.createElement('input');
+            postGameCheckbox.type = 'checkbox';
 
-      let dialogBody = document.createElement('div');
-      dialogBody.classList.add('dialog-body');
-      if (playedGame) {
-        dialogBody.classList.add('played-game');
-      }
+            let postGameCheckboxText = document.createElement('span');
+            postGameCheckboxText.textContent = 'Share with everyone';
 
-      let firstUnread = appendComments(dialogBody, category, playedGame);
+            let postGameCheckboxLabel = document.createElement('label');
+            postGameCheckboxLabel.appendChild(postGameCheckboxText);
+            postGameCheckboxLabel.appendChild(postGameCheckbox);
 
-      dialog.appendChild(dialogBody);
+            commentInputRow2 = document.createElement('div');
+            commentInputRow2.appendChild(postGameCheckboxLabel);
+            commentInputContainer.appendChild(commentInputRow2);
+          }
 
-      let commentInputContainer = document.createElement('form');
-      commentInputContainer.classList.add('comment-input');
-      commentInputRow1 = document.createElement('div');
+          commentInputContainer.addEventListener('submit', createSubmitCommentHandler(dialogBody, category, commentTextarea, postGameCheckbox, playedGame))
 
-      let commentTextarea = document.createElement('textarea');
-      let submitCommentButton = document.createElement('button');
-      submitCommentButton.innerHTML = '	&#x27a4;' // ➤
-      submitCommentButton.type = 'submit';
-
-      commentInputRow1.appendChild(commentTextarea);
-      commentInputRow1.appendChild(submitCommentButton);
-      commentInputContainer.appendChild(commentInputRow1);
-
-      let postGameCheckbox;
-      if (playedGame) {
-        postGameCheckbox = document.createElement('input');
-        postGameCheckbox.type = 'checkbox';
-
-        let postGameCheckboxText = document.createElement('span');
-        postGameCheckboxText.textContent = 'Share with everyone';
-
-        let postGameCheckboxLabel = document.createElement('label');
-        postGameCheckboxLabel.appendChild(postGameCheckboxText);
-        postGameCheckboxLabel.appendChild(postGameCheckbox);
-
-        commentInputRow2 = document.createElement('div');
-        commentInputRow2.appendChild(postGameCheckboxLabel);
-        commentInputContainer.appendChild(commentInputRow2);
-      }
-
-      commentInputContainer.addEventListener('submit', createSubmitCommentHandler(dialogBody, category, commentTextarea, postGameCheckbox, playedGame))
-
-      let dialogFooter = document.createElement('div');
-      dialogFooter.classList.add('dialog-footer');
-      dialogFooter.appendChild(commentInputContainer);
-      dialog.appendChild(dialogFooter);
-
-      dialogOverlay.appendChild(dialog);
-      document.body.appendChild(dialogOverlay);
-      commentTextarea.focus();
-      if (firstUnread) {
-        firstUnread.scrollIntoView();
-      } else {
-        // scroll to the bottom
-        dialogBody.scrollTop = dialogBody.scrollHeight;
-      }
-      disableScroll();
+          dialogFooter.appendChild(commentInputContainer);
+        },
+        (dialog) => {
+          let commentTextarea = dialog.querySelector('textarea')
+          commentTextarea.focus();
+          disableScroll();
+        });
     }
   }
 
@@ -665,7 +729,7 @@ function stringToColor(str) {
 
       let submitRequest = new XMLHttpRequest();
       submitRequest.onreadystatechange = function () {
-        if (requestIsDone(submitRequest)) {
+        if (requestHasSucceeded(submitRequest)) {
           if (postGameCheckbox) postGameCheckbox.checked = false;
           getComments(category, () => appendComments(dialogBody, category, playedGame));
           commentTextarea.value = null;
@@ -699,7 +763,7 @@ function stringToColor(str) {
   (function initialize() {
     let dailyWordRequest = new XMLHttpRequest();
     dailyWordRequest.onreadystatechange = function () {
-      if (requestIsDone(dailyWordRequest)) {
+      if (requestHasSucceeded(dailyWordRequest)) {
         let response = JSON.parse(dailyWordRequest.responseText);
         startingWord.innerText = response.word;
         dateInput.value = response.date;
@@ -748,8 +812,8 @@ function stringToColor(str) {
 
   let submittingResult = false;
 
-  function submitResult() {
-    if (submittingResult || !userInput.value || !resultsTextarea.value) {
+  function submitResult(dialogOverlay, resultsInput) {
+    if (submittingResult || !userInput.value || !resultsInput.innerText) {
       return;
     }
 
@@ -758,26 +822,14 @@ function stringToColor(str) {
     let submitRequest = new XMLHttpRequest();
     submitRequest.onreadystatechange = function () {
       if (requestIsDone(submitRequest)) {
+        submittingResult = false;
+      }
+
+      if (requestHasSucceeded(submitRequest)) {
         refreshData();
 
-        let timeout;
-
-        // keep the content around until the user does something
-        let handler = function () {
-          submittingResult = false;
-          clearTimeout(timeout);
-          resultsTextarea.style.color = '';
-          resultsTextarea.value = '';
-          resultsTextarea.removeEventListener('blur', handler);
-          resultsTextarea.removeEventListener('click', handler);
-          resultsTextarea.removeEventListener('keydown', handler);
-        }
-
-        resultsTextarea.style.color = '#a0a0a0';
-        timeout = setTimeout(handler, 2 * 1000); // 2 seconds
-        resultsTextarea.addEventListener('blur', handler);
-        resultsTextarea.addEventListener('click', handler);
-        resultsTextarea.addEventListener('keydown', handler);
+        dialogOverlay.remove();
+        enableScroll();
       }
     }
 
@@ -789,33 +841,11 @@ function stringToColor(str) {
 
     submitRequest.open('PUT', url, false);
     submitRequest.setRequestHeader('Content-Type', 'application/json');
-    submitRequest.send(JSON.stringify(resultsTextarea.value));
+    submitRequest.send(JSON.stringify(resultsInput.innerText));
   }
 
   leaderboardComments.addEventListener('click', createViewCommentsHandler('Leaderboard', false));
-
-  // submit when clicking submit, when pressing enter, or when pasting into the text area
-  submitButton.addEventListener('click', submitResult);
-  resultsTextarea.addEventListener('keypress', (ev) => ev.key == 'Enter' ? event.preventDefault() : undefined);
-  resultsTextarea.addEventListener('keyup', enterListener(submitResult));
-  resultsTextarea.addEventListener('paste', function () {
-    let handler = function () {
-      submitResult();
-      resultsTextarea.removeEventListener('input', handler);
-    }
-
-    resultsTextarea.addEventListener('input', handler);
-  });
-
-  // attempt to try and catch pastes from gboard - if a bunch of text gets added at once, auto-submit
-  let oldLength = 0;
-  resultsTextarea.addEventListener('input', function () {
-    let newLength = resultsTextarea.value.length;
-    if (newLength - oldLength > 20) {
-      submitResult();
-    }
-    oldLength = newLength;
-  });
+  startSubmitButton.addEventListener('click', startSubmit);
 
   function setClipboard(summary) {
     navigator.clipboard.writeText(summary.dailyResult.result);
