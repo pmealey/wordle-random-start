@@ -80,6 +80,7 @@ function stringToColor(str) {
   let deleteArea = document.getElementById('delete-area');
   let deleteButton = document.getElementById('delete');
   let resultsArea = document.getElementById('results-area');
+  let gamesList = document.getElementById('games-list');
   let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
   let leaderboardComments = document.getElementById('leaderboard-comments');
@@ -230,6 +231,10 @@ function stringToColor(str) {
 
       let gameContainer = document.createElement('div');
       gameContainer.classList.add('game');
+      if (game.countWinner) {
+        gameContainer.classList.add('count-winner');
+      }
+
       addGameLink(game, myDailyResult, gameContainer);
       let resultsList = document.createElement('div');
       resultsList.classList.add('results');
@@ -747,6 +752,11 @@ function stringToColor(str) {
     gamesRequest.onreadystatechange = function () {
       if (requestHasSucceeded(gamesRequest)) {
         games = JSON.parse(gamesRequest.responseText);
+        gamesList.innerText = games
+          .slice(0, games.length)
+          .filter(g => g.countWinner)
+          .map(g => g.gameName)
+          .join(', ') + ', and ' + games[games.length - 1].gameName;
         initializeStep2();
       }
     }
