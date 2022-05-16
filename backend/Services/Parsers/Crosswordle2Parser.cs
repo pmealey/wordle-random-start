@@ -11,6 +11,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override string Category => "Word";
         public override string GameName => "Crosswordle 2";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"^Crosswordle \\d+ .*? (?<{ScoreGroup}>[\\d]+)/");

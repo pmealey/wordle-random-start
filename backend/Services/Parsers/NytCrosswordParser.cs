@@ -11,6 +11,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override string Category => "Word";
         public override bool CountWinner => false;
         public override string GameName => "NYT Crossword";
         public override string? HelpText => "Enter \"Nytc 42:42\", \"Nytc 42.42\", or \"Nytc 1:42:42\" for example.";

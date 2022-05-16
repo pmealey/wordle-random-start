@@ -12,6 +12,7 @@ namespace backend.Services
             _logger = logger;
         }
 
+        public abstract string Category { get; }
         public abstract bool CountWinner { get; }
 
         public abstract string GameName { get; }

@@ -12,6 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override string Category => "Madness Inducing";
         public override bool CountWinner => true;
         public override string GameName => "Redactle";
         public override bool GolfScoring => true;

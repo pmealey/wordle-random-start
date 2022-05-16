@@ -11,6 +11,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override string Category => "Word";
         private const string TimePart1 = "time1";
         private const string TimePart2 = "time2";
         public override string GameName => "Crosswordle 1";

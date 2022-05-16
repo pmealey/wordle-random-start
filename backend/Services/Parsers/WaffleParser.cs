@@ -10,6 +10,8 @@ namespace backend.Services.Parsers
         {
             _logger = logger;
         }
+
+        public override string Category => "Word";
         public override string GameName => "Waffle";
         public override bool GolfScoring => false;
         public override string? HelpText => null;
