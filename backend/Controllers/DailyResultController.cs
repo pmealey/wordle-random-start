@@ -55,7 +55,7 @@ public class DailyResultController : ControllerBase
             .ThenBy(dr => dr.User)
             .ToList();
 
-        return GetDailySummaryWithGameInfo(dailyResults, true);
+        return Ok(dailyResults);
     }
 
     [HttpGet("{user}/{dateString}")]
@@ -71,7 +71,7 @@ public class DailyResultController : ControllerBase
             .Where(dr => dr.User.ToLower() == user.ToLower() && dr.Date == date.Date)
             .ToList();
 
-        return GetDailySummaryWithGameInfo(dailyResults, true);
+        return Ok(dailyResults);
     }
 
     [HttpGet("{user}/{dateString}/{game}")]
@@ -191,32 +191,5 @@ public class DailyResultController : ControllerBase
         _context.SaveChanges();
 
         return NoContent();
-    }
-
-    private IActionResult GetDailySummaryWithGameInfo(IEnumerable<DailyResult> dailyResults, bool includeAllGames)
-    {
-        var list = _resultParsers
-            .GroupJoin(
-                dailyResults,
-                (rp) => rp.GameName,
-                (dr) => dr.Game,
-                (rp, dr) => dr.DefaultIfEmpty().Select((dailyResult) => new {
-                    DailyResult = dailyResult,
-                    CountWinner = rp.CountWinner,
-                    GameName = rp.GameName,
-                    GolfScoring = rp.GolfScoring,
-                    HelpText = rp.HelpText,
-                    Url = rp.Url
-                }))
-            .SelectMany(g => g);
-
-        if (!includeAllGames) {
-            list = list.Where(o => o.DailyResult != null);
-        }
-
-        var dailyResultWithGameInfo = list
-            .ToList();
-
-        return Ok(dailyResultWithGameInfo);
     }
 }

@@ -86,15 +86,13 @@ function stringToColor(str) {
   let crownColumn2 = document.getElementById('crown2');
   let summaryArea = document.getElementById('summary');
 
+
   let refreshWorker = new Worker('refresh-worker.js');
   refreshWorker.onmessage = setData;
 
+  let games = [];
   let comments = {};
   let readComments = {};
-
-  // function turnOnNotifications() {
-  //   refreshWorker.postMessage({ type: 'notify', date: dateInput.value });
-  // }
 
   function refreshData() {
     refreshWorker.postMessage({ type: 'refresh', date: dateInput.value });
@@ -218,43 +216,36 @@ function stringToColor(str) {
   function setData(e) {
     leaderboard = {};
     clearData(summaryArea);
-    let summaries = e.data;
-
-    let allGames = summaries
-      .map((summary) => summary.gameName);
-    let games = allGames.filter((game, index) => allGames.indexOf(game) === index);
+    let dailyResults = e.data;
 
     games.forEach((game) => {
-      let summariesForGame = summaries
-        .filter((summary) => summary.gameName == game);
+      let dailyResultsForGame = dailyResults
+        .filter((dailyResult) => dailyResult.game == game.gameName);
 
-      let allUsersForGame = summariesForGame
-        .filter((summary) => summary.dailyResult)
-        .map((summary) => summary.dailyResult.user);
+      let allUsersForGame = dailyResultsForGame
+        .map((dailyResult) => dailyResult.user);
       let users = allUsersForGame.filter((user, index) => allUsersForGame.indexOf(user) === index);
 
-      let mySummary = summariesForGame.find(summary => summary.dailyResult && summary.dailyResult.user === userInput.value) ||
-        Object.assign({}, summariesForGame[0], { dailyResult: undefined });
+      let myDailyResult = dailyResultsForGame.find(dailyResult => dailyResult.user === userInput.value);
 
       let gameContainer = document.createElement('div');
       gameContainer.classList.add('game');
-      //gameContainer.style.backgroundColor = stringToColor(mySummary.gameName);
-      addGameLink(mySummary, gameContainer);
+      addGameLink(game, myDailyResult, gameContainer);
       let resultsList = document.createElement('div');
       resultsList.classList.add('results');
       gameContainer.appendChild(resultsList);
 
       users.sort()
         .forEach((user) => {
-          summariesForGame
-            .filter((summary) => summary.dailyResult && summary.dailyResult.user === user)
-            .forEach((summary) => {
-              let scores = summariesForGame.map(s => getScore(s.dailyResult, s.golfScoring));
-              let winner = (summary.golfScoring ? Math.min(...scores) : Math.max(...scores)) === getScore(summary.dailyResult, summary.golfScoring);
-              let container = addResult(summary, user, winner);
+          dailyResultsForGame
+            .filter((dailyResult) => dailyResult.user === user)
+            .forEach((dailyResult) => {
+              let scores = dailyResultsForGame.map(dr => getScore(dr, game.golfScoring));
+              let winner = (game.golfScoring ? Math.min(...scores) : Math.max(...scores)) === getScore(dailyResult, game.golfScoring);
+              let container = addResult(game, dailyResult, user, winner);
               resultsList.appendChild(container);
 
-              if (summary.countWinner) {
+              if (game.countWinner) {
                 logResult(user, winner);
               }
             });
@@ -270,73 +261,43 @@ function stringToColor(str) {
     checkForUnreadComments();
   }
 
-  // function askNotificationPermission() {
-  //   // function to actually ask the permissions
-  //   function handlePermission(permission) {
-  //     // set the button to shown or hidden, depending on what the user answers
-  //     if (Notification.permission === 'granted') {
-  //       if (!advancedModeEnabled()) {
-  //         turnOnNotifications();
-  //       }
-
-  //       notificationButton.parentElement.classList.add('hidden');
-  //     }
-  //   }
-  
-  //   // Let's check if the browser supports notifications
-  //   if (!('Notification' in window)) {
-  //     console.log("This browser does not support notifications.");
-  //   } else {
-  //     if (checkNotificationPromise()) {
-  //       Notification.requestPermission()
-  //         .then((permission) => {
-  //           handlePermission(permission);
-  //         });
-  //     } else {
-  //       Notification.requestPermission(function (permission) {
-  //         handlePermission(permission);
-  //       });
-  //     }
-  //   }
-  // }
-
   function getCommentButtonName(category) {
     return category.replace(' ', '-').toLowerCase() + '-comments';
   }
 
-  function addGameLink(summary, container) {
+  function addGameLink(game, dailyResult, container) {
     let header = document.createElement('div');
     header.classList.add('game-header');
 
     let row1 = document.createElement('div');
     header.appendChild(row1);
 
-    if (summary.dailyResult) {
+    if (dailyResult) {
       let textContainer = document.createElement('a');
-      textContainer.innerText = summary.gameName;
+      textContainer.innerText = game.gameName;
       row1.appendChild(textContainer);
-    } else if (summary.url) {
+    } else if (game.url) {
       let link = document.createElement('a');
-      link.href = summary.url;
+      link.href = game.url;
       link.target = '_blank';
-      link.innerText = 'Play ' + summary.gameName;
+      link.innerText = 'Play ' + game.gameName;
       row1.appendChild(link);
     } else {
       let textContainer = document.createElement('div');
-      textContainer.innerText = 'Play ' + summary.gameName;
+      textContainer.innerText = 'Play ' + game.gameName;
       row1.appendChild(textContainer);
     }
 
     let commentButton = document.createElement('button');
     commentButton.innerHTML = '&#x1F4AC' // 💬
-    commentButton.addEventListener('click', createViewCommentsHandler(summary.gameName, !!summary.dailyResult))
-    commentButton.id = getCommentButtonName(summary.gameName);
+    commentButton.addEventListener('click', createViewCommentsHandler(game.gameName, !!dailyResult))
+    commentButton.id = getCommentButtonName(game.gameName);
     row1.appendChild(commentButton);
 
-    if (summary.helpText) {
+    if (game.helpText) {
       let helpText = document.createElement('div');
       helpText.classList.add('help');
-      helpText.textContent = summary.helpText;
+      helpText.textContent = game.helpText;
 
       let row2 = document.createElement('div');
       row2.appendChild(helpText);
@@ -346,11 +307,11 @@ function stringToColor(str) {
     container.appendChild(header);
   }
 
-  function addResult(summary, label, winner) {
+  function addResult(game, dailyResult, label, winner) {
     let wrapper = document.createElement('div');
     wrapper.classList.add('result-wrapper');
 
-    if (summary.countWinner && winner) {
+    if (game.countWinner && winner) {
       let winnerBorder = document.createElement('div');
       winnerBorder.classList.add('winner-border');
       wrapper.append(winnerBorder);
@@ -358,7 +319,7 @@ function stringToColor(str) {
 
     let outerContainer = document.createElement('div');
     outerContainer.classList.add('result');
-    outerContainer.style.backgroundColor = stringToColor(summary.dailyResult.user);
+    outerContainer.style.backgroundColor = stringToColor(dailyResult.user);
 
     if (label) {
       let labelContainer = document.createElement('div');
@@ -372,25 +333,21 @@ function stringToColor(str) {
       container.appendChild(document.createElement('br'));
     }
 
-    if (summary.dailyResult) {
-      outerContainer.classList.add('copyable');
+    outerContainer.classList.add('copyable');
 
-      if (advancedModeEnabled()) {
-        let idSpan = document.createElement('span');
-        idSpan.innerText = 'ID: ' + summary.dailyResult.id.toString();
-        container.appendChild(idSpan);
-        addLineBreak();
-      }
-
-      let resultSpan = document.createElement('span');
-      resultSpan.innerHTML = summary.dailyResult.result.replaceAll('\n', '<br>');
-      container.appendChild(resultSpan);
-      container.addEventListener('click', () => {
-        setClipboard(summary);
-      });
-    } else {
-      addGameLink(summary, container);
+    if (advancedModeEnabled()) {
+      let idSpan = document.createElement('span');
+      idSpan.innerText = 'ID: ' + dailyResult.id.toString();
+      container.appendChild(idSpan);
+      addLineBreak();
     }
+
+    let resultSpan = document.createElement('span');
+    resultSpan.innerHTML = dailyResult.result.replaceAll('\n', '<br>');
+    container.appendChild(resultSpan);
+    container.addEventListener('click', () => {
+      setClipboard(dailyResult);
+    });
 
     outerContainer.appendChild(container);
     wrapper.appendChild(outerContainer);
@@ -760,44 +717,56 @@ function stringToColor(str) {
     localStorage.setItem('readComments', JSON.stringify(readComments));
   }
 
+  let initialized = false;
+  function initializeStep2() {
+    if (!initialized) {
+      initialized = true;
+      return;
+    }
+
+    userArea.classList.remove('hidden');
+
+    let user = localStorage.getItem('user');
+    if (user) {
+      userInput.value = user;
+    }
+
+    getComments();
+    refreshData();
+
+    if (localStorage.getItem('today') !== dateInput.value) {
+      clearCache();
+      localStorage.setItem('today', dateInput.value)
+    }
+
+    initializeFromCache();
+  }
+
   (function initialize() {
+    let gamesRequest = new XMLHttpRequest();
+    gamesRequest.onreadystatechange = function () {
+      if (requestHasSucceeded(gamesRequest)) {
+        games = JSON.parse(gamesRequest.responseText);
+        initializeStep2();
+      }
+    }
+
+    gamesRequest.open('GET', '/api/wordle/games', false);
+    gamesRequest.send();
+
     let dailyWordRequest = new XMLHttpRequest();
     dailyWordRequest.onreadystatechange = function () {
       if (requestHasSucceeded(dailyWordRequest)) {
         let response = JSON.parse(dailyWordRequest.responseText);
         startingWord.innerText = response.word;
         dateInput.value = response.date;
-        userArea.classList.remove('hidden');
-
-        let user = localStorage.getItem('user');
-        if (user) {
-          userInput.value = user;
-        }
-
-        getComments();
-        refreshData();
-
-        if (localStorage.getItem('today') !== dateInput.value) {
-          clearCache();
-          localStorage.setItem('today', dateInput.value)
-        }
-
-        initializeFromCache();
-
-        // if (!advancedModeEnabled() && Notification.permission === 'granted') {
-        //   turnOnNotifications();
-        // }
+        initializeStep2();
       }
     }
 
     dailyWordRequest.open('GET', '/api/wordle/daily-word', false);
     dailyWordRequest.send();
   })();
-
-  // if (Notification.permission === 'default') {
-  //   notificationButton.parentElement.classList.remove('hidden');
-  //   notificationButton.addEventListener('click', askNotificationPermission);
-  // }
 
   function setUser() {
     if (userInput.value) {
@@ -828,8 +797,10 @@ function stringToColor(str) {
       if (requestHasSucceeded(submitRequest)) {
         refreshData();
 
-        dialogOverlay.remove();
-        enableScroll();
+        setTimeout(() => {
+          dialogOverlay.remove();
+          enableScroll();
+        }, 250);
       }
     }
 
@@ -847,7 +818,7 @@ function stringToColor(str) {
   leaderboardComments.addEventListener('click', createViewCommentsHandler('Leaderboard', false));
   startSubmitButton.addEventListener('click', startSubmit);
 
-  function setClipboard(summary) {
-    navigator.clipboard.writeText(summary.dailyResult.result);
+  function setClipboard(dailyResult) {
+    navigator.clipboard.writeText(dailyResult.result);
   }
 })();
