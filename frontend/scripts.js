@@ -752,11 +752,12 @@ function stringToColor(str) {
     gamesRequest.onreadystatechange = function () {
       if (requestHasSucceeded(gamesRequest)) {
         games = JSON.parse(gamesRequest.responseText);
-        gamesList.innerText = games
-          .slice(0, games.length)
+        let countedGames = games
           .filter(g => g.countWinner)
-          .map(g => g.gameName)
-          .join(', ') + ', and ' + games[games.length - 1].gameName;
+          .map(g => g.gameName);
+        gamesList.innerText = countedGames
+          .slice(0, countedGames.length - 1)
+          .join(', ') + ', and ' + countedGames[countedGames.length - 1];
         initializeStep2();
       }
     }
