@@ -550,6 +550,7 @@ function stringToColor(str) {
       () => {
         let resultsInput = document.getElementById('results');
         resultsInput.focus();
+        disableScroll();
       }
     )
   }
