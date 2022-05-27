@@ -146,7 +146,7 @@ function stringToColor(str) {
         }
       }
 
-      deleteRequest.open('DELETE', url, false);
+      deleteRequest.open('DELETE', url, true);
       deleteRequest.send();
     });
 
@@ -380,7 +380,7 @@ function stringToColor(str) {
       }
     }
 
-    viewRequest.open('GET', '/api/wordle/daily-result/' + resultIdInput.value, false);
+    viewRequest.open('GET', '/api/wordle/daily-result/' + resultIdInput.value, true);
     viewRequest.send();
   }
 
@@ -424,7 +424,7 @@ function stringToColor(str) {
         }
       }
 
-      commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value, false);
+      commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value, true);
       commentsRequest.send();
     } else if (appendComments != null) {
       let commentsRequest = new XMLHttpRequest();
@@ -436,7 +436,7 @@ function stringToColor(str) {
         }
       }
 
-      commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value + '/' + encodeURIComponent(category), false);
+      commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value + '/' + encodeURIComponent(category), true);
       commentsRequest.send();
     }
   }
@@ -761,7 +761,7 @@ function stringToColor(str) {
       }
     }
 
-    gamesRequest.open('GET', '/api/wordle/games', false);
+    gamesRequest.open('GET', '/api/wordle/games', true);
     gamesRequest.send();
 
     let dailyWordRequest = new XMLHttpRequest();
@@ -774,7 +774,7 @@ function stringToColor(str) {
       }
     }
 
-    dailyWordRequest.open('GET', '/api/wordle/daily-word', false);
+    dailyWordRequest.open('GET', '/api/wordle/daily-word', true);
     dailyWordRequest.send();
   })();
 
@@ -820,7 +820,7 @@ function stringToColor(str) {
       url += '/' + dateInput.value;
     }
 
-    submitRequest.open('PUT', url, false);
+    submitRequest.open('PUT', url, true);
     submitRequest.setRequestHeader('Content-Type', 'application/json');
     submitRequest.send(JSON.stringify(resultsInput.innerText));
   }
