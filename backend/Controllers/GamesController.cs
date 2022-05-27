@@ -13,8 +13,10 @@ public class GamesController : ControllerBase
 {
     private readonly DataContext _context;
     private readonly ILogger<GamesController> _logger;
-    private readonly IEnumerable<object> _games;
-    private readonly Dictionary<string, int> GameCategoryCounts = new Dictionary<string, int>
+    private readonly IEnumerable<ResultParser> _resultParsers;
+    private static IEnumerable<object>? _games;
+
+    private static readonly Dictionary<string, int> GameCategoryCounts = new Dictionary<string, int>
     {
         { "Word", 2 },
         { "Media", 1 },
@@ -24,12 +26,28 @@ public class GamesController : ControllerBase
 
     public GamesController(DataContext context, ILogger<GamesController> logger, IEnumerable<ResultParser> resultParsers)
     {
-        var categories = resultParsers
+        _context = context;
+        _logger = logger;
+        _resultParsers = resultParsers;
+    }
+
+    [HttpGet("{dateString?}")]
+    public IActionResult Get(string? dateString)
+    {
+        var categories = _resultParsers
             .Where(rp => rp.CountWinner)
             .GroupBy(rp => rp.Category)
             .ToDictionary(g => g.Key, g => g.Select(rp => rp.GameName).ToList());
 
-        var date = TimeUtility.GetNowEasternStandardTime();
+        if (DateTime.TryParse(dateString, out var date)) {
+            if (_games != null) {
+                return Ok(_games);
+            }
+        } else {
+            date = TimeUtility.GetNowEasternStandardTime();
+        }
+
+        // every day should result in the same 
         var seed = date.Year * 1000 + date.DayOfYear;
         var rand = new Random(seed);
 
@@ -46,30 +64,18 @@ public class GamesController : ControllerBase
             }
         }
 
-        _context = context;
-        _logger = logger;
-        _games = resultParsers
+        _games = _resultParsers
             .Select(rp => new
             {
                 Category = rp.Category,
-                CountWinner = CountWinner(rp.CountWinner, categories, rp.Category, rp.GameName),
+                CountWinner = rp.CountWinner && categories.ContainsKey(rp.Category) && categories[rp.Category].Contains(rp.GameName),
                 GameName = rp.GameName,
                 GolfScoring = rp.GolfScoring,
                 HelpText = rp.HelpText,
                 Url = rp.Url
             })
             .ToList();
-    }
 
-    [HttpGet()]
-    public IActionResult Get()
-    {
         return Ok(_games);
-    }
-
-    private bool CountWinner(bool countWinnerForGame, Dictionary<string, List<string>> categories, string category, string gameName)
-    {
-        var countWinner = countWinnerForGame && categories.ContainsKey(category) && categories[category].Contains(gameName);
-        return countWinner;
     }
 }
