@@ -505,77 +505,62 @@ function stringToColor(str) {
         let labelContainer = document.createElement('div');
         let resultsLabel = document.createElement('label');
         resultsLabel.for = 'results';
-        resultsLabel.textContent = "Enter your result here:";
-        resultsLabel.classList.add('hidden');
+        resultsLabel.textContent = "Paste or enter your result here:";
         labelContainer.appendChild(resultsLabel);
         dialogBody.appendChild(labelContainer);
 
-        let manualInput = document.createElement('div');
-        manualInput.contentEditable = true;
-        manualInput.id = 'results';
-        manualInput.enterKeyHint = 'done';
-        manualInput.classList.add('hidden');
-        manualInput.classList.add('results-container');
+        let resultsInput = document.createElement('div');
+        resultsInput.contentEditable = true;
+        resultsInput.id = 'results';
+        resultsInput.enterKeyHint = 'done';
 
-        let submit = () => submitResult(dialogBody.parentElement.parentElement, manualInput)
+        let submit = () => submitResult(dialogBody.parentElement.parentElement, resultsInput)
 
         // submit when clicking submit, when pressing enter, or when pasting into the text area
-        manualInput.addEventListener('keypress', (ev) => ev.key == 'Enter' ? event.preventDefault() : undefined);
-        manualInput.addEventListener('keyup', enterListener(submit));
-        manualInput.addEventListener('paste', function () {
+        resultsInput.addEventListener('keypress', (event) => event.key == 'Enter' ? event.preventDefault() : undefined);
+        resultsInput.addEventListener('keyup', enterListener(submit));
+        resultsInput.addEventListener('paste', function () {
           let handler = function () {
             submit();
-            manualInput.removeEventListener('input', handler);
+            resultsInput.removeEventListener('input', handler);
           }
 
-          manualInput.addEventListener('input', handler);
+          resultsInput.addEventListener('input', handler);
         });
 
         // comment this out - gboard pastes aren't playing nice with the content editable
         // // attempt to try and catch pastes from gboard - if a bunch of text gets added at once, auto-submit
         // let oldLength = 0;
-        // manualInput.addEventListener('input', function () {
-        //   let newLength = manualInput.innerText.length;
+        // resultsInput.addEventListener('input', function () {
+        //   let newLength = resultsInput.innerText.length;
         //   if (newLength - oldLength > 20) {
         //     submit();
         //   }
         //   oldLength = newLength;
         // });
 
-        dialogBody.appendChild(manualInput);
+        dialogBody.appendChild(resultsInput);
 
-        let resultsContainer = document.createElement('div');
-        resultsContainer.classList.add('results-container');
-        navigator.clipboard.readText().then((text) => {
-          resultsContainer.innerText = text;
-        });
-        dialogBody.appendChild(resultsContainer);
+        try {
+          navigator.permissions.query({ name: 'clipboard-read' })
+            .then((permission) => {
+              if (permission.state === 'granted' || permission.state === 'prompt' && typeof(navigator.clipboard.readText) === 'function') {
+                navigator.clipboard.readText().then((text) => {
+                  resultsInput.innerText = text;
+                  let focusListener = () => {
+                    resultsInput.innerText = '';
+                    resultsInput.removeEventListener('focus', focusListener);
+                  }
+                  resultsInput.addEventListener('focus', focusListener);
+                });
+              }
+            });
+        } catch { }
       },
       (dialogFooter, dialogBody) => {
-        let toggleInputButton = document.createElement('button');
-        toggleInputButton.addEventListener('click', () => {
-          var resultsInput = dialogBody.querySelector('.results-container:not(.hidden)');
-          var hiddenInput = dialogBody.querySelector('.results-container.hidden');
-          var label = dialogBody.querySelector('label');
-
-          resultsInput.classList.add('hidden');
-          hiddenInput.classList.remove('hidden');
-          hiddenInput.focus();
-
-          if (label.classList.contains('hidden')) {
-            label.classList.remove('hidden');
-          } else {
-            hiddenInput.classList.remove('hidden');
-          }
-
-          toggleInputButton.classList.add('hidden');
-        });
-        toggleInputButton.textContent = 'Manual Input';
-        dialogFooter.appendChild(toggleInputButton);
-
         let submitButton = document.createElement('button');
         submitButton.addEventListener('click', () => {
-          let resultsInput = dialogBody.querySelector('.results-container:not(.hidden)');
+          let resultsInput = dialogBody.querySelector('#results');
           submitResult(dialogBody.parentElement.parentElement, resultsInput);
         });
         submitButton.textContent = 'Submit';
