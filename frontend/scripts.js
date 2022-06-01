@@ -509,7 +509,7 @@ function stringToColor(str) {
         labelContainer.appendChild(resultsLabel);
         dialogBody.appendChild(labelContainer);
 
-        let resultsInput = document.createElement('div');
+        let resultsInput = document.createElement('pre');
         resultsInput.contentEditable = true;
         resultsInput.id = 'results';
         resultsInput.enterKeyHint = 'done';
@@ -541,21 +541,19 @@ function stringToColor(str) {
 
         dialogBody.appendChild(resultsInput);
 
-        try {
-          navigator.permissions.query({ name: 'clipboard-read' })
-            .then((permission) => {
-              if (permission.state === 'granted' || permission.state === 'prompt' && typeof(navigator.clipboard.readText) === 'function') {
-                navigator.clipboard.readText().then((text) => {
-                  resultsInput.innerText = text;
-                  let focusListener = () => {
-                    resultsInput.innerText = '';
-                    resultsInput.removeEventListener('focus', focusListener);
-                  }
-                  resultsInput.addEventListener('focus', focusListener);
-                });
-              }
-            });
-        } catch { }
+        // auto-paste isn't work, maybe try it again later.
+        // try {
+        //   if (typeof(navigator.clipboard.readText) === 'function') {
+        //     navigator.clipboard.readText().then((text) => {
+        //       resultsInput.innerText = text;
+        //       let focusListener = () => {
+        //         resultsInput.innerText = '';
+        //         resultsInput.removeEventListener('focus', focusListener);
+        //       }
+        //       resultsInput.addEventListener('focus', focusListener);
+        //     });
+        //   }
+        // } catch { }
       },
       (dialogFooter, dialogBody) => {
         let submitButton = document.createElement('button');
@@ -567,6 +565,8 @@ function stringToColor(str) {
         dialogFooter.appendChild(submitButton);
       },
       () => {
+        let resultsInput = document.getElementById('results');
+        resultsInput.focus();
         disableScroll();
       }
     )
