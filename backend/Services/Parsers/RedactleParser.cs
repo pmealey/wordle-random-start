@@ -12,6 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override DateTime ActiveAfter => DateTime.MinValue;
         public override string Category => "Madness Inducing";
         public override bool CountWinner => true;
         public override string GameName => "Redactle";

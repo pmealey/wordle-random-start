@@ -12,6 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override DateTime ActiveAfter => DateTime.MinValue;
         public override string Category => "Default";
         public override bool CountWinner => true;
         private List<string> ScoreGroups = new [] { 1, 2, 3, 4 }

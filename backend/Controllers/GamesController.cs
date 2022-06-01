@@ -34,8 +34,9 @@ public class GamesController : ControllerBase
     [HttpGet("{dateString?}")]
     public IActionResult Get(string? dateString)
     {
+        var now = TimeUtility.GetNowEasternStandardTime();
         var categories = _resultParsers
-            .Where(rp => rp.CountWinner)
+            .Where(rp => rp.CountWinner && rp.ActiveAfter <= now)
             .GroupBy(rp => rp.Category)
             .ToDictionary(g => g.Key, g => g.Select(rp => rp.GameName).ToList());
 
@@ -44,7 +45,7 @@ public class GamesController : ControllerBase
                 return Ok(_games);
             }
         } else {
-            date = TimeUtility.GetNowEasternStandardTime();
+            date = now;
         }
 
         // every day should result in the same 

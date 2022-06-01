@@ -12,6 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override DateTime ActiveAfter => DateTime.MinValue;
         public override string Category => "Media";
         public override string GameName => "Framed";
         public override string? HelpText => null;
