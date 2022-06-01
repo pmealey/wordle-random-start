@@ -528,16 +528,15 @@ function stringToColor(str) {
           resultsInput.addEventListener('input', handler);
         });
 
-        // comment this out - gboard pastes aren't playing nice with the content editable
-        // // attempt to try and catch pastes from gboard - if a bunch of text gets added at once, auto-submit
-        // let oldLength = 0;
-        // resultsInput.addEventListener('input', function () {
-        //   let newLength = resultsInput.innerText.length;
-        //   if (newLength - oldLength > 20) {
-        //     submit();
-        //   }
-        //   oldLength = newLength;
-        // });
+        // attempt to try and catch pastes from gboard - if a bunch of text gets added at once, auto-submit
+        let oldLength = 0;
+        resultsInput.addEventListener('input', function () {
+          let newLength = resultsInput.innerText.length;
+          if (newLength - oldLength > 20) {
+            submit();
+          }
+          oldLength = newLength;
+        });
 
         dialogBody.appendChild(resultsInput);
 
