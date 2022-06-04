@@ -15,7 +15,7 @@ namespace backend.Services.Parsers
         public override string Category => "Other";
         public override string GameName => "Subwaydle";
         public override string? HelpText => null;
-        protected override Regex Parser => new Regex($"{GameName} \\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
+        protected override Regex Parser => new Regex($"{GameName} \\d+ \\(?[^)]*\\)? ?(?<{ScoreGroup}>[\\d|X])/\\d");
         protected override string? ExtraContent => null;
         public override string Url => "https://www.subwaydle.com/";
     }
