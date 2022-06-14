@@ -37,7 +37,7 @@ namespace backend.Services.Parsers
             {
                 return new TimeSpan(0, minutes, seconds);
             }
-            else if (Int32.TryParse(timePart2, out seconds))
+            else if (Int32.TryParse(timePart1, out seconds))
             {
                 return new TimeSpan(0, 0, seconds);
             }
