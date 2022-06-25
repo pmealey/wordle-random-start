@@ -37,6 +37,7 @@ builder.Services.AddScoped<ResultParser, AbsurdleParser>();
 builder.Services.AddScoped<ResultParser, HeardleParser>();
 builder.Services.AddScoped<ResultParser, BoxOfficeGameParser>();
 builder.Services.AddScoped<ResultParser, FramedParser>();
+builder.Services.AddScoped<ResultParser, MoviedleParser>();
 builder.Services.AddScoped<ResultParser, NerdleParser>();
 builder.Services.AddScoped<ResultParser, CloudleParser>();
 builder.Services.AddScoped<ResultParser, DungleonParser>();
