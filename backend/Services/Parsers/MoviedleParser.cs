@@ -22,9 +22,9 @@ namespace backend.Services.Parsers
         // \uD83D\uDFE5 = 🟥
         // \u2B1C\uFE0F = ⬜️
         // \u2B1B\uFE0F = ⬛️
-        protected override Regex Parser => new Regex($"#{GameName} #\\[d-]+\n\\s*\uD83C\uDFA5(?<{ScoreGroup}>[^\n]*)", RegexOptions.Singleline);
+        protected override Regex Parser => new Regex($"#{GameName} #[\\d-]+\\s*\n\n\\s*\uD83C\uDFA5(?<{ScoreGroup}>[^\n]*)", RegexOptions.Singleline);
         protected override string? ExtraContent => Url;
-        public override string Url => "https://www.moviedle.app/";
+        public override string Url => "https://moviedle.app";
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
