@@ -17,6 +17,6 @@ namespace backend.Services.Parsers
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"{GameName} .*? (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override string? ExtraContent => Url;
-        public override string Url => "https://cogit.fun/cloudle";
+        public override string Url => "https://cloudle.app/";
     }
 }
