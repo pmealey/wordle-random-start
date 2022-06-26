@@ -11,7 +11,6 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override DateTime ActiveAfter => DateTime.MinValue;
         public override string Category => "Default";
         public override string GameName => "Wordle";
         public override string? HelpText => null;

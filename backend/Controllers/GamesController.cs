@@ -36,7 +36,7 @@ public class GamesController : ControllerBase
     {
         var now = TimeUtility.GetNowEasternStandardTime();
         var categories = _resultParsers
-            .Where(rp => rp.CountWinner && rp.ActiveAfter <= now)
+            .Where(rp => rp.CountWinner && rp.ActiveAfter <= now && rp.ActiveBefore > now)
             .GroupBy(rp => rp.Category)
             .ToDictionary(g => g.Key, g => g.Select(rp => rp.GameName).ToList());
 

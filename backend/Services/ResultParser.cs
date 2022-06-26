@@ -12,7 +12,9 @@ namespace backend.Services
             _logger = logger;
         }
 
-        public abstract DateTime ActiveAfter { get; }
+
+        public virtual DateTime ActiveAfter => DateTime.MinValue;
+        public virtual DateTime ActiveBefore => DateTime.MaxValue;
 
         public abstract string Category { get; }
 
