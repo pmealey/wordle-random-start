@@ -11,6 +11,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override DateTime ActiveBefore => new DateTime(2022, 6, 27);
         public override string Category => "Word";
         public override string GameName => "Lewdle";
         public override string? HelpText => null;
