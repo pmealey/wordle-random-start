@@ -12,6 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
+        public override DateTime ActiveBefore => new DateTime(2022, 7, 19);
         public override string Category => "Madness Inducing";
         public override bool CountWinner => true;
         public override string GameName => "Redactle";
