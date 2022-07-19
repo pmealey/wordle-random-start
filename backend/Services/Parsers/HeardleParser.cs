@@ -26,7 +26,7 @@ namespace backend.Services.Parsers
         // \u2B1B\uFE0F = ⬛️
         protected override Regex Parser => new Regex($"#{GameName} #\\d+\\s+\uD83D[\uDD07-\uDD0A](?<{ScoreGroup}>[^\\s]+)", RegexOptions.Singleline);
         protected override string? ExtraContent => Url;
-        public override string Url => "https://www.heardle.app";
+        public override string Url => "https://spotify.com/heardle";
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
