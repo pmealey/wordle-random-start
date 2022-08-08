@@ -787,6 +787,7 @@ function stringToColor(str) {
       if (requestHasSucceeded(dailyWordRequest)) {
         let response = JSON.parse(dailyWordRequest.responseText);
         startingWord.innerText = response.word;
+        startingWord.href = 'https://www.google.com/search?q=' + encodeURIComponent('define: ' + response.word);
         dateInput.value = response.date;
         initializeStep2();
       }
