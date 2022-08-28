@@ -12,7 +12,7 @@ namespace backend.Services.Parsers
         }
 
         public override DateTime ActiveAfter => new DateTime(2022, 6, 1);
-        public override string Category => "Word";
+        public override string Category => "Default";
         public override string GameName => "Squareword";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"{GameName.ToLower()}.org \\d+: (?<{ScoreGroup}>\\d+) guesses");

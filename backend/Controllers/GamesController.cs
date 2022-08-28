@@ -18,7 +18,7 @@ public class GamesController : ControllerBase
 
     private static readonly Dictionary<string, int> GameCategoryCounts = new Dictionary<string, int>
     {
-        { "Word", 2 },
+        { "Word", 1 },
         { "Media", 1 },
         { "Other", 1 },
         { "Madness Inducing", 1 }
