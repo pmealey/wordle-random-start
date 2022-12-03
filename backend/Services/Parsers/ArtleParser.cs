@@ -21,7 +21,7 @@ namespace backend.Services.Parsers
         // \u2B1C\uFE0F = ⬜️
         protected override Regex Parser => new Regex($"{GameName} #\\d+.*?\uD83C\uDFA8(?<{ScoreGroup}>[^\\n]+)", RegexOptions.Singleline);
         protected override string? ExtraContent => Url;
-        public override string Url => "https://nga.gov/Artle";
+        public override string Url => "https://www.nga.gov/Artle";
         public override DateTime ActiveAfter => new DateTime(2022, 12, 4);
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
