@@ -14,7 +14,8 @@ button:hover { background-color: #e0e0e0;}
 .input-row input {flex: 1 1 auto;min-width: 0;}
 .hidden {display: none;visibility: hidden;}
 .result, .game { padding: 5px; border-radius: 4px; }
-.game.count-winner { border: solid 2px green; }
+.game.count-winner { border: dotted 2px green; }
+.game.count-winner.competitive { border-style: solid; }
 .result-wrapper, .leaderboard-wrapper { position: relative; padding: 5px; border-radius: 4px; overflow: hidden; }
 .result, .leaderboard { display: flex; flex-flow: column; }
 .result div { margin-right: auto; }

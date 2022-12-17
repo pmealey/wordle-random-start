@@ -235,6 +235,10 @@ function stringToColor(str) {
         gameContainer.classList.add('count-winner');
       }
 
+      if (allUsersForGame.length > 1) {
+        gameContainer.classList.add('competitive');
+      }
+
       addGameLink(game, myDailyResult, gameContainer);
       let resultsList = document.createElement('div');
       resultsList.classList.add('results');
@@ -250,7 +254,7 @@ function stringToColor(str) {
               let container = addResult(game, dailyResult, user, winner);
               resultsList.appendChild(container);
 
-              if (game.countWinner) {
+              if (game.countWinner && scores.length > 1) {
                 logResult(user, winner);
               }
             });
