@@ -15,7 +15,14 @@ namespace backend.Services.Parsers
         public override string GameName => "Globle";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"🌎.*?🌍[\\s\n\r]+[^=]*= (?<{ScoreGroup}>\\d+)");
-        protected override string? ExtraContent => "#globle";
+        protected override string? ExtraContent => null;
         public override string Url => "https://globle-game.com";
+        protected override string GetCleanResult(string result, Match parserResults)
+        {
+                return result
+                    .Replace("#globle", string.Empty)
+                    .Replace("globle-game.com", string.Empty)
+                    .Trim();
+        }
     }
 }
