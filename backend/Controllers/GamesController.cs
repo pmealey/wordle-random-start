@@ -66,6 +66,7 @@ public class GamesController : ControllerBase
         }
 
         _games = _resultParsers
+            .Where(rp => rp.HideAfter > now)
             .Select(rp => new
             {
                 Category = rp.Category,

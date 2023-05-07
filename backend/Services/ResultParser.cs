@@ -14,6 +14,7 @@ namespace backend.Services
 
 
         public virtual DateTime ActiveAfter => DateTime.MinValue;
+
         public virtual DateTime ActiveBefore => DateTime.MaxValue;
 
         public abstract string Category { get; }
@@ -25,6 +26,8 @@ namespace backend.Services
         public abstract bool GolfScoring { get; }
 
         public abstract string? HelpText { get; }
+
+        public virtual DateTime HideAfter => DateTime.MaxValue;
 
         protected abstract Regex Parser { get; }
 
