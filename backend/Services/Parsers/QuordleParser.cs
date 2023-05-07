@@ -23,11 +23,11 @@ namespace backend.Services.Parsers
         public override string? HelpText => null;
 
         protected override Regex Parser => new Regex($"Daily {GameName}[^\\d]+\\d+.*?[\\s\n\r]+{string.Join("[^\\d]*", ScoreGroups.Select(g => $"(?<{g}>[\\d|🟥])"))}");
-        public override string Url => "https://www.quordle.com/";
+        public override string Url => "https://www.merriam-webster.com/games/quordle/";
 
         protected override string GetCleanResult(string result, Match parserResults)
         {
-            return result.Replace("quordle.com", string.Empty).Trim();
+            return result.Replace("m-w.com/games/quordle", string.Empty).Trim();
         }
 
         public override string? GetScoreValue(DailyResult dailyResult)
