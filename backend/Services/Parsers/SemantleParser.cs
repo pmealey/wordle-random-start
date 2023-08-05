@@ -13,7 +13,7 @@ namespace backend.Services.Parsers
         }
 
         public override string Category => "Madness Inducing";
-        public override bool CountWinner => true;
+        public override bool CountWinner => false;
         public override string GameName => "Semantle";
         public override bool GolfScoring => true;
         public override string? HelpText => null;
