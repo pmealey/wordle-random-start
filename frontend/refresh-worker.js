@@ -55,12 +55,6 @@ const thirtySeconds = 30 * 1000; // 30 seconds
 const fiveMinutes = 5 * 60 * 1000; // 5 minutes
 const thirtyMinutes = 30 * 60 * 1000; // 30 minutes
 
-function periodicallyRefreshData(date) {
-  setTimeout(() => {
-    getData(true, date);
-  }, fiveMinutes);
-}
-
 onmessage = function(e) {
   if (e.data.type === 'refresh') {
     getData(false, e.data.date, e.data.groups)

@@ -83,7 +83,6 @@ function stringToColor(str) {
   let gamesList = document.getElementById('games-list');
   let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
-  let leaderboardComments = document.getElementById('leaderboard-comments');
   let crownColumn2 = document.getElementById('crown2');
   let summaryArea = document.getElementById('summary');
 
@@ -100,8 +99,6 @@ function stringToColor(str) {
   refreshWorker.onmessage = setData;
 
   let games = [];
-  let comments = {};
-  let readComments = {};
 
   function refreshData() {
     refreshWorker.postMessage({ type: 'refresh', date: dateInput.value, groups: getGroups() });
@@ -274,12 +271,6 @@ function stringToColor(str) {
     resultsArea.classList.remove('hidden');
 
     displayLeaderboard();
-
-    checkForUnreadComments();
-  }
-
-  function getCommentButtonName(category) {
-    return category.replace(' ', '-').toLowerCase() + '-comments';
   }
 
   function addGameLink(game, dailyResult, container) {
@@ -304,12 +295,6 @@ function stringToColor(str) {
       textContainer.innerText = 'Play ' + game.gameName;
       row1.appendChild(textContainer);
     }
-
-    let commentButton = document.createElement('button');
-    commentButton.innerHTML = '&#x1F4AC' // 💬
-    commentButton.addEventListener('click', createViewCommentsHandler(game.gameName, !!dailyResult))
-    commentButton.id = getCommentButtonName(game.gameName);
-    row1.appendChild(commentButton);
 
     if (game.helpText) {
       let helpText = document.createElement('div');
@@ -394,63 +379,6 @@ function stringToColor(str) {
 
     viewRequest.open('GET', '/api/wordle/daily-result/' + resultIdInput.value, true);
     viewRequest.send();
-  }
-
-  function checkForUnreadComments(category) {
-    if (!category) {
-      for(let category in comments) {
-        checkForUnreadComments(category);
-      }
-      return;
-    }
-
-    if (!comments[category]) {
-      return;
-    }
-
-    readComments[category] = readComments[category] || [];
-    let categoryHasUnreadComments = false;
-
-    for (let comment of comments[category]) {
-      if (!readComments[category].includes(comment.id)) {
-        categoryHasUnreadComments = true;
-      }
-    }
-
-    let button = document.getElementById(getCommentButtonName(category));
-    if (categoryHasUnreadComments) {
-      button.classList.add('unread-comments');
-    } else {
-      button.classList.remove('unread-comments');
-    }
-  }
-
-  function getComments(category, renderComments) {
-    if (!dateInput.value) return;
-
-    if (category == null) {
-      let commentsRequest = new XMLHttpRequest();
-      commentsRequest.onreadystatechange = function () {
-        if (requestHasSucceeded(commentsRequest)) {
-          comments = JSON.parse(commentsRequest.responseText);
-        }
-      }
-
-      commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value, true);
-      commentsRequest.send();
-    } else if (appendComments != null) {
-      let commentsRequest = new XMLHttpRequest();
-      commentsRequest.onreadystatechange = function () {
-        if (requestHasSucceeded(commentsRequest)) {
-          comments[category] = JSON.parse(commentsRequest.responseText);
-          renderComments();
-          checkForUnreadComments(category);
-        }
-      }
-
-      commentsRequest.open('GET', '/api/wordle/comments/' + dateInput.value + '/' + encodeURIComponent(category), true);
-      commentsRequest.send();
-    }
   }
 
   function disableScroll() {
@@ -583,174 +511,6 @@ function stringToColor(str) {
     )
   }
 
-  function createViewCommentsHandler(category, playedGame) {
-    return () => {
-      createAndAttachDialog(
-        category,
-        (dialogBody) => {
-          if (playedGame) {
-            dialogBody.classList.add('played-game');
-          }
-
-          firstUnread = appendComments(dialogBody, category, playedGame);
-        },
-        (dialogFooter, dialogBody) => {
-          let commentInputContainer = document.createElement('form');
-          commentInputContainer.classList.add('comment-input');
-          commentInputRow1 = document.createElement('div');
-
-          let commentTextarea = document.createElement('textarea');
-          let submitCommentButton = document.createElement('button');
-          submitCommentButton.innerHTML = '	&#x27a4;' // ➤
-          submitCommentButton.type = 'submit';
-
-          commentInputRow1.appendChild(commentTextarea);
-          commentInputRow1.appendChild(submitCommentButton);
-          commentInputContainer.appendChild(commentInputRow1);
-
-          let postGameCheckbox;
-          if (playedGame) {
-            postGameCheckbox = document.createElement('input');
-            postGameCheckbox.type = 'checkbox';
-
-            let postGameCheckboxText = document.createElement('span');
-            postGameCheckboxText.textContent = 'Share with everyone';
-
-            let postGameCheckboxLabel = document.createElement('label');
-            postGameCheckboxLabel.appendChild(postGameCheckboxText);
-            postGameCheckboxLabel.appendChild(postGameCheckbox);
-
-            commentInputRow2 = document.createElement('div');
-            commentInputRow2.appendChild(postGameCheckboxLabel);
-            commentInputContainer.appendChild(commentInputRow2);
-          }
-
-          commentInputContainer.addEventListener('submit', createSubmitCommentHandler(dialogBody, category, commentTextarea, postGameCheckbox, playedGame))
-
-          dialogFooter.appendChild(commentInputContainer);
-        },
-        (dialog) => {
-          let commentTextarea = dialog.querySelector('textarea')
-          commentTextarea.focus();
-          disableScroll();
-        });
-    }
-  }
-
-  function appendComments(dialogBody, category, playedGame) {
-    clearData(dialogBody);
-
-    let relevantComments = comments[category] || [];
-    readComments[category] = readComments[category] || []
-
-    let hiddenComments = false;
-    let firstUnread = null;
-
-    relevantComments.forEach(comment => {
-      if (!playedGame && comment.postGame) {
-        hiddenComments = true;
-        return;
-      }
-
-      let commentRow = document.createElement('div');
-      commentRow.classList.add('comment-row');
-
-      if (comment.postGame) {
-        commentRow.classList.add('post-game');
-      }
-
-      let commentContainer = document.createElement('div');
-      commentContainer.classList.add('comment');
-      commentContainer.style.backgroundColor = stringToColor(comment.user);
-
-      if (comment.user === userInput.value) {
-        commentRow.classList.add('mine');
-      }
-
-      let user = document.createElement('div');
-      user.classList.add('user');
-      user.textContent = comment.user;
-      commentContainer.appendChild(user);
-
-      let commentText = document.createElement('div');
-      commentText.classList.add('comment-text');
-      commentText.textContent = comment.commentText;
-      commentContainer.appendChild(commentText);
-
-      commentRow.appendChild(commentContainer);
-
-      dialogBody.appendChild(commentRow);
-
-      if (!readComments[category].includes(comment.id)) {
-        firstUnread = commentRow;
-        readComments[category].push(comment.id);
-      }
-    });
-
-    if (hiddenComments) {
-      let hiddenComments = document.createElement('div');
-      hiddenComments.classList.add('hidden-comments');
-      hiddenComments.textContent = 'Some comments are hidden. Complete today\'s game to see them!';
-
-      let hiddenCommentsRow = document.createElement('div');
-      hiddenCommentsRow.classList.add('comment-row');
-      hiddenCommentsRow.appendChild(hiddenComments);
-      dialogBody.appendChild(hiddenCommentsRow);
-    }
-
-    checkForUnreadComments(category);
-    setCache();
-
-    return firstUnread;
-  }
-
-  let submittingComment = false;
-
-  function createSubmitCommentHandler(dialogBody, category, commentTextarea, postGameCheckbox, playedGame) {
-    return (event) => {
-      event.preventDefault();
-
-      if (!commentTextarea.value || !dateInput.value || !userInput.value || submittingComment) {
-        return false;
-      }
-
-      submittingComment = true;
-
-      let postGame = !postGameCheckbox?.checked && playedGame;
-
-      let submitRequest = new XMLHttpRequest();
-      submitRequest.onreadystatechange = function () {
-        if (requestHasSucceeded(submitRequest)) {
-          if (postGameCheckbox) postGameCheckbox.checked = false;
-          getComments(category, () => appendComments(dialogBody, category, playedGame));
-          commentTextarea.value = null;
-          submittingComment = false;
-        }
-      };
-
-      submitRequest.open('POST', '/api/wordle/comments/' + dateInput.value + '/' + encodeURIComponent(category) +  '/' + userInput.value);
-      submitRequest.setRequestHeader('Content-Type', 'application/json');
-      submitRequest.send(JSON.stringify({
-        commentText: commentTextarea.value,
-        postGame: postGame
-      }));
-
-      return false;
-    };
-  }
-
-  function clearCache() {
-    localStorage.setItem('readComments', null);
-  }
-
-  function initializeFromCache() {
-    readComments = JSON.parse(localStorage.getItem('readComments')) || {};
-  }
-
-  function setCache() {
-    localStorage.setItem('readComments', JSON.stringify(readComments));
-  }
-
   let initialized = false;
   function initializeStep2() {
     if (!initialized) {
@@ -765,15 +525,11 @@ function stringToColor(str) {
       userInput.value = user;
     }
 
-    getComments();
     refreshData();
 
     if (localStorage.getItem('today') !== dateInput.value) {
-      clearCache();
       localStorage.setItem('today', dateInput.value)
     }
-
-    initializeFromCache();
   }
 
   (function initialize() {
