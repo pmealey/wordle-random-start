@@ -20,8 +20,7 @@ public class GamesController : ControllerBase
     {
         { "Word", 1 },
         { "Media", 1 },
-        { "Other", 1 },
-        { "Madness Inducing", 1 }
+        { "Other", 1 }
     };
 
     public GamesController(DataContext context, ILogger<GamesController> logger, IEnumerable<ResultParser> resultParsers)
