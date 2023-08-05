@@ -36,7 +36,7 @@ public class DailyResultController : ControllerBase
     }
 
     [HttpGet("{dateOrUser}")]
-    public IActionResult GetDailySummary([FromRoute] string dateOrUser)
+    public IActionResult GetDailySummary([FromRoute] string dateOrUser, [FromQuery] string[]? group)
     {
         var query = _context.DailyResult.AsQueryable();
 
@@ -47,6 +47,11 @@ public class DailyResultController : ControllerBase
         else
         {
             query = query.Where(dr => dr.User.ToLower() == dateOrUser.ToLower());
+        }
+
+        if (group != null && group.Length > 0)
+        {
+            query = query.Where(dr => dr.Groups.Any(g => group.Contains(g)));
         }
 
         var dailyResults = query
@@ -144,23 +149,23 @@ public class DailyResultController : ControllerBase
     }
 
     [HttpPut("{user}")]
-    public IActionResult Set([FromRoute] string user, [FromBody] string result)
+    public IActionResult Set([FromRoute] string user, [FromBody] string result, [FromQuery] List<string> group)
     {
-        return CreateDailyResult(user, TimeUtility.GetNowEasternStandardTime().Date, result);
+        return CreateDailyResult(user, TimeUtility.GetNowEasternStandardTime().Date, result, group);
     }
 
     [HttpPut("{user}/{dateString}")]
-    public IActionResult Set([FromRoute] string user, [FromRoute] string dateString, [FromBody] string result)
+    public IActionResult Set([FromRoute] string user, [FromRoute] string dateString, [FromBody] string result, [FromQuery] List<string> group)
     {
         if (!DateTime.TryParse(dateString, out var date))
         {
             return BadRequest("Invalid Date");
         }
 
-        return CreateDailyResult(user, date, result);
+        return CreateDailyResult(user, date, result, group);
     }
 
-    private IActionResult CreateDailyResult(string user, DateTime date, string result) {
+    private IActionResult CreateDailyResult(string user, DateTime date, string result, List<string> groups) {
         DailyResult? dailyResult = null;
         foreach (var parser in _resultParsers)
         {
@@ -173,6 +178,15 @@ public class DailyResultController : ControllerBase
         if (dailyResult == null)
         {
             return BadRequest("The game results could not be parsed");
+        }
+
+        if (groups.Count > 0)
+        {
+            dailyResult.Groups = groups;
+        }
+        else
+        {
+            dailyResult.Groups = new List<string>() { "family" };
         }
 
         var existingResult = _context.DailyResult.SingleOrDefault(dr => dr.User.ToLower() == dailyResult.User.ToLower() && dr.Date.Date == dailyResult.Date.Date && dr.Game == dailyResult.Game);

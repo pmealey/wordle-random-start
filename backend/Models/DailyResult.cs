@@ -5,6 +5,7 @@ namespace backend.Models
 {
     public class DailyResult
     {
+
         public int Id { get; set; }
         [Required]
         [MaxLength(128)]
@@ -20,5 +21,6 @@ namespace backend.Models
         public int? Score { get; set; }
         public TimeSpan? Time { get; set; }
         public List<int>? Scores { get; set; }
+        public List<string> Groups { get; set; } = null!;
     }
 }

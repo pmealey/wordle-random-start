@@ -4,7 +4,7 @@ function requestIsDone(request) {
   return request.readyState === XMLHttpRequest.DONE && request.status >= 200 && request.status < 300;
 }
 
-function getData(notify, date) {
+function getData(notify, date, groups) {
   let summaryRequest = new XMLHttpRequest();
   summaryRequest.onreadystatechange = function () {
     if (requestIsDone(summaryRequest)) {
@@ -41,6 +41,12 @@ function getData(notify, date) {
     url += '/' + date;
   }
 
+  if (groups) {
+    const params = new URLSearchParams();
+    groups.forEach(g => params.append('group', g));
+    url = url + '?' + params.toString();
+  }
+
   summaryRequest.open('GET', url, false);
   summaryRequest.send();
 }
@@ -57,8 +63,6 @@ function periodicallyRefreshData(date) {
 
 onmessage = function(e) {
   if (e.data.type === 'refresh') {
-    getData(false, e.data.date)
-  } else if (e.data.type === 'notify') {
-    periodicallyRefreshData(e.data.date);
+    getData(false, e.data.date, e.data.groups)
   }
 }

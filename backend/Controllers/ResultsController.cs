@@ -22,7 +22,7 @@ public class ResultsController : ControllerBase
     }
 
     [HttpGet()]
-    public IActionResult Get([FromQuery] string names, [FromQuery] string exclude)
+    public IActionResult Get([FromQuery] string names, [FromQuery] string exclude, [FromQuery] string? group)
     {
         var excludedGames = exclude.Split(',').Select(e => e.Trim().ToLower());
 
@@ -47,6 +47,11 @@ public class ResultsController : ControllerBase
         }
 
         var query = _context.DailyResult.AsQueryable();
+
+        if (group != null)
+        {
+            query = query.Where(dr => dr.Groups.Any(g => g.ToLower() == group.ToLower()));
+        }
 
         if (!allUsers)
         {

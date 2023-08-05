@@ -87,6 +87,14 @@ function stringToColor(str) {
   let crownColumn2 = document.getElementById('crown2');
   let summaryArea = document.getElementById('summary');
 
+  (function () {
+    const thisUrlParams = new URLSearchParams(location.search);
+    if (!thisUrlParams.has('group')) {
+      thisUrlParams.append('group', 'family');
+      const newUrl = location.origin + location.pathname + '?' + thisUrlParams.toString();
+      history.replaceState({path: newUrl}, '', newUrl);
+    }
+  })();
 
   let refreshWorker = new Worker('refresh-worker.js');
   refreshWorker.onmessage = setData;
@@ -96,7 +104,7 @@ function stringToColor(str) {
   let readComments = {};
 
   function refreshData() {
-    refreshWorker.postMessage({ type: 'refresh', date: dateInput.value });
+    refreshWorker.postMessage({ type: 'refresh', date: dateInput.value, groups: getGroups() });
   }
 
   if (advancedModeEnabled()) {
@@ -843,12 +851,25 @@ function stringToColor(str) {
       url += '/' + dateInput.value;
     }
 
-    submitRequest.open('PUT', url, true);
+    submitRequest.open('PUT', addGroupParams(url), true);
     submitRequest.setRequestHeader('Content-Type', 'application/json');
     submitRequest.send(JSON.stringify(resultsInput.innerText));
   }
 
-  leaderboardComments.addEventListener('click', createViewCommentsHandler('Leaderboard', false));
+  function getGroups() {
+    const thisUrlParams = new URLSearchParams(location.search);
+    return thisUrlParams.getAll('group').filter(Boolean);
+  }
+
+  function addGroupParams(url, newUrlParams = new URLSearchParams()) {
+    const groups = getGroups();
+    groups.forEach((group) => {
+      newUrlParams.append('group', group);
+    });
+
+    return url + '?' + newUrlParams.toString();
+  }
+
   startSubmitButton.addEventListener('click', startSubmit);
 
   function setClipboard(dailyResult) {
