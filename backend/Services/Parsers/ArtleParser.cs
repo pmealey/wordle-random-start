@@ -23,6 +23,7 @@ namespace backend.Services.Parsers
         protected override string? ExtraContent => Url;
         public override string Url => "https://www.nga.gov/Artle";
         public override DateTime ActiveAfter => new DateTime(2022, 12, 4);
+        public override DateTime ActiveBefore => new DateTime(2023, 8, 5);
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
