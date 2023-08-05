@@ -13,6 +13,7 @@ namespace backend.Services.Parsers
         }
 
         public override string Category => "Media";
+        public override bool CountWinner => false;
         public override string GameName => "Artle";
         public override string? HelpText => null;
         // \uD83C\uDFA8 = 🎨
