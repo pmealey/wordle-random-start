@@ -53,6 +53,10 @@ public class DailyResultController : ControllerBase
         {
             query = query.Where(dr => dr.Groups.Any(g => group.Contains(g)));
         }
+        else
+        {
+            query = query = query.Where(dr => dr.Groups.Contains("family"));
+        }
 
         var dailyResults = query
             .OrderBy(dr => dr.Game)
