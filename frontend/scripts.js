@@ -95,13 +95,33 @@ function stringToColor(str) {
     }
   })();
 
-  let refreshWorker = new Worker('refresh-worker.js?v=1');
-  refreshWorker.onmessage = setData;
-
   let games = [];
 
   function refreshData() {
-    refreshWorker.postMessage({ type: 'refresh', date: dateInput.value, groups: getGroups() });
+    let summaryRequest = new XMLHttpRequest();
+    summaryRequest.onreadystatechange = function () {
+      if (requestIsDone(summaryRequest)) {
+        let newSummaries = JSON.parse(summaryRequest.responseText);
+        setData(newSummaries);
+      }
+    }
+
+    let url = '/api/wordle/daily-result';
+
+    const date = dateInput.value
+    if (date) {
+      url += '/' + date;
+    }
+
+    const groups = getGroups();
+    if (groups && groups.length) {
+      const params = new URLSearchParams();
+      groups.forEach(g => params.append('group', g));
+      url = url + '?' + params.toString();
+    }
+
+    summaryRequest.open('GET', url, false);
+    summaryRequest.send();
   }
 
   if (advancedModeEnabled()) {
@@ -219,10 +239,9 @@ function stringToColor(str) {
     });
   }
 
-  function setData(e) {
+  function setData(dailyResults) {
     leaderboard = {};
     clearData(summaryArea);
-    let dailyResults = e.data;
 
     games.forEach((game) => {
       let dailyResultsForGame = dailyResults
