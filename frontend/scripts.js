@@ -95,7 +95,7 @@ function stringToColor(str) {
     }
   })();
 
-  let refreshWorker = new Worker('refresh-worker.js');
+  let refreshWorker = new Worker('refresh-worker.js?v=1');
   refreshWorker.onmessage = setData;
 
   let games = [];
