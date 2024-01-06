@@ -25,9 +25,8 @@ namespace backend.Services.Parsers
             return result.Replace(Url + "?daily=1", string.Empty).Replace("\n\n", "\n").Trim();
         }
 
-        protected override TimeSpan? ParseTimeSpanString(Match parserResults)
+        protected override TimeSpan? ParseTimeSpanString(string timeSpan, Match parserResults)
         {
-            var timeSpan = parserResults.Groups[TimeGroup].Value;
             var timePart1 = parserResults.Groups[TimePart1].Value;
             var timePart2 = parserResults.Groups[TimePart2].Value;
 

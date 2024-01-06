@@ -23,7 +23,7 @@ namespace backend.Services
                 return GameName;
             }
 
-            var time = ParseTimeSpanString(parserResults);
+            var time = ParseTimeSpanString(parserResults.Groups[TimeGroup].Value, parserResults);
 
             if (time == null)
             {
@@ -50,7 +50,7 @@ namespace backend.Services
                 return dailyResult;
             }
 
-            var time = ParseTimeSpanString(parserResults);
+            var time = ParseTimeSpanString(parserResults.Groups[TimeGroup].Value, parserResults);
             if (time == null)
             {
                 return dailyResult;
@@ -61,10 +61,8 @@ namespace backend.Services
             return dailyResult;
         }
 
-        protected virtual TimeSpan? ParseTimeSpanString(Match parserResults)
+        protected virtual TimeSpan? ParseTimeSpanString(string timeSpan, Match parserResults)
         {
-            var timeSpan = parserResults.Groups[TimeGroup].Value;
-
             timeSpan = timeSpan.Replace('.', ':');
 
             _logger.LogDebug($"Parsing {timeSpan}...");

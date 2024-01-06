@@ -22,12 +22,19 @@ function enterListener(func) {
 function getScore(dailyResult, golfScoring) {
   let defaultScore = golfScoring ? Infinity : 0;
 
+  if (dailyResult.score != null && dailyResult.time != null) {
+    // special and lazy handling for murdle - highest score with lowest time should win
+    const time = new Date(dailyResult.date.replace('00:00:00', dailyResult.time)) - new Date(dailyResult.date);
+    // each failure adds a day in seconds to the score
+    return dailyResult.score * 24 * 60 * 60 + time;
+  }
+
   if (dailyResult.score != null) {
     return dailyResult.score;
   }
 
   if (Array.isArray(dailyResult.scores)) {
-    // special & lazy handling for quordle - more wordles failed should score after less wordles failed
+    // special & lazy handling for quordle - more wordles failed should score after fewer wordles failed
     let sum = 100 * (4 - dailyResult.scores.length);
     sum = dailyResult.scores.reduce((a, b) => a + b, sum);
     return sum || defaultScore;

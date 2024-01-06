@@ -34,6 +34,7 @@ builder.Services.AddScoped<ResultParser, NytMiniParser>();
 builder.Services.AddScoped<ResultParser, FramedParser>();
 builder.Services.AddScoped<ResultParser, CloudleParser>();
 builder.Services.AddScoped<ResultParser, DungleonParser>();
+builder.Services.AddScoped<ResultParser, MurdleParser>();
 builder.Services.AddScoped<ResultParser, NytCrosswordParser>();
 builder.Services.AddScoped<ResultParser, Crosswordle1Parser>();
 builder.Services.AddScoped<ResultParser, Crosswordle2Parser>();
