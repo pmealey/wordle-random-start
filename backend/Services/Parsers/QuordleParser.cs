@@ -27,7 +27,7 @@ namespace backend.Services.Parsers
 
         protected override string GetCleanResult(string result, Match parserResults)
         {
-            return result.Replace("m-w.com/games/quordle", string.Empty).Trim();
+            return result.Replace("m-w.com/games/quordle/", string.Empty).Trim();
         }
 
         public override string? GetScoreValue(DailyResult dailyResult)
