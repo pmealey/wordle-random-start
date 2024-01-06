@@ -18,24 +18,37 @@ namespace backend.Services.Parsers
         public override string GameName => "Connections";
         public override string? HelpText => null;
 
-        protected override Regex Parser => new Regex($"{GameName}\nPuzzle #[\\d]+\n(?<{ScoreGroup}>.*)");
+        protected override Regex Parser => new Regex($@"^{GameName}\s*Puzzle #\d+(?<{ScoreGroup}>.*)$", RegexOptions.Singleline);
         public override string Url => "https://www.nytimes.com/games/connections";
 
-        public override string? GetScoreValue(DailyResult dailyResult)
+        protected override string GetCleanResult(string result, Match parserResults)
         {
-            return dailyResult.Scores == null || dailyResult.Scores.Count != 4 ? null : dailyResult.Scores.Average().ToString();
+            return result;
         }
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
+            if (!parserResults.Groups.ContainsKey(ScoreGroup)) {
+                return dailyResult;
+            }
+
             var scoreRows = parserResults.Groups[ScoreGroup]
                 .Value
-                .Split('\n');
+                .Split('\n')
+                .Where(row => !string.IsNullOrEmpty(row))
+                .Select(row => row.Trim())
+                .ToArray();
 
             var totalGuesses = scoreRows.Length;
 
             var correctRows = scoreRows
-                .Where(row => row.Distinct().Count() == 1)
+                .Where(row => {
+                    var rowParts = new List<string>();
+                    for (var i = 0; i < row.Length - 1; i += 2) {
+                        rowParts.Add(row.Substring(i, 2));
+                    }
+                    return rowParts.Distinct().Count() == 1;
+                })
                 .Count();
 
             // the score is the total number of guesses plus the number of categories that were not successfully guessed
