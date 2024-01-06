@@ -20,10 +20,10 @@ namespace backend.Services.Parsers
         public override string Url => "https://globle-game.com";
         protected override string GetCleanResult(string result, Match parserResults)
         {
-                return result
-                    .Replace("#globle", string.Empty)
-                    .Replace("globle-game.com", string.Empty)
-                    .Trim();
+            return result
+                .Replace("#globle", string.Empty)
+                .Replace(Url, string.Empty)
+                .Trim();
         }
     }
 }
