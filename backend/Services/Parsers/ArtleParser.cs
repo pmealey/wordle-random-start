@@ -12,8 +12,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override string Category => "Media";
         public override bool CountWinner => false;
+        public override bool Default => false;
         public override string GameName => "Artle";
         public override string? HelpText => null;
         // \uD83C\uDFA8 = 🎨
@@ -23,8 +23,6 @@ namespace backend.Services.Parsers
         protected override Regex Parser => new Regex($"{GameName} #\\d+.*?\uD83C\uDFA8(?<{ScoreGroup}>[^\\n]+)", RegexOptions.Singleline);
         protected override string? ExtraContent => Url;
         public override string Url => "https://www.nga.gov/Artle";
-        public override DateTime ActiveAfter => new DateTime(2022, 12, 4);
-        public override DateTime ActiveBefore => new DateTime(2023, 8, 5);
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {

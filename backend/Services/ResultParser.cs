@@ -12,13 +12,9 @@ namespace backend.Services
             _logger = logger;
         }
 
-        public virtual DateTime ActiveAfter => DateTime.MinValue;
-
-        public virtual DateTime ActiveBefore => DateTime.MaxValue;
-
-        public abstract string Category { get; }
-
         public abstract bool CountWinner { get; }
+
+        public abstract bool Default { get; }
 
         public abstract string GameName { get; }
 

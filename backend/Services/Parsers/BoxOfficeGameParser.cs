@@ -12,7 +12,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override string Category => "Media";
+        public override bool CountWinner => false;
+        public override bool Default => false;
         public override string GameName => "Box Office Game";
         public override bool GolfScoring => false;
         public override string? HelpText => null;

@@ -12,8 +12,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override DateTime ActiveAfter => new DateTime(2022, 6, 25);
-        public override string Category => "Media";
+        public override bool CountWinner => false;
+        public override bool Default => false;
         public override string GameName => "Moviedle";
         public override string? HelpText => null;
         // \uD83C\uDFA5 = 🎥

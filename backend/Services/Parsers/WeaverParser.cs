@@ -12,8 +12,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override DateTime ActiveAfter => new DateTime(2022, 7, 20);
-        public override string Category => "Word";
+        public override bool CountWinner => false;
+        public override bool Default => false;
         public override string GameName => "Weaver";
         public override string? HelpText => null;
         // \uD83D\uDFE9 = 🟩

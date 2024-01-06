@@ -11,7 +11,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override string Category => "Other";
+        public override bool CountWinner => true;
+        public override bool Default => false;
         public override string GameName => "Dungleon";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"{Url} #\\d+ (?<{ScoreGroup}>[\\d|X])/\\d");

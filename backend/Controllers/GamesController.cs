@@ -16,13 +16,6 @@ public class GamesController : ControllerBase
     private readonly IEnumerable<ResultParser> _resultParsers;
     private static IEnumerable<object>? _games;
 
-    private static readonly Dictionary<string, int> GameCategoryCounts = new Dictionary<string, int>
-    {
-        { "Word", 1 },
-        { "Media", 1 },
-        { "Other", 1 }
-    };
-
     public GamesController(DataContext context, ILogger<GamesController> logger, IEnumerable<ResultParser> resultParsers)
     {
         _context = context;
@@ -34,10 +27,6 @@ public class GamesController : ControllerBase
     public IActionResult Get(string? dateString)
     {
         var now = TimeUtility.GetNowEasternStandardTime();
-        var categories = _resultParsers
-            .Where(rp => rp.CountWinner && rp.ActiveAfter <= now && rp.ActiveBefore > now)
-            .GroupBy(rp => rp.Category)
-            .ToDictionary(g => g.Key, g => g.Select(rp => rp.GameName).ToList());
 
         if (DateTime.TryParse(dateString, out var date)) {
             if (_games != null) {
@@ -47,29 +36,20 @@ public class GamesController : ControllerBase
             date = now;
         }
 
-        // every day should result in the same 
+        // every day should result in the same games selected
         var seed = date.Year * 1000 + date.DayOfYear;
         var rand = new Random(seed);
 
-        foreach (var category in categories.Where(kvp => GameCategoryCounts.ContainsKey(kvp.Key)))
-        {
-            var numberToSelect = GameCategoryCounts[category.Key];
-            var numberToRemove = category.Value.Count() - numberToSelect;
-
-            while (numberToRemove > 0)
-            {
-                var indexToRemove = rand.Next(category.Value.Count());
-                category.Value.RemoveAt(indexToRemove);
-                numberToRemove = category.Value.Count() - numberToSelect;
-            }
-        }
+        var randomlySelectedOtherGames = _resultParsers
+            .Where(rp => rp.CountWinner && !rp.Default)
+            .OrderBy(rp => rand.Next())
+            .Take(2);
 
         _games = _resultParsers
             .Where(rp => rp.HideAfter > now)
             .Select(rp => new
             {
-                Category = rp.Category,
-                CountWinner = rp.CountWinner && categories.ContainsKey(rp.Category) && categories[rp.Category].Contains(rp.GameName),
+                CountWinner = rp.CountWinner && (rp.Default || randomlySelectedOtherGames.Contains(rp)),
                 GameName = rp.GameName,
                 GolfScoring = rp.GolfScoring,
                 HelpText = rp.HelpText,

@@ -11,7 +11,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override string Category => "Word";
+        public override bool CountWinner => false;
+        public override bool Default => false;
         public override string GameName => "Antiwordle";
         public override bool GolfScoring => false;
         public override string? HelpText => null;

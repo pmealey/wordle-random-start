@@ -12,8 +12,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override string Category => "Default";
         public override bool CountWinner => true;
+        public override bool Default => true;
         private List<string> ScoreGroups = new [] { 1, 2, 3, 4 }
             .Select(i => "score" + i.ToString())
             .ToList();

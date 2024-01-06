@@ -11,8 +11,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override string Category => "Word";
         public override bool CountWinner => false;
+        public override bool Default => false;
         public override string GameName => "Absurdle";
         public override string? HelpText => "Make sure you start with today's word, and don't retread or retry the puzzle.";
         protected override Regex Parser => new Regex($"{GameName} (?<{ScoreGroup}>\\d+)/");

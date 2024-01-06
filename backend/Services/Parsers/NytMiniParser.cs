@@ -11,7 +11,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override string Category => "Word";
+        public override bool CountWinner => true;
+        public override bool Default => false;
         public override string GameName => "NYT Mini";
         public override string? HelpText => "Enter \"Nytm 42\", \"Nytm 1:42\", or \"Nytm 1.42\" for example.";
         protected override Regex Parser => new Regex($"(I solved the [\\d/]+ New York Times Mini Crossword in|NYTM) (?<{TimeGroup}>[:\\d\\.]+)!?", RegexOptions.IgnoreCase);

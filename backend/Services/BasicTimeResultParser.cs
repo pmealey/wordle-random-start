@@ -12,8 +12,6 @@ namespace backend.Services
             _logger = logger;
         }
 
-        public override bool CountWinner => true;
-
         public override bool GolfScoring => true;
 
         protected const string TimeGroup = "time";

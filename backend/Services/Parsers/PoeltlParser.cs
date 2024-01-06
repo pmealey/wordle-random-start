@@ -11,8 +11,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override DateTime ActiveBefore => new DateTime(2022, 6, 26);
-        public override string Category => "Other";
+        public override bool CountWinner => false;
+        public override bool Default => false;
         public override string GameName => "Poeltl";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"{GameName} \\d+ - (?<{ScoreGroup}>[\\d|X])/\\d");

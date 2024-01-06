@@ -12,7 +12,8 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override string Category => "Media";
+        public override bool CountWinner => true;
+        public override bool Default => false;
         public override string GameName => "Framed";
         public override string? HelpText => null;
         // \uD83C\uDFA5 = 🎥
