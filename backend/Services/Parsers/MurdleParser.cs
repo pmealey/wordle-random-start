@@ -28,7 +28,7 @@ namespace backend.Services.Parsers
         // 7\uFE0F\u20E3 = 7️⃣
         // 8\uFE0F\u20E3 = 8️⃣
         // 9\uFE0F\u20E3 = 9️⃣
-        protected override Regex Parser => new Regex($"{GameName} for [\\d/]+[^✅❌]+(?<{ScoreGroup}>[✅❌]+) (?<{TimeGroup}>[:0123456789\uFE0F\u20E3]+)");
+        protected override Regex Parser => new Regex($@"{GameName} for [\d/]+[^✅❌]+(?<{ScoreGroup}>[✅❌]+)\s+(?<{TimeGroup}>[:0123456789\uFE0F\u20E3]+)", RegexOptions.Singleline);
         public override string Url => "https://murdle.com/";
 
         protected override string GetCleanResult(string result, Match parserResults)
