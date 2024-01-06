@@ -27,6 +27,7 @@ builder.Services.AddScoped<ResultParser, SquarewordParser>();
 builder.Services.AddScoped<ResultParser, QuordleParser>();
 builder.Services.AddScoped<ResultParser, GlobleParser>();
 builder.Services.AddScoped<ResultParser, WorldleParser>();
+builder.Services.AddScoped<ResultParser, TradleParser>();
 builder.Services.AddScoped<ResultParser, ConnectionsParser>();
 builder.Services.AddScoped<ResultParser, ColorfleParser>();
 builder.Services.AddScoped<ResultParser, NytMiniParser>();
