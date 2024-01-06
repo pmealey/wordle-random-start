@@ -14,7 +14,7 @@ namespace backend.Services.Parsers
         public override bool CountWinner => false;
         public override bool Default => false;
         public override string GameName => "Absurdle";
-        public override string? HelpText => "Make sure you start with today's word, and don't retread or retry the puzzle.";
+        public override string? HelpText => "Start with today's random word.";
         protected override Regex Parser => new Regex($"{GameName} (?<{ScoreGroup}>\\d+)/");
         protected override string? ExtraContent => Url;
         public override string Url => "https://qntm.org/files/absurdle/absurdle.html";
