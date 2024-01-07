@@ -14,6 +14,8 @@ public class DailyResultController : ControllerBase
     private readonly DataContext _context;
     private readonly ILogger<DailyResultController> _logger;
     private readonly IEnumerable<ResultParser> _resultParsers;
+
+    private static List<string> AcceptedGroups = new List<string> { "family", "libo" };
  
     public DailyResultController(DataContext context, ILogger<DailyResultController> logger, IEnumerable<ResultParser> resultParsers)
     {
@@ -36,8 +38,21 @@ public class DailyResultController : ControllerBase
     }
 
     [HttpGet("{dateOrUser}")]
-    public IActionResult GetDailySummary([FromRoute] string dateOrUser, [FromQuery] string[]? group)
+    public IActionResult GetDailySummary([FromRoute] string dateOrUser, [FromQuery] string[] group)
     {
+        var invalidGroups = group.Where((g) => !AcceptedGroups.Contains(g)).ToList();
+        if (invalidGroups.Count() > 0)
+        {
+            if (invalidGroups.Count() > 1)
+            {
+                return BadRequest(string.Join(", ", invalidGroups.Select((g) => "\"" + g + "\"")) + " are not valid groups.");
+            }
+            else
+            {
+                return BadRequest("\"" + invalidGroups.First() + "\" is not a valid group.");
+            }
+        }
+
         var query = _context.DailyResult.AsQueryable();
 
         if (DateTime.TryParse(dateOrUser, out var date))
@@ -170,6 +185,20 @@ public class DailyResultController : ControllerBase
     }
 
     private IActionResult CreateDailyResult(string user, DateTime date, string result, List<string> groups) {
+        var invalidGroups = groups.Where((g) => !AcceptedGroups.Contains(g)).ToList();
+        if (invalidGroups.Count() > 0)
+        {
+            if (invalidGroups.Count() > 1)
+            {
+                return BadRequest(string.Join(", ", invalidGroups.Select((g) => "\"" + g + "\"")) + " are not valid groups.");
+            }
+            else
+            {
+                return BadRequest("\"" + invalidGroups.First() + "\" is not a valid group.");
+            }
+        }
+
+
         DailyResult? dailyResult = null;
         foreach (var parser in _resultParsers)
         {
@@ -181,7 +210,7 @@ public class DailyResultController : ControllerBase
 
         if (dailyResult == null)
         {
-            return BadRequest("The game results could not be parsed");
+            return BadRequest("The game results could not be parsed.");
         }
 
         if (groups.Count > 0)

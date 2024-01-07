@@ -73,4 +73,6 @@ button:hover { background-color: #e0e0e0;}
 .group-tabs button.selected { position: relative; bottom: -1px; }
 .group-tabs button + button { margin-left: 8px; }
 
+.error { color: red; }
+
 @keyframes shine { to { background-position: 200% center; } }

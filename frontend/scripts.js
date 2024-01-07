@@ -97,10 +97,13 @@ function stringToColor(str) {
   let leaderboardArea = document.getElementById('leaderboard');
   let crownColumn2 = document.getElementById('crown2');
   let summaryArea = document.getElementById('summary');
+  let errorArea = document.getElementById('error-area');
 
   let games = [];
 
   function refreshData() {
+    errorArea.classList.add('hidden');
+
     if (!userInput.value || !groupInput.value) {
       noUserOrGroupArea.classList.remove('hidden');
       groupSelectionArea.classList.add('hidden');
@@ -115,8 +118,14 @@ function stringToColor(str) {
     let summaryRequest = new XMLHttpRequest();
     summaryRequest.onreadystatechange = function () {
       if (requestIsDone(summaryRequest)) {
-        let newSummaries = JSON.parse(summaryRequest.responseText);
-        setData(newSummaries);
+        if (requestHasSucceeded(summaryRequest)) {
+          let newSummaries = JSON.parse(summaryRequest.responseText);
+          setData(newSummaries);
+        } else {
+          errorArea.textContent = summaryRequest.responseText;
+          resultsArea.classList.add('hidden');
+          errorArea.classList.remove('hidden');
+        }
       }
     }
 
@@ -492,7 +501,19 @@ function stringToColor(str) {
         resultsInput.id = 'results';
         resultsInput.enterKeyHint = 'done';
 
-        let submit = () => submitResult(dialogBody.parentElement.parentElement, resultsInput);
+        const errorArea = document.createElement('div');
+        errorArea.id = 'result-error-area'
+        errorArea.classList.add('error');
+
+        const handleSuccess = () => {
+          dialogBody.parentElement.parentElement.remove();
+        };
+
+        const handleError = (errorText) => {
+          errorArea.innerHTML = errorText;
+        };
+
+        let submit = () => submitResult(resultsInput.innerText, handleSuccess, handleError);
 
         // submit when clicking submit, when pressing enter, or when pasting into the text area
         resultsInput.addEventListener('keypress', (event) => event.key == 'Enter' ? event.preventDefault() : undefined);
@@ -518,7 +539,9 @@ function stringToColor(str) {
 
         dialogBody.appendChild(resultsInput);
 
-        // auto-paste isn't work, maybe try it again later.
+        dialogBody.appendChild(errorArea);
+
+        // auto-paste isn't working, maybe try it again later.
         // try {
         //   if (typeof(navigator.clipboard.readText) === 'function') {
         //     navigator.clipboard.readText().then((text) => {
@@ -536,7 +559,17 @@ function stringToColor(str) {
         let submitButton = document.createElement('button');
         submitButton.addEventListener('click', () => {
           let resultsInput = dialogBody.querySelector('#results');
-          submitResult(dialogBody.parentElement.parentElement, resultsInput);
+
+          const handleSuccess = () => {
+            dialogBody.parentElement.parentElement.remove();
+          };
+
+          const handleError = (errorText) => {
+            let errorArea = dialogBody.querySelector('#result-error-area');
+            errorArea.innerHTML = errorText;
+          };
+
+          submitResult(resultsInput.innerText, handleSuccess, handleError);
         });
         submitButton.textContent = 'Submit';
 
@@ -685,8 +718,8 @@ function stringToColor(str) {
 
   let submittingResult = false;
 
-  function submitResult(dialogOverlay, resultsInput) {
-    if (submittingResult || !userInput.value || !resultsInput.innerText) {
+  function submitResult(resultText, handleSuccess, handleError) {
+    if (submittingResult || !userInput.value || !resultText) {
       return;
     }
 
@@ -702,9 +735,11 @@ function stringToColor(str) {
         refreshData();
 
         setTimeout(() => {
-          dialogOverlay.remove();
+          handleSuccess();
           enableScroll();
         }, 250);
+      } else {
+        handleError(submitRequest.responseText);
       }
     }
 
@@ -716,7 +751,7 @@ function stringToColor(str) {
 
     submitRequest.open('PUT', addGroupParams(url), true);
     submitRequest.setRequestHeader('Content-Type', 'application/json');
-    submitRequest.send(JSON.stringify(resultsInput.innerText));
+    submitRequest.send(JSON.stringify(resultText));
   }
 
   function getSelectedGroup() {
