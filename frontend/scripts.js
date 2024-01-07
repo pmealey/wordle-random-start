@@ -90,6 +90,7 @@ function stringToColor(str) {
   let deleteArea = document.getElementById('delete-area');
   let deleteButton = document.getElementById('delete');
   let noUserOrGroupArea = document.getElementById('no-user-or-group-area');
+  let groupSelectionArea = document.getElementById('group-selection-area');
   let resultsArea = document.getElementById('results-area');
   let gamesList = document.getElementById('games-list');
   let crownColumn1 = document.getElementById('crown1');
@@ -97,23 +98,18 @@ function stringToColor(str) {
   let crownColumn2 = document.getElementById('crown2');
   let summaryArea = document.getElementById('summary');
 
-  (function () {
-    const thisUrlParams = new URLSearchParams(location.search);
-    let groups = thisUrlParams.getAll('group').filter(Boolean);
-    if (!groups || !groups.length) {
-      groups = ['family'];
-    }
-
-    setGroups(groups);
-  })();
-
   let games = [];
 
   function refreshData() {
     if (!userInput.value || !groupInput.value) {
-      resultsArea.classList.add('hidden');
       noUserOrGroupArea.classList.remove('hidden');
+      groupSelectionArea.classList.add('hidden');
+      resultsArea.classList.add('hidden');
       return;
+    }
+
+    if (groupInput.value.includes(',')) {
+      groupSelectionArea.classList.remove('hidden');
     }
 
     let summaryRequest = new XMLHttpRequest();
@@ -131,7 +127,8 @@ function stringToColor(str) {
       url += '/' + date;
     }
 
-    url = addGroupParams(url);
+    // fetch results corresponding to the selected group
+    url = addGroupParam(url);
 
     summaryRequest.open('GET', url, false);
     summaryRequest.send();
@@ -573,10 +570,20 @@ function stringToColor(str) {
 
     groupArea.classList.remove('hidden');
 
-    let group = localStorage.getItem('group');
-    if (group) {
-      groupInput.value = group;
+    // first check the URL for a group
+    const thisUrlParams = new URLSearchParams(location.search);
+    let group = thisUrlParams.getAll('group').filter(Boolean);
+    if (!group || !group.length) {
+      // if the URL does not have a group specified, check local storage
+      group = localStorage.getItem('group')?.split(',');
+
+      // if there is still no group specified, default to family for now
+      if (!group || !group.length) {
+          group = ['family']
+      }
     }
+
+    setGroups(group, false);
 
     refreshData();
 
@@ -618,16 +625,18 @@ function stringToColor(str) {
     dailyWordRequest.send();
   })();
 
-  function setUser() {
+  function setUser(refresh = true) {
     localStorage.setItem('user', userInput.value);
 
-    refreshData();
+    if (refresh) {
+      refreshData();
+    }
   }
 
   setUserButton.addEventListener('click', setUser);
   userInput.addEventListener('keyup', enterListener(setUser));
 
-  function setGroups(groups = getGroupsFromInput()) {
+  function setGroups(groups = getGroupsFromInput(), refresh = true) {
     localStorage.setItem('group', groups?.toString());
     groupInput.value = groups?.toString();
 
@@ -637,7 +646,43 @@ function stringToColor(str) {
     const newUrl = location.origin + location.pathname + (groups?.length ? '?' : '') + thisUrlParams.toString();
     history.replaceState({path: newUrl}, '', newUrl);
 
-    refreshData();
+    let selectedGroup = getSelectedGroup();
+    if (!groups.includes(selectedGroup)) {
+      selectedGroup = undefined;
+    }
+
+    groupSelectionArea.innerHTML = '';
+    groupSelectionArea.classList.add('hidden');
+
+    if (groups && groups.length) {
+      if (!selectedGroup) {
+        selectedGroup = groups[0];
+      }
+  
+      groups.forEach(group => {
+        const groupButton = document.createElement('button');
+        groupButton.id = `select-${group}-group`;
+        groupButton.textContent = group;
+        groupButton.dataset.group = group;
+        if (group === selectedGroup) {
+          groupButton.classList.add('selected');
+        }
+        groupButton.addEventListener('click', () => {
+          if (!groupButton.classList.contains('selected')) {
+            document.querySelectorAll('.group-tabs button.selected')
+              .forEach(groupButton => groupButton.classList.remove('selected'));
+
+            groupButton.classList.add('selected');
+            refreshData();
+          }
+        });
+        groupSelectionArea.appendChild(groupButton);
+      });
+    }
+
+    if (refresh) {
+      refreshData();
+    }
   }
 
   setGroupButton.addEventListener('click', () => setGroups());
@@ -679,6 +724,12 @@ function stringToColor(str) {
     submitRequest.send(JSON.stringify(resultsInput.innerText));
   }
 
+  function getSelectedGroup() {
+    return document.querySelector('.group-tabs button.selected')
+      ?.dataset
+      ?.group;
+  }
+
   function getGroupsFromInput() {
     return groupInput.value
       .split(',')
@@ -693,6 +744,17 @@ function stringToColor(str) {
     }
 
     groups.forEach((group) => newUrlParams.append('group', group));
+
+    return url + '?' + newUrlParams.toString();
+  }
+
+  function addGroupParam(url, newUrlParams = new URLSearchParams()) {
+    const group = getSelectedGroup();
+    if (!group) {
+      return url;
+    }
+
+    newUrlParams.append('group', group);
 
     return url + '?' + newUrlParams.toString();
   }
