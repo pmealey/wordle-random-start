@@ -78,6 +78,9 @@ function stringToColor(str) {
   let userArea = document.getElementById('user-area');
   let userInput = document.getElementById('user');
   let setUserButton = document.getElementById('set-user');
+  let setGroupButton = document.getElementById('set-group');
+  let groupArea = document.getElementById('group-area');
+  let groupInput = document.getElementById('group');
   let dateArea = document.getElementById('date-area');
   let dateInput = document.getElementById('date');
   let refreshButton = document.getElementById('refresh');
@@ -86,6 +89,7 @@ function stringToColor(str) {
   let viewButton = document.getElementById('view');
   let deleteArea = document.getElementById('delete-area');
   let deleteButton = document.getElementById('delete');
+  let noUserOrGroupArea = document.getElementById('no-user-or-group-area');
   let resultsArea = document.getElementById('results-area');
   let gamesList = document.getElementById('games-list');
   let crownColumn1 = document.getElementById('crown1');
@@ -95,16 +99,23 @@ function stringToColor(str) {
 
   (function () {
     const thisUrlParams = new URLSearchParams(location.search);
-    if (!thisUrlParams.has('group')) {
-      thisUrlParams.append('group', 'family');
-      const newUrl = location.origin + location.pathname + '?' + thisUrlParams.toString();
-      history.replaceState({path: newUrl}, '', newUrl);
+    let groups = thisUrlParams.getAll('group').filter(Boolean);
+    if (!groups || !groups.length) {
+      groups = ['family'];
     }
+
+    setGroups(groups);
   })();
 
   let games = [];
 
   function refreshData() {
+    if (!userInput.value || !groupInput.value) {
+      resultsArea.classList.add('hidden');
+      noUserOrGroupArea.classList.remove('hidden');
+      return;
+    }
+
     let summaryRequest = new XMLHttpRequest();
     summaryRequest.onreadystatechange = function () {
       if (requestIsDone(summaryRequest)) {
@@ -120,12 +131,7 @@ function stringToColor(str) {
       url += '/' + date;
     }
 
-    const groups = getGroups();
-    if (groups && groups.length) {
-      const params = new URLSearchParams();
-      groups.forEach(g => params.append('group', g));
-      url = url + '?' + params.toString();
-    }
+    url = addGroupParams(url);
 
     summaryRequest.open('GET', url, false);
     summaryRequest.send();
@@ -294,6 +300,7 @@ function stringToColor(str) {
       summaryArea.appendChild(gameContainer);
     });
 
+    noUserOrGroupArea.classList.add('hidden');
     resultsArea.classList.remove('hidden');
 
     displayLeaderboard();
@@ -468,10 +475,18 @@ function stringToColor(str) {
       (dialogBody) => {
         dialogBody.classList.add('results-dialog');
 
+        if (!userInput.value || !groupInput.value) {
+          const noUserOrGroupWarning = document.createElement('p');
+          noUserOrGroupWarning.classList.add('help');
+          noUserOrGroupWarning.textContent = noUserOrGroupArea.textContent;
+          dialogBody.appendChild(noUserOrGroupWarning);
+          return;
+        }
+
         let labelContainer = document.createElement('div');
         let resultsLabel = document.createElement('label');
         resultsLabel.for = 'results';
-        resultsLabel.textContent = "Paste or enter your result here:";
+        resultsLabel.textContent = 'Paste or enter your result here:';
         labelContainer.appendChild(resultsLabel);
         dialogBody.appendChild(labelContainer);
 
@@ -480,7 +495,7 @@ function stringToColor(str) {
         resultsInput.id = 'results';
         resultsInput.enterKeyHint = 'done';
 
-        let submit = () => submitResult(dialogBody.parentElement.parentElement, resultsInput)
+        let submit = () => submitResult(dialogBody.parentElement.parentElement, resultsInput);
 
         // submit when clicking submit, when pressing enter, or when pasting into the text area
         resultsInput.addEventListener('keypress', (event) => event.key == 'Enter' ? event.preventDefault() : undefined);
@@ -527,6 +542,11 @@ function stringToColor(str) {
           submitResult(dialogBody.parentElement.parentElement, resultsInput);
         });
         submitButton.textContent = 'Submit';
+
+        if (!userInput.value || !groupInput.value) {
+          submitButton.disabled = true;
+        }
+
         dialogFooter.appendChild(submitButton);
       },
       () => {
@@ -549,6 +569,13 @@ function stringToColor(str) {
     let user = localStorage.getItem('user');
     if (user) {
       userInput.value = user;
+    }
+
+    groupArea.classList.remove('hidden');
+
+    let group = localStorage.getItem('group');
+    if (group) {
+      groupInput.value = group;
     }
 
     refreshData();
@@ -592,15 +619,29 @@ function stringToColor(str) {
   })();
 
   function setUser() {
-    if (userInput.value) {
-      localStorage.setItem('user', userInput.value);
-    }
+    localStorage.setItem('user', userInput.value);
 
     refreshData();
   }
 
   setUserButton.addEventListener('click', setUser);
   userInput.addEventListener('keyup', enterListener(setUser));
+
+  function setGroups(groups = getGroupsFromInput()) {
+    localStorage.setItem('group', groups?.toString());
+    groupInput.value = groups?.toString();
+
+    const thisUrlParams = new URLSearchParams(location.search);
+    thisUrlParams.delete('group');
+    groups?.forEach(group => thisUrlParams.append('group', group));
+    const newUrl = location.origin + location.pathname + (groups?.length ? '?' : '') + thisUrlParams.toString();
+    history.replaceState({path: newUrl}, '', newUrl);
+
+    refreshData();
+  }
+
+  setGroupButton.addEventListener('click', () => setGroups());
+  groupInput.addEventListener('keyup', enterListener(() => setGroups()));
 
   let submittingResult = false;
 
@@ -638,16 +679,20 @@ function stringToColor(str) {
     submitRequest.send(JSON.stringify(resultsInput.innerText));
   }
 
-  function getGroups() {
-    const thisUrlParams = new URLSearchParams(location.search);
-    return thisUrlParams.getAll('group').filter(Boolean);
+  function getGroupsFromInput() {
+    return groupInput.value
+      .split(',')
+      .filter(Boolean)
+      .map(group => group.trim());
   }
 
   function addGroupParams(url, newUrlParams = new URLSearchParams()) {
-    const groups = getGroups();
-    groups.forEach((group) => {
-      newUrlParams.append('group', group);
-    });
+    const groups = getGroupsFromInput();
+    if (!groups || !groups.length) {
+      return url;
+    }
+
+    groups.forEach((group) => newUrlParams.append('group', group));
 
     return url + '?' + newUrlParams.toString();
   }
