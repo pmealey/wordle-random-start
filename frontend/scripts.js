@@ -575,12 +575,7 @@ function stringToColor(str) {
     let group = thisUrlParams.getAll('group').filter(Boolean);
     if (!group || !group.length) {
       // if the URL does not have a group specified, check local storage
-      group = localStorage.getItem('group')?.split(',');
-
-      // if there is still no group specified, default to family for now
-      if (!group || !group.length) {
-          group = ['family']
-      }
+      group = localStorage.getItem('group')?.split(',')?.filter(Boolean);
     }
 
     setGroups(group, false);
