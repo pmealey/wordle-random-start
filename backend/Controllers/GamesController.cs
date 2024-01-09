@@ -14,7 +14,6 @@ public class GamesController : ControllerBase
     private readonly DataContext _context;
     private readonly ILogger<GamesController> _logger;
     private readonly IEnumerable<ResultParser> _resultParsers;
-    private static IEnumerable<object>? _games;
 
     public GamesController(DataContext context, ILogger<GamesController> logger, IEnumerable<ResultParser> resultParsers)
     {
@@ -28,11 +27,7 @@ public class GamesController : ControllerBase
     {
         var now = TimeUtility.GetNowEasternStandardTime();
 
-        if (DateTime.TryParse(dateString, out var date)) {
-            if (_games != null) {
-                return Ok(_games);
-            }
-        } else {
+        if (!DateTime.TryParse(dateString, out var date)) {
             date = now;
         }
 
@@ -43,9 +38,10 @@ public class GamesController : ControllerBase
         var randomlySelectedOtherGames = _resultParsers
             .Where(rp => rp.CountWinner && !rp.Default)
             .OrderBy(rp => rand.Next())
-            .Take(2);
+            .Take(2)
+            .ToList();
 
-        _games = _resultParsers
+        var games = _resultParsers
             .Where(rp => rp.HideAfter > now)
             .Select(rp => new
             {
@@ -57,6 +53,6 @@ public class GamesController : ControllerBase
             })
             .ToList();
 
-        return Ok(_games);
+        return Ok(games);
     }
 }
