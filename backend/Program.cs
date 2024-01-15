@@ -30,6 +30,7 @@ builder.Services.AddScoped<ResultParser, WorldleParser>();
 builder.Services.AddScoped<ResultParser, TradleParser>();
 builder.Services.AddScoped<ResultParser, ConnectionsParser>();
 builder.Services.AddScoped<ResultParser, ColorfleParser>();
+builder.Services.AddScoped<ResultParser, ColorfleHardModeParser>();
 builder.Services.AddScoped<ResultParser, NytMiniParser>();
 builder.Services.AddScoped<ResultParser, FramedParser>();
 builder.Services.AddScoped<ResultParser, CloudleParser>();

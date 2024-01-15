@@ -14,7 +14,7 @@ namespace backend.Services.Parsers
         public override bool CountWinner => true;
         public override bool Default => false;
         public override string GameName => "Colorfle";
-        public override string? HelpText => null;
+        public override string? HelpText => "Select 'NORMAL' from the difficulty selector.";
         protected override Regex Parser => new Regex($"{GameName} \\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override string? ExtraContent => null;
         public override string Url => "https://colorfle.com/";
