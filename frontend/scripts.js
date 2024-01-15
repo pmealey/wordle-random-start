@@ -101,6 +101,8 @@ function stringToColor(str) {
 
   let games = [];
 
+  let group = {};
+
   function refreshData() {
     errorArea.classList.add('hidden');
 
@@ -129,18 +131,33 @@ function stringToColor(str) {
       }
     }
 
-    let url = '/api/wordle/daily-result';
+    let groupRequest = new XMLHttpRequest();
+    groupRequest.onreadystatechange = function () {
+      if (requestHasSucceeded(groupRequest)) {
+        group = JSON.parse(groupRequest.responseText);
 
-    const date = dateInput.value
-    if (date) {
-      url += '/' + date;
+        let summaryRequestUrl = '/api/wordle/daily-result';
+
+        const date = dateInput.value
+        if (date) {
+          summaryRequestUrl += '/' + date;
+        }
+
+        // fetch results corresponding to the selected group
+        summaryRequestUrl = addGroupParam(summaryRequestUrl);
+
+        summaryRequest.open('GET', summaryRequestUrl, false);
+        summaryRequest.send();
+      } else {
+        resultsArea.classList.add('hidden');
+        noUserOrGroupArea.classList.remove('hidden');
+      }
     }
 
-    // fetch results corresponding to the selected group
-    url = addGroupParam(url);
+    let groupRequestUrl =  ['/api/wordle/group', getSelectedGroup()].join('/');
 
-    summaryRequest.open('GET', url, false);
-    summaryRequest.send();
+    groupRequest.open('GET', groupRequestUrl, true);
+    groupRequest.send();
   }
 
   if (advancedModeEnabled()) {
@@ -274,7 +291,8 @@ function stringToColor(str) {
 
       let gameContainer = document.createElement('div');
       gameContainer.classList.add('game');
-      if (game.countWinner) {
+      if (group.selectGames && game.countWinner ||
+          !group.selectGames && allUsersForGame.length > 0) {
         gameContainer.classList.add('count-winner');
       }
 
@@ -294,7 +312,7 @@ function stringToColor(str) {
             .forEach((dailyResult) => {
               let scores = dailyResultsForGame.map(dr => getScore(dr, game.golfScoring));
               let winner = (game.golfScoring ? Math.min(...scores) : Math.max(...scores)) === getScore(dailyResult, game.golfScoring);
-              let container = addResult(game, dailyResult, user, winner);
+              let container = addResult(game, dailyResult, user, winner, scores.length);
               resultsList.appendChild(container);
 
               if (game.countWinner && scores.length > 1) {
@@ -348,11 +366,11 @@ function stringToColor(str) {
     container.appendChild(header);
   }
 
-  function addResult(game, dailyResult, label, winner) {
+  function addResult(game, dailyResult, label, winner, numResults) {
     let wrapper = document.createElement('div');
     wrapper.classList.add('result-wrapper');
 
-    if (game.countWinner && winner) {
+    if ((group.selectGames && game.countWinner || !group.selectGames) && numResults > 1 && winner) {
       let winnerBorder = document.createElement('div');
       winnerBorder.classList.add('winner-border');
       wrapper.append(winnerBorder);

@@ -15,8 +15,8 @@ public class DailyResultController : ControllerBase
     private readonly ILogger<DailyResultController> _logger;
     private readonly IEnumerable<ResultParser> _resultParsers;
 
-    private static List<string> AcceptedGroups = new List<string> { "family", "libo" };
- 
+    private readonly IList<string> AcceptedGroups = GroupController.Groups.Select(g => g.Name).ToList();
+
     public DailyResultController(DataContext context, ILogger<DailyResultController> logger, IEnumerable<ResultParser> resultParsers)
     {
         _context = context;
