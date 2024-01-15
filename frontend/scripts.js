@@ -133,6 +133,10 @@ function stringToColor(str) {
 
     let groupRequest = new XMLHttpRequest();
     groupRequest.onreadystatechange = function () {
+      if (!requestIsDone(groupRequest)) {
+        return;
+      }
+
       if (requestHasSucceeded(groupRequest)) {
         group = JSON.parse(groupRequest.responseText);
 
