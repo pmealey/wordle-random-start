@@ -319,7 +319,8 @@ function stringToColor(str) {
               let container = addResult(game, dailyResult, user, winner, scores.length);
               resultsList.appendChild(container);
 
-              if (game.countWinner && scores.length > 1) {
+              if ((group.selectGames && game.countWinner ||
+                  !group.selectGames) && scores.length > 1) {
                 logResult(user, winner);
               }
             });
