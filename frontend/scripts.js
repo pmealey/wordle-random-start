@@ -25,8 +25,8 @@ function getScore(dailyResult, golfScoring) {
   if (dailyResult.score != null && dailyResult.time != null) {
     // special and lazy handling for murdle - highest score with lowest time should win
     const time = new Date(dailyResult.date.replace('00:00:00', dailyResult.time)) - new Date(dailyResult.date);
-    // each failure adds a day in seconds to the score
-    return dailyResult.score * 24 * 60 * 60 + time;
+    // each failure adds a day in milliseconds to the score
+    return dailyResult.score * 24 * 60 * 60 * 1000 + time;
   }
 
   if (dailyResult.score != null) {
