@@ -18,12 +18,12 @@ namespace backend.Services.Parsers
         public override bool GolfScoring => true;
         public override string? HelpText => null;
         private const string ScoreGroup = "score";
-        protected override Regex Parser => new Regex($"^I solved today's {GameName} [^\\s]+ in (?<{ScoreGroup}>\\d+) guesses");
-        public override string Url => "https://www.redactle.com/";
+        protected override Regex Parser => new Regex($@"^I solved {GameName} #\d+ in (?<{ScoreGroup}>\d+) guesses");
+        public override string Url => "https://redactle.net/";
 
         protected override string GetCleanResult(string result, Match parserResults)
         {
-            return result.Replace($"Played at {Url}", string.Empty).Trim();
+            return result.Replace($"Play at {Url}", string.Empty).Trim();
         }
 
         public override string? GetScoreValue(DailyResult dailyResult)
