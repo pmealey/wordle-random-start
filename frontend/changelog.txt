@@ -5,3 +5,4 @@
 - Added the game "Sedecordle Savior".
 - Added the game "Hertl".
 - Added the game "Moviemoji".
+- Added the game "Moviedle 2".
