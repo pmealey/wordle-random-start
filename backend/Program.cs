@@ -50,6 +50,7 @@ builder.Services.AddScoped<ResultParser, ArtleParser>();
 builder.Services.AddScoped<ResultParser, NerdleParser>();
 builder.Services.AddScoped<ResultParser, SubwaydleParser>();
 builder.Services.AddScoped<ResultParser, PoeltlParser>();
+builder.Services.AddScoped<ResultParser, SedecordleParser>();
 builder.Services.AddScoped<ResultParser, PimantleParser>();
 builder.Services.AddScoped<ResultParser, SemantleParser>();
 builder.Services.AddScoped<ResultParser, RedactleParser>();
