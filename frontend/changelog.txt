@@ -1,0 +1,2 @@
+- Updated the Redactle URL and fixed the Redactle results parser.
+- Added an alternate entry mode for Weaver.
