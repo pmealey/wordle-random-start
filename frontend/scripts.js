@@ -104,7 +104,6 @@ function stringToColor(str) {
   let noUserOrGroupArea = document.getElementById('no-user-or-group-area');
   let groupSelectionArea = document.getElementById('group-selection-area');
   let resultsArea = document.getElementById('results-area');
-  let gamesList = document.getElementById('games-list');
   let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
   let crownColumn2 = document.getElementById('crown2');
@@ -660,12 +659,6 @@ function stringToColor(str) {
     gamesRequest.onreadystatechange = function () {
       if (requestHasSucceeded(gamesRequest)) {
         games = JSON.parse(gamesRequest.responseText);
-        let countedGames = games
-          .filter(g => g.countWinner)
-          .map(g => g.gameName);
-        gamesList.innerText = countedGames
-          .slice(0, countedGames.length - 1)
-          .join(', ') + ', and ' + countedGames[countedGames.length - 1];
         initializeStep2();
       }
     }
