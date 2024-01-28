@@ -85,6 +85,7 @@ function stringToColor(str) {
 
 (function () {
   let startSubmitButton = document.getElementById('start-submit');
+  let todaySpan = document.getElementById('today');
   let startingWord = document.getElementById('starting-word');
   //let notificationButton = document.getElementById('allow-notifications');
   let userArea = document.getElementById('user-area');
@@ -153,7 +154,7 @@ function stringToColor(str) {
 
         let summaryRequestUrl = '/api/wordle/daily-result';
 
-        const date = dateInput.value
+        const date = dateInput.value;
         if (date) {
           summaryRequestUrl += '/' + date;
         }
@@ -650,7 +651,7 @@ function stringToColor(str) {
     refreshData();
 
     if (localStorage.getItem('today') !== dateInput.value) {
-      localStorage.setItem('today', dateInput.value)
+      localStorage.setItem('today', dateInput.value);
     }
   }
 
@@ -673,6 +674,11 @@ function stringToColor(str) {
         startingWord.innerText = response.word;
         startingWord.href = 'https://www.google.com/search?q=' + encodeURIComponent('define: ' + response.word);
         dateInput.value = response.date;
+        if (advancedModeEnabled()) {
+          todaySpan.innerText = 'Advanced Mode';
+        } else {
+          todaySpan.innerText = new Date(dateInput.value + ' 00:00:00').toLocaleDateString();
+        }
         initializeStep2();
       }
     }
@@ -760,6 +766,11 @@ function stringToColor(str) {
       }
 
       if (requestHasSucceeded(submitRequest)) {
+        if (!advancedModeEnabled() && dateInput.value !== new Date(Date.now()).toISOString().substring(0, new Date(Date.now()).toISOString().indexOf('T'))) {
+          location.reload();
+          return;
+        }
+
         refreshData();
 
         setTimeout(() => {
