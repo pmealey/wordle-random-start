@@ -14,7 +14,7 @@ namespace backend.Services.Parsers
         public override bool CountWinner => false;
         public override bool Default => false;
         public override string GameName => "Crosswordle 2";
-        public override string? HelpText => null;
+        public override string? HelpText => "Guess a two word phrase.";
         protected override Regex Parser => new Regex($"^Crosswordle \\d+ .*? (?<{ScoreGroup}>[\\d]+)/");
         protected override string? ExtraContent => Url;
         public override string Url => "https://crosswordle.serializer.ca/";

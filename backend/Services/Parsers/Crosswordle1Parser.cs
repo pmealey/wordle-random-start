@@ -16,7 +16,7 @@ namespace backend.Services.Parsers
         private const string TimePart1 = "time1";
         private const string TimePart2 = "time2";
         public override string GameName => "Crosswordle 1";
-        public override string? HelpText => null;
+        public override string? HelpText => "Reverese engineer a Wordle grid as fast as possible.";
         protected override Regex Parser => new Regex($"Daily Crosswordle \\d+: (?<{TimeGroup}>(?<{TimePart1}>\\d+)[ms] ?(?<{TimePart2}>\\d*)s?)");
         public override string Url => "https://crosswordle.vercel.app/";
 
