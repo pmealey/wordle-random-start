@@ -41,7 +41,7 @@ namespace backend.Services.Parsers
             }
 
             return "\"" + string.Join(",", dailyResult.Scores
-                .Select((i) => dailyResult.Scores[i].ToString())) + "\"";
+                .Select((s) => s.ToString())) + "\"";
         }
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
