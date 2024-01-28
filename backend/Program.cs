@@ -33,6 +33,7 @@ builder.Services.AddScoped<ResultParser, ColorfleParser>();
 builder.Services.AddScoped<ResultParser, ColorfleHardModeParser>();
 builder.Services.AddScoped<ResultParser, NytMiniParser>();
 builder.Services.AddScoped<ResultParser, FramedParser>();
+builder.Services.AddScoped<ResultParser, MoviemojiParser>();
 builder.Services.AddScoped<ResultParser, CloudleParser>();
 builder.Services.AddScoped<ResultParser, DungleonParser>();
 builder.Services.AddScoped<ResultParser, MurdleParser>();
