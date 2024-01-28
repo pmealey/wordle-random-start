@@ -15,7 +15,7 @@ namespace backend.Services.Parsers
         public override bool CountWinner => false;
         public override bool Default => false;
         public override string GameName => "Moviedle 1";
-        public override string? HelpText => "Guess the movie from a compressed 1-6 second version of it.";
+        public override string? HelpText => "Guess a movie from a compressed 1-6 second version of it.";
         // \uD83C\uDFA5 = 🎥
         // \uD83D\uDFE9 = 🟩
         // \uD83D\uDFE8 = 🟨

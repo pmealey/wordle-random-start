@@ -14,7 +14,7 @@ namespace backend.Services.Parsers
         public override bool CountWinner => false;
         public override bool Default => false;
         public override string GameName => "Moviedle 2";
-        public override string? HelpText => "Guess the movie based on its similarities with your prior guesses.";
+        public override string? HelpText => "Guess a movie based on its similarities with your prior guesses.";
         protected override Regex Parser => new Regex($"Moviedle #\\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override string? ExtraContent => "Play here: ";
         public override string Url => "https://moviedle.xyz";
