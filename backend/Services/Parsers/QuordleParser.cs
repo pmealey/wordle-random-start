@@ -32,7 +32,20 @@ namespace backend.Services.Parsers
 
         public override string? GetScoreValue(DailyResult dailyResult)
         {
-            return dailyResult.Scores == null || dailyResult.Scores.Count != 4 ? null : dailyResult.Scores.Average().ToString();
+            if (dailyResult.Scores == null)
+            {
+                return null;
+            }
+
+            return "\"" + string.Join(",", Enumerable.Range(0, 4).ToArray()
+                .Select((i) => {
+                    if (dailyResult.Scores.Count <= i)
+                    {
+                        return "X";
+                    }
+
+                    return dailyResult.Scores[i].ToString();
+                })) + "\"";
         }
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
