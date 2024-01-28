@@ -57,6 +57,7 @@ builder.Services.AddScoped<ResultParser, HertlParser>();
 builder.Services.AddScoped<ResultParser, SedecordleParser>();
 builder.Services.AddScoped<ResultParser, SedecOrderParser>();
 builder.Services.AddScoped<ResultParser, SedecordleSaviorParser>();
+builder.Services.AddScoped<ResultParser, ContextoParser>();
 builder.Services.AddScoped<ResultParser, PimantleParser>();
 builder.Services.AddScoped<ResultParser, SemantleParser>();
 builder.Services.AddScoped<ResultParser, RedactleParser>();

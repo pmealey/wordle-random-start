@@ -33,12 +33,23 @@ function getScore(dailyResult, golfScoring) {
     return dailyResult.score;
   }
 
-  if (Array.isArray(dailyResult.scores) && (dailyResult.game === 'Quordle' || dailyResult.game === 'Sedecordle')) {
-    const totalGames = dailyResult.game === 'Quordle' ? 4 : 16;
-    // special & lazy handling for quordle - more wordles failed should score after fewer wordles failed
-    let sum = 1000 * (totalGames - dailyResult.scores.length);
-    sum = dailyResult.scores.reduce((a, b) => a + b, sum);
-    return sum || defaultScore;
+  if (Array.isArray(dailyResult.scores)) {
+    if (dailyResult.game === 'Quordle' || dailyResult.game === 'Sedecordle') {
+      // special & lazy handling for quordle & sedecordle - more wordles failed should score after fewer wordles failed
+      const totalGames = dailyResult.game === 'Quordle' ? 4 : 16;
+      let sum = 1000 * (totalGames - dailyResult.scores.length);
+      sum = dailyResult.scores.reduce((a, b) => a + b, sum);
+      return sum || defaultScore;
+    } else if (dailyResult.game === 'Contexto' || dailyResult.game === 'Pimantle') {
+      // special and lazy handling for contexto and pimantle - hints push scores into higher tiers
+      if (dailyResult.scores.length === 2) {
+        return dailyResult.scores[0] * 10000 + dailyResult.scores[1];
+      } else if (dailyResult.scores.length === 1) {
+        return dailyResult.scores[0];
+      } else {
+        return defaultScore;
+      }
+    }
   }
 
   if (dailyResult.time) {

@@ -7,3 +7,4 @@
 - Added the game "Moviemoji".
 - Added the game "Moviedle 2".
 - Added the game "Actorle".
+- Added the game "Contexto".

@@ -18,7 +18,8 @@ namespace backend.Services.Parsers
         public override bool GolfScoring => true;
         public override string? HelpText => null;
         private const string ScoreGroup = "score";
-        protected override Regex Parser => new Regex($"^I solved {GameName} #\\d+ with (?<{ScoreGroup}>\\d+) guesses");
+        private const string HintGroup = "hint";
+        protected override Regex Parser => new Regex($"^I solved {GameName} #\\d+ with (?<{ScoreGroup}>\\d+) guesses and ((?<{HintGroup}>\\d+)|no) hints");
         public override string Url => "https://semantle.pimanrul.es/";
 
         protected override string GetCleanResult(string result, Match parserResults)
@@ -33,10 +34,21 @@ namespace backend.Services.Parsers
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
-            if (Int32.TryParse(parserResults.Groups[ScoreGroup].Value, out var score))
+            if (!parserResults.Groups.ContainsKey(ScoreGroup) ||
+                !Int32.TryParse(parserResults.Groups[ScoreGroup].Value, out var score))
             {
-                dailyResult.Score = score;
+                return dailyResult;
             }
+            
+            var scores = new List<int>();
+            if (parserResults.Groups.ContainsKey(HintGroup) && Int32.TryParse(parserResults.Groups[HintGroup].Value, out var hints))
+            {
+                scores.Add(hints);
+            }
+
+            scores.Add(score);
+
+            dailyResult.Scores = scores;
 
             return dailyResult;
         }
