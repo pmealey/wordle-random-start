@@ -17,6 +17,6 @@ namespace backend.Services.Parsers
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"#{GameName} #\\d+ (?<{ScoreGroup}>[\\d|X])/\\d");
         protected override string? ExtraContent => Url;
-        public override string Url => "https://oec.world/en/tradle";
+        public override string Url => "https://games.oec.world/en/tradle";
     }
 }
