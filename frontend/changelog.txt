@@ -3,3 +3,4 @@
 - Added the game "Sedecordle".
 - Added the game "Sedec-order".
 - Added the game "Sedecordle Savior".
+- Added the game "Hertl".
