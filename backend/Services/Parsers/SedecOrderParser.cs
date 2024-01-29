@@ -17,7 +17,7 @@ namespace backend.Services.Parsers
         public override string GameName => "Sedec-order";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($@"Daily {GameName} #\d+\nGuesses: (?<{ScoreGroup}>(\d\d?)|X).*?{ExtraContent}", RegexOptions.Singleline);
-        protected override string? ExtraContent => "https://sedecordle.com\n#sedecordle  #sedecorder";
+        protected override string? ExtraContent => "https://sedecordle.com/\n#sedecordle  #sedecorder";
         public override string Url => "https://www.sedecordle.com/sedec-order";
 
         public override string? GetScoreValue(DailyResult dailyResult)
