@@ -85,6 +85,7 @@ function stringToColor(str) {
 
 (function () {
   let startSubmitButton = document.getElementById('start-submit');
+  let titleSpan = document.getElementById('title');
   let todaySpan = document.getElementById('today');
   let startingWord = document.getElementById('starting-word');
   //let notificationButton = document.getElementById('allow-notifications');
@@ -124,6 +125,14 @@ function stringToColor(str) {
       resultsArea.classList.add('hidden');
       return;
     }
+
+    let title = 'Daily Games'
+    if (groupInput.value.includes('family') && userInput.value === 'Trix') {
+      title = 'Puzzeltjes';
+    }
+
+    titleSpan.textContent = title;
+    document.title = title;
 
     if (groupInput.value.includes(',')) {
       groupSelectionArea.classList.remove('hidden');
