@@ -12,7 +12,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        public override bool Default => true;
         public override string GameName => "Squareword";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"{GameName.ToLower()}.org \\d+: (?<{ScoreGroup}>\\d+) guesses");

@@ -12,7 +12,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        public override bool Default => true;
         public override string GameName => "Waffle";
         public override bool GolfScoring => false;
         public override string? HelpText => null;

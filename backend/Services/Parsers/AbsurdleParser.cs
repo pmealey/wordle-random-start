@@ -12,7 +12,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => false;
-        public override bool Default => false;
         public override string GameName => "Absurdle";
         public override string? HelpText => "Start with today's random word.";
         protected override Regex Parser => new Regex($"{GameName} (?<{ScoreGroup}>\\d+)/");

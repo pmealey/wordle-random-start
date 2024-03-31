@@ -13,7 +13,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => false;
-        public override bool Default => false;
         public override string GameName => "Weaver";
         public override string? HelpText => "Alternate entry: \"Weaver X\", where X is your score.";
         // \uD83D\uDFE9 = 🟩

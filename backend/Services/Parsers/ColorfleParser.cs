@@ -12,7 +12,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        public override bool Default => false;
         public override string GameName => "Colorfle";
         public override string? HelpText => "Select 'NORMAL' from the difficulty selector.";
         protected override Regex Parser => new Regex($"{GameName} \\d+ (?<{ScoreGroup}>[\\d|X])/\\d");

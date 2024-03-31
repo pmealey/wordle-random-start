@@ -13,7 +13,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        public override bool Default => true;
         private List<string> ScoreGroups = new [] { 1, 2, 3, 4 }
             .Select(i => "score" + i.ToString())
             .ToList();

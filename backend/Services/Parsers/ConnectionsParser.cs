@@ -13,7 +13,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        public override bool Default => false;
         protected override string? ExtraContent => null;
         public override string GameName => "Connections";
         public override string? HelpText => null;

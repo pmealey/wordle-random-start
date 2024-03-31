@@ -14,8 +14,6 @@ namespace backend.Services
 
         public abstract bool CountWinner { get; }
 
-        public abstract bool Default { get; }
-
         public abstract string GameName { get; }
 
         public abstract bool GolfScoring { get; }

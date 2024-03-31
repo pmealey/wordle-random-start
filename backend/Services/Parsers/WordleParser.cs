@@ -12,7 +12,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => true;
-        public override bool Default => true;
         public override string GameName => "Wordle";
         public override string? HelpText => "Start with today's random word.";
         protected override Regex Parser => new Regex($"{GameName} .+?(?<{ScoreGroup}>[\\d|X])/\\d");

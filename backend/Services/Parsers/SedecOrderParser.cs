@@ -13,7 +13,6 @@ namespace backend.Services.Parsers
         }
 
         public override bool CountWinner => false;
-        public override bool Default => false;
         public override string GameName => "Sedec-order";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($@"Daily {GameName} #\d+\nGuesses: (?<{ScoreGroup}>(\d\d?)|X).*?{ExtraContent}", RegexOptions.Singleline);
