@@ -1,10 +1,1 @@
-- Updated the Redactle URL and fixed the Redactle results parser.
-- Added an alternate entry mode for Weaver.
-- Added the game "Sedecordle".
-- Added the game "Sedec-order".
-- Added the game "Sedecordle Savior".
-- Added the game "Hertl".
-- Added the game "Moviemoji".
-- Added the game "Moviedle 2".
-- Added the game "Actorle".
-- Added the game "Contexto".
+- Fixed the Worldle parser
