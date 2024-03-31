@@ -63,6 +63,7 @@ public class GamesController : ControllerBase
             .ToList();
 
         var games = _resultParsers
+            .Where(rp => rp.HideAfter > now)
             .Select(rp => new
             {
                 CountWinner = rp.CountWinner && (mostPopularGames.Contains(rp) || randomlySelectedOtherGames.Contains(rp)),
