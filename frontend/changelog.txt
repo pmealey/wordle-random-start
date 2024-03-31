@@ -1,2 +1,3 @@
 - Fixed the game "Worldle"
 - Added the game "Framequiz"
+- Added the game "Bandle"
