@@ -35,20 +35,41 @@ public class GamesController : ControllerBase
         var seed = date.Year * 1000 + date.DayOfYear;
         var rand = new Random(seed);
 
-        var randomlySelectedOtherGames = _resultParsers
-            .Where(rp => rp.CountWinner && !rp.Default)
-            .OrderBy(rp => rand.Next())
+        var today = DateTime.Today;
+        var lastWeek = today.AddDays(-7);
+
+        var lastWeeksResults = _context.DailyResult
+            .AsQueryable()
+            .Where(dr => dr.Date.Date != today.Date && dr.Date >= lastWeek)
+            .ToList();
+
+        var popularity = _resultParsers
+            .ToDictionary(rp => rp, rp => lastWeeksResults.Count(dr => dr.Game == rp.GameName));
+
+        var allParsersByPopularity = _resultParsers
+            .Where(rp => rp.HideAfter > now && rp.CountWinner)
+            .OrderByDescending(rp => popularity[rp])
+            .ThenBy(rp => rand.Next())
+            .ToList();
+
+        var mostPopularGames = allParsersByPopularity
+            .Take(3)
+            .ToList();
+
+        var randomlySelectedOtherGames = allParsersByPopularity
+            .Skip(3)
+            .Where((rp, i) => i <= 6)
             .Take(2)
             .ToList();
 
         var games = _resultParsers
-            .Where(rp => rp.HideAfter > now)
             .Select(rp => new
             {
-                CountWinner = rp.CountWinner && (rp.Default || randomlySelectedOtherGames.Contains(rp)),
+                CountWinner = rp.CountWinner && (mostPopularGames.Contains(rp) || randomlySelectedOtherGames.Contains(rp)),
                 GameName = rp.GameName,
                 GolfScoring = rp.GolfScoring,
                 HelpText = rp.HelpText,
+                Popularity = lastWeeksResults.Count(dr => dr.Game == rp.GameName),
                 Url = rp.Url
             })
             .ToList();

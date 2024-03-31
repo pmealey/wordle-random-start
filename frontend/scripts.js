@@ -304,7 +304,11 @@ function stringToColor(str) {
     leaderboard = {};
     clearData(summaryArea);
 
-    games.forEach((game) => {
+    const sortedGames = group.selectGames
+      ? games.toSorted((a, b) => b.popularity - a.popularity)
+      : games;
+
+    sortedGames.forEach((game) => {
       let dailyResultsForGame = dailyResults
         .filter((dailyResult) => dailyResult.game == game.gameName);
 
