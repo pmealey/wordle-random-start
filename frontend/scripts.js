@@ -316,13 +316,14 @@ function stringToColor(str) {
 
       let gameContainer = document.createElement('div');
       gameContainer.classList.add('game');
-      if (group.selectGames && game.countWinner ||
-          !group.selectGames && allUsersForGame.length > 0) {
-        gameContainer.classList.add('count-winner');
-      }
+      if (group.selectGames) {
+        if (game.countWinner) {
+          gameContainer.classList.add('count-winner');
+        }
 
-      if (allUsersForGame.length > 1) {
-        gameContainer.classList.add('competitive');
+        if (allUsersForGame.length > 1) {
+          gameContainer.classList.add('competitive');
+        }
       }
 
       addGameLink(game, myDailyResult, gameContainer);
