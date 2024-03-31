@@ -7,5 +7,6 @@ namespace backend.Models
     {
         public string Name { get; set; } = null!;
         public bool SelectGames { get; set; }
+        public string? Description { get; set; }
     }
 }

@@ -109,6 +109,7 @@ function stringToColor(str) {
   let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
   let crownColumn2 = document.getElementById('crown2');
+  let groupDescription = document.getElementById('group-description');
   let summaryArea = document.getElementById('summary');
   let errorArea = document.getElementById('error-area');
 
@@ -160,6 +161,13 @@ function stringToColor(str) {
 
       if (requestHasSucceeded(groupRequest)) {
         group = JSON.parse(groupRequest.responseText);
+
+        groupDescription.textContent = group.description;
+        // if (group.description) {
+        //   groupDescription.classList.remove('hidden');
+        // } else {
+        //   groupDescription.classList.add('hidden');
+        // }
 
         let summaryRequestUrl = '/api/wordle/daily-result';
 
