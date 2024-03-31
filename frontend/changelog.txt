@@ -2,3 +2,4 @@
 - Added the game "Framequiz"
 - Added the game "Bandle"
 - Added the game "Bazingle"
+- Added the game "Strands"
