@@ -11,7 +11,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override bool CountWinner => false;
+        public override bool CountWinner => true;
         private const string TimePart1 = "time1";
         private const string TimePart2 = "time2";
         public override string GameName => "Crosswordle 1";

@@ -12,7 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override bool CountWinner => false;
+        public override bool CountWinner => true;
         public override string GameName => "Framequiz";
         public override string? HelpText => null;
         // \uD83D\uDFE9 = 🟩

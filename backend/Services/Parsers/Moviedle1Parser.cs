@@ -12,7 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override bool CountWinner => false;
+        public override bool CountWinner => true;
         public override string GameName => "Moviedle 1";
         public override string? HelpText => "Guess a movie from a compressed 1-6 second version of it.";
         // \uD83C\uDFA5 = 🎥

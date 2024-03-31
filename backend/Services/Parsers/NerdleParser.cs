@@ -11,7 +11,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override bool CountWinner => false;
+        public override bool CountWinner => true;
         public override string GameName => "Nerdle";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"{GameName.ToLower()}game \\d+ (?<{ScoreGroup}>[\\d|X])/\\d");

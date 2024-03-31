@@ -12,7 +12,7 @@ namespace backend.Services.Parsers
             _logger = logger;
         }
 
-        public override bool CountWinner => false;
+        public override bool CountWinner => true;
         public override string GameName => "Box Office Game";
         public override bool GolfScoring => false;
         public override string? HelpText => null;
