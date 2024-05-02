@@ -21,6 +21,38 @@ public class ResultsController : ControllerBase
         _resultParsers = resultParsers;
     }
 
+    [HttpGet("{group}/{game}")]
+    public IActionResult Get([FromRoute] string group, [FromRoute] string game)
+    {
+        game = game.ToLower();
+        group = group.ToLower();
+
+        if (GroupController.Groups.All(g => g.Name.ToLower() != group))
+        {
+            return BadRequest("Invalid group");
+        }
+
+        if (_resultParsers.All(rp => rp.GameName.ToLower() != game))
+        {
+            return BadRequest("Invalid game");
+        }
+
+        var results = _context.DailyResult.AsQueryable()
+            .Where(dr => dr.Game.ToLower() == game)
+            .Where(dr => dr.Groups.Any(g => g == group))
+            .OrderBy(dr => dr.Date)
+            .ThenBy(dr => dr.User)
+            .AsEnumerable()
+            .Select(dr => new {
+                dr.Date,
+                dr.User,
+                dr.Result
+            })
+            .ToList();
+
+        return Ok(results);
+    }
+
     [HttpGet()]
     public IActionResult Get([FromQuery] string names, [FromQuery] string exclude, [FromQuery] string? group)
     {
@@ -50,7 +82,7 @@ public class ResultsController : ControllerBase
 
         if (group != null)
         {
-            query = query.Where(dr => dr.Groups.Any(g => g.ToLower() == group.ToLower()));
+            query = query.Where(dr => dr.Groups.Any(g => g == group.ToLower()));
         }
 
         if (!allUsers)
