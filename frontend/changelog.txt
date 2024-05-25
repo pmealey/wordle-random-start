@@ -1,3 +1,4 @@
 - Added the game "Travle"
 - Added the game "Thrice"
 - Added the game "Costcodle"
+- Added the game "FoodGuessr"
