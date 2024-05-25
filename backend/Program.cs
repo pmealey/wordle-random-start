@@ -40,6 +40,7 @@ builder.Services.AddScoped<ResultParser, MoviemojiParser>();
 builder.Services.AddScoped<ResultParser, CloudleParser>();
 builder.Services.AddScoped<ResultParser, DungleonParser>();
 builder.Services.AddScoped<ResultParser, MurdleParser>();
+builder.Services.AddScoped<ResultParser, ThriceParser>();
 builder.Services.AddScoped<ResultParser, NytCrosswordParser>();
 builder.Services.AddScoped<ResultParser, Crosswordle1Parser>();
 builder.Services.AddScoped<ResultParser, Crosswordle2Parser>();

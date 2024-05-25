@@ -1,1 +1,2 @@
 - Added the game "Travle"
+- Added the game "Thrice"
