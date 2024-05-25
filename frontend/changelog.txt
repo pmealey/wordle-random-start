@@ -2,3 +2,4 @@
 - Added the game "Thrice"
 - Added the game "Costcodle"
 - Added the game "FoodGuessr"
+- Added the game "TimeGuessr"

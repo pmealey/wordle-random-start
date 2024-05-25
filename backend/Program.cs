@@ -29,6 +29,7 @@ builder.Services.AddScoped<ResultParser, GlobleParser>();
 builder.Services.AddScoped<ResultParser, WorldleParser>();
 builder.Services.AddScoped<ResultParser, TradleParser>();
 builder.Services.AddScoped<ResultParser, TravleParser>();
+builder.Services.AddScoped<ResultParser, TimeGuessrParser>();
 builder.Services.AddScoped<ResultParser, FoodGuessrParser>();
 builder.Services.AddScoped<ResultParser, ConnectionsParser>();
 builder.Services.AddScoped<ResultParser, ColorfleParser>();
