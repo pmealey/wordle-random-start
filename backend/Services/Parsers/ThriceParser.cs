@@ -15,7 +15,7 @@ namespace backend.Services.Parsers
         public override string GameName => "Thrice";
         public override bool GolfScoring => false;
         public override string? HelpText => null;
-        protected override Regex Parser => new Regex($@"{GameName} Game #\d+ → (?<{ScoreGroup}>[\d]) points");
+        protected override Regex Parser => new Regex($@"{GameName} Game #\d+ → (?<{ScoreGroup}>[\d]+) points");
         protected override string? ExtraContent => Url;
         public override string Url => "https://thricegame.com";
     }
