@@ -53,20 +53,14 @@ public class GamesController : ControllerBase
             .ToList();
 
         var mostPopularGames = allParsersByPopularity
-            .Take(3)
-            .ToList();
-
-        var randomlySelectedOtherGames = allParsersByPopularity
-            .Skip(3)
-            .Where((rp, i) => i <= 6)
-            .Take(2)
+            .Take(5)
             .ToList();
 
         var games = _resultParsers
             .Where(rp => rp.HideAfter > now)
             .Select(rp => new
             {
-                CountWinner = rp.CountWinner && (mostPopularGames.Contains(rp) || randomlySelectedOtherGames.Contains(rp)),
+                CountWinner = rp.CountWinner && (mostPopularGames.Contains(rp)),
                 GameName = rp.GameName,
                 GolfScoring = rp.GolfScoring,
                 HelpText = rp.HelpText,
