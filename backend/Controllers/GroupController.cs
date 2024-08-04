@@ -18,7 +18,7 @@ public class GroupController : ControllerBase
 
     public static List<Group> Groups = new List<Group> 
     {
-        new() { Name = "family", SelectGames = true, Description = "Games now sorted by popularity! Feedback welcome." },
+        new() { Name = "family", SelectGames = true },
         new() { Name = "libo", SelectGames = false }
     };
 

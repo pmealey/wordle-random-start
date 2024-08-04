@@ -4,7 +4,7 @@
     <base href="wordle">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Daily Games</title>
-    <link rel="stylesheet" href="style.css?v=20">
+    <link rel="stylesheet" href="style.css?v=21">
     <meta name="robots" content="noindex">
 </head>
 <body>
@@ -47,9 +47,9 @@
         You need to enter a name and a group before you can participate. Please contact me if you don't know what group to enter.
     </p>
 
-    <div id="group-selection-area" class="hidden group-tabs"></div>
+    <div id="group-selection-area" class="group-tabs hidden"></div>
 
-    <div id="results-area" class="hidden">
+    <div id="results-area" class="results-area hidden">
         <div class="leaderboard-container">
             <div> Leaderboard </div>
             <div class="summary leaderboard-list">
@@ -59,9 +59,23 @@
             </div>
         </div>
 
-        <p id="group-description" class="summary"></p>
+        <div id="group-info-area" class="group-info-area">
+            <p id="group-description" class="summary"></p>
+            <div class="sort-area">
+                <label for="sort" class="summary">
+                    Sort by:
+                </label>
+                <select id="sort">
+                    <option value="arbitrary">Patrick's Arbitrary Order</option>
+                    <option value="popularity">Top Games</option>
+                    <option value="personal">My Top Games</option>
+                    <option value="alphabetically">Alphabetically</option>
+                </select>
+            </div>
+        </div>
     
-        <div id="summary" class="summary"></div>
+
+        <div id="summary" class="summary results-area"></div>
     </div>
 
     <p id="error-area" class="hidden error"></p>

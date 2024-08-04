@@ -112,6 +112,7 @@ function stringToColor(str) {
   let deleteButton = document.getElementById('delete');
   let noUserOrGroupArea = document.getElementById('no-user-or-group-area');
   let groupSelectionArea = document.getElementById('group-selection-area');
+  let sortSelect = document.getElementById('sort');
   let resultsArea = document.getElementById('results-area');
   let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
@@ -145,6 +146,11 @@ function stringToColor(str) {
     if (groupInput.value.includes(',')) {
       groupSelectionArea.classList.remove('hidden');
     }
+
+    let sort = localStorage.getItem('sort') || 'popularity';
+    localStorage.setItem('sort', sort);
+    sortSelect.value = sort;
+
 
     let summaryRequest = new XMLHttpRequest();
     summaryRequest.onreadystatechange = function () {
@@ -315,12 +321,19 @@ function stringToColor(str) {
     });
   }
 
+  let lastDailyResults;
   function setData(dailyResults) {
+    lastDailyResults = dailyResults;
+
     leaderboard = {};
     clearData(summaryArea);
 
-    const sortedGames = group.selectGames
+    let sortedGames = sortSelect.value === 'popularity'
       ? games.toSorted((a, b) => b.popularity - a.popularity)
+      : sortSelect.value === 'alphabetically'
+      ? games.toSorted((a, b) => b.gameName > a.gameName ? -1 : 1)
+      : sortSelect.value === 'personal'
+      ? games.toSorted((a, b) => b.myPopularity - a.myPopularity)
       : games;
 
     sortedGames.forEach((game) => {
@@ -696,7 +709,8 @@ function stringToColor(str) {
       }
     }
 
-    gamesRequest.open('GET', '/api/wordle/games', true);
+    let gamesParams = new URLSearchParams({ user: userInput.value || localStorage.getItem('user') });
+    gamesRequest.open('GET', '/api/wordle/games?' + gamesParams.toString(), true);
     gamesRequest.send();
 
     let dailyWordRequest = new XMLHttpRequest();
@@ -746,7 +760,12 @@ function stringToColor(str) {
     }
 
     groupSelectionArea.innerHTML = '';
-    groupSelectionArea.classList.add('hidden');
+
+    if (groups.length <= 1) {
+      groupSelectionArea.classList.add('hidden');
+    } else {
+      groupSelectionArea.classList.remove('hidden')
+    }
 
     if (groups && groups.length) {
       if (!selectedGroup) {
@@ -824,6 +843,15 @@ function stringToColor(str) {
     submitRequest.setRequestHeader('Content-Type', 'application/json');
     submitRequest.send(JSON.stringify(resultText));
   }
+
+  sortSelect.addEventListener('change', (event) => {
+    localStorage.setItem('sort', event.target.value);
+    if (lastDailyResults) {
+      setData(lastDailyResults);
+    } else {
+      refreshData();
+    }
+  });
 
   function getSelectedGroup() {
     return document.querySelector('.group-tabs button.selected')

@@ -23,7 +23,7 @@ public class GamesController : ControllerBase
     }
 
     [HttpGet("{dateString?}")]
-    public IActionResult Get(string? dateString)
+    public IActionResult Get(string? dateString, [FromQuery] string? user)
     {
         var now = TimeUtility.GetNowEasternStandardTime();
 
@@ -65,6 +65,7 @@ public class GamesController : ControllerBase
                 GolfScoring = rp.GolfScoring,
                 HelpText = rp.HelpText,
                 Popularity = lastWeeksResults.Count(dr => dr.Game == rp.GameName),
+                MyPopularity = lastWeeksResults.Where(dr => dr.User == user).Count(dr => dr.Game == rp.GameName),
                 Url = rp.Url
             })
             .ToList();
