@@ -19,6 +19,13 @@ function enterListener(func) {
   }
 }
 
+function scoreIsFailure(score, game) {
+  let isFailure = game.golfScoring
+    ? score === Infinity
+    : score === 0;
+  return isFailure;
+}
+
 function getScore(dailyResult, golfScoring) {
   let defaultScore = golfScoring ? Infinity : 0;
 
@@ -349,12 +356,15 @@ function stringToColor(str) {
             .filter((dailyResult) => dailyResult.user === user)
             .forEach((dailyResult) => {
               let scores = dailyResultsForGame.map(dr => getScore(dr, game.golfScoring));
-              let winner = (game.golfScoring ? Math.min(...scores) : Math.max(...scores)) === getScore(dailyResult, game.golfScoring);
+              let score = getScore(dailyResult, game.golfScoring);
+              let isFailure = scoreIsFailure(score, game)
+              let winner = !isFailure && (game.golfScoring ? Math.min(...scores) : Math.max(...scores)) === score;
               let container = addResult(game, dailyResult, user, winner, scores.length);
               resultsList.appendChild(container);
 
-              if ((group.selectGames && game.countWinner ||
-                  !group.selectGames) && scores.length > 1) {
+              if ((group.selectGames && game.countWinner || 
+                   !group.selectGames && !isFailure) &&
+                   scores.length > 1) {
                 logResult(user, winner);
               }
             });
