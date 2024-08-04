@@ -17,5 +17,14 @@ namespace backend.Services.Parsers
         protected override Regex Parser => new Regex($@"{GameName} #\d+ (?<{ScoreGroup}>[\d|X])/\d");
         protected override string? ExtraContent => Url;
         public override string Url => "https://costcodle.com";
+
+        protected override string GetCleanResult(string result, Match parserResults)
+        {
+            return result
+                .Replace("https://costcodle.com/", string.Empty)
+                .Replace("https://costcodle.com", string.Empty)
+                .Trim();
+        }
+
     }
 }
