@@ -1,3 +1,4 @@
 - Removed the trailing "/" sometimes seen in Juxtastat results
 - Added the Bracket City game
 - Added the Raddle game
+- Added the Rogule game
