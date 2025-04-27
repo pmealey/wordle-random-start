@@ -1,3 +1,1 @@
-- Added the game "Juxtastat"
-- Failed results (i.e. X, 0, etc., depending on the game) can no longer win a game for the leaderboard
-- Added a way to sort the list of games
+- Removed the trailing "/" sometimes seen in Juxtastat results

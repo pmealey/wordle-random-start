@@ -42,7 +42,23 @@ namespace backend.Services
                 return false;
             }
 
-            var cleanResult = GetCleanResult(result, parserResults);
+            var cleanResult = result;
+
+            // automatically strip out the URL
+            if (Url != null)
+            {
+                if (!Url.EndsWith("/"))
+                {
+                    cleanResult = cleanResult.Replace(Url + "/", string.Empty);
+                }
+
+                cleanResult = cleanResult.Replace(Url, string.Empty);
+            }
+
+            cleanResult = GetCleanResult(cleanResult, parserResults);
+
+            // automatically strip out extra space
+            cleanResult = new Regex("\\n{3,}").Replace(cleanResult, "\n\n");
 
             dailyResult = new DailyResult
             {
