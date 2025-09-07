@@ -44,6 +44,7 @@ builder.Services.AddScoped<ResultParser, JuxtastatParser>();
 builder.Services.AddScoped<ResultParser, KindaHardGolfParser>();
 builder.Services.AddScoped<ResultParser, RoguleParser>();
 builder.Services.AddScoped<ResultParser, DungleonParser>();
+builder.Services.AddScoped<ResultParser, CluesBySamParser>();
 builder.Services.AddScoped<ResultParser, MurdleParser>();
 builder.Services.AddScoped<ResultParser, ThriceParser>();
 builder.Services.AddScoped<ResultParser, CostcodleParser>();

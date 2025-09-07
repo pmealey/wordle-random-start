@@ -29,8 +29,8 @@ function scoreIsFailure(score, game) {
 function getScore(dailyResult, golfScoring) {
   let defaultScore = golfScoring ? Infinity : 0;
 
-  if (dailyResult.score != null && dailyResult.time != null && dailyResult.game === 'Murdle') {
-    // special and lazy handling for murdle - highest score with lowest time should win
+  if (dailyResult.score != null && dailyResult.time != null && (dailyResult.game === 'Murdle' || dailyResult.game === 'Clues by Sam')) {
+    // special and lazy handling for murdle & clues by sam - highest score with lowest time should win
     const time = new Date(dailyResult.date.replace('00:00:00', dailyResult.time)) - new Date(dailyResult.date);
     // each failure adds a day in milliseconds to the score
     return dailyResult.score * 24 * 60 * 60 * 1000 + time;

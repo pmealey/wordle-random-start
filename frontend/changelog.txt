@@ -2,3 +2,4 @@
 - Fixed Raddle
 - Added the Kinda Hard Golf game
 - Added the Minute Cryptic game
+- Added the Clues by Sam game
