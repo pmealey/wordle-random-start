@@ -56,6 +56,14 @@ function getScore(dailyResult, golfScoring) {
       } else {
         return defaultScore;
       }
+    } else if (dailyResult.game === 'Rogule') {
+      // special and lazy handling for Rogule - treasure > foes > faster > health
+      const treasure = dailyResult.scores[0].toString();
+      const foes = dailyResult.scores[1].toString().padStart(2, '0');
+      const steps = (9999 - dailyResult.scores[2]).toString().padStart(4, '0');
+      const health = dailyResult.scores[3].toString();
+      // VVWWXXYYYYZ, V = treasure, W = foes, X = steps, Y = steps, Z = health
+      return +(treasure + foes + steps + health);
     }
   }
 

@@ -15,7 +15,7 @@ namespace backend.Services.Parsers
         public override bool CountWinner => false;
         public override string GameName => "Rogule";
         public override bool GolfScoring => false;
-        public override string? HelpText => "Doesn't count towards the daily leaderboard.";
+        public override string? HelpText => "Escaping with more treasure > more foes defeated > fewer steps";
         protected override Regex Parser => new Regex($"#{GameName}");
         public override string Url => "https://rogule.com";
 
@@ -28,18 +28,23 @@ namespace backend.Services.Parsers
 
         public override string? GetScoreValue(DailyResult dailyResult)
         {
-            return dailyResult.Score?.ToString();
+            return dailyResult.Scores?.ToString();
         }
 
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
             if (dailyResult.Result.Contains('⛩'))
             {
-                dailyResult.Score = 1;
-            }
-            else
-            {
-                dailyResult.Score = 0;
+                var lines = dailyResult.Result.Split('\n');
+                var stepsMatch = new Regex(".*?(?<score>\\d+) 👣").Match(lines[1]);
+                var steps = stepsMatch.Success && stepsMatch.Groups.ContainsKey("score")
+                    ? int.Parse(stepsMatch.Groups["score"].Value)
+                    : 9999;
+                var health = new Regex("🟩").Count(lines[3]);
+                var foes = lines[4].Replace("⚔ ", "").Length / 2;
+                var treasure = lines[5].Replace("⬜", "").Length / 2;
+
+                dailyResult.Scores = new List<int> { treasure, foes, steps, health };
             }
 
             return dailyResult;
