@@ -1,1 +1,2 @@
 - Removed trailing 'share' from Worldle search results
+- Fixed Raddle

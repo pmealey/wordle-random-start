@@ -15,7 +15,7 @@ namespace backend.Services.Parsers
         public override bool CountWinner => true;
         public override string GameName => "Raddle";
         public override string? HelpText => null;
-        protected override Regex Parser => new Regex($"{GameName.ToUpper()}.+?(?<{ScoreGroup}>\\d+)%", RegexOptions.Singleline);
+        protected override Regex Parser => new Regex($".+?\\[(?<{ScoreGroup}>\\d+)%\\].*?{GameName}", RegexOptions.Singleline);
         protected override string? ExtraContent => null;
         public override string Url => "https://raddle.quest";
     }
