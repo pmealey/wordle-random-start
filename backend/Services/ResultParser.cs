@@ -44,6 +44,8 @@ namespace backend.Services
 
             var cleanResult = result;
 
+            cleanResult = GetCleanResult(cleanResult, parserResults);
+
             // automatically strip out the URL
             if (Url != null)
             {
@@ -55,10 +57,10 @@ namespace backend.Services
                 cleanResult = cleanResult.Replace(Url, string.Empty);
             }
 
-            cleanResult = GetCleanResult(cleanResult, parserResults);
-
             // automatically strip out extra space
             cleanResult = new Regex("\\n{3,}").Replace(cleanResult, "\n\n");
+
+            cleanResult = cleanResult.Trim();
 
             dailyResult = new DailyResult
             {
