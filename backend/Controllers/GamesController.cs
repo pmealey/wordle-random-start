@@ -53,14 +53,14 @@ public class GamesController : ControllerBase
             .ToList();
 
         var mostPopularGames = allParsersByPopularity
-            .Take(5)
+            .Take(6)
             .ToList();
 
         var games = _resultParsers
             .Where(rp => rp.HideAfter > now)
             .Select(rp => new
             {
-                CountWinner = rp.CountWinner && (mostPopularGames.Contains(rp)),
+                CountWinner = rp.CountWinner && mostPopularGames.Contains(rp),
                 GameName = rp.GameName,
                 GolfScoring = rp.GolfScoring,
                 HelpText = rp.HelpText,
