@@ -1,3 +1,4 @@
 - Removed trailing 'share' from Worldle search results
 - Fixed Raddle
 - Added the Kinda Hard Golf game
+- Added the Minute Cryptic game

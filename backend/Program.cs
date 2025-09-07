@@ -49,6 +49,7 @@ builder.Services.AddScoped<ResultParser, ThriceParser>();
 builder.Services.AddScoped<ResultParser, CostcodleParser>();
 builder.Services.AddScoped<ResultParser, NytCrosswordParser>();
 builder.Services.AddScoped<ResultParser, BracketCityParser>();
+builder.Services.AddScoped<ResultParser, MinuteCrypticParser>();
 builder.Services.AddScoped<ResultParser, Crosswordle1Parser>();
 builder.Services.AddScoped<ResultParser, Crosswordle2Parser>();
 builder.Services.AddScoped<ResultParser, WeaverParser>();
