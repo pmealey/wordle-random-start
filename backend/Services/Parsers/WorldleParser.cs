@@ -15,7 +15,7 @@ namespace backend.Services.Parsers
         public override string GameName => "Worldle";
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($"#{GameName} .+?(?<{ScoreGroup}>[\\d|X])/\\d");
-        protected override string? ExtraContent => Url;
+        protected override string? ExtraContent => Url + "/share";
         public override string Url => "https://worldle.teuteuf.fr";
     }
 }
