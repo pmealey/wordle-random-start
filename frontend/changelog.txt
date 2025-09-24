@@ -1,6 +1,1 @@
-- Removed trailing 'share' from Worldle search results
-- Fixed Raddle
-- Added the Kinda Hard Golf game
-- Added the Minute Cryptic game
-- Added the Clues by Sam game
-- Modified how Rogule is scored
+- Removed the trailing / from Juxtastat results.

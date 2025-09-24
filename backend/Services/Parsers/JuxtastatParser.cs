@@ -16,7 +16,7 @@ namespace backend.Services.Parsers
         public override bool GolfScoring => false;
         public override string? HelpText => null;
         protected override Regex Parser => new Regex($@"{GameName} \d+ (?<{ScoreGroup}>[\d|X])/\d");
-        protected override string? ExtraContent => Url;
+        protected override string? ExtraContent => null;
         public override string Url => "https://juxtastat.org";
     }
 }
