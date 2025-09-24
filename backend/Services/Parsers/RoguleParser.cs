@@ -31,18 +31,28 @@ namespace backend.Services.Parsers
             return dailyResult.Scores?.ToString();
         }
 
+        private string getResultLine(string[] lines, int index)
+        {
+            if (lines.Length > index)
+            {
+                return lines[index];
+            }
+
+            return "";
+        }
+
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
             if (dailyResult.Result.Contains('⛩'))
             {
                 var lines = dailyResult.Result.Split('\n');
-                var stepsMatch = new Regex(".*?(?<score>\\d+) 👣").Match(lines[1]);
+                var stepsMatch = new Regex(".*?(?<score>\\d+) 👣").Match(getResultLine(lines, 1));
                 var steps = stepsMatch.Success && stepsMatch.Groups.ContainsKey("score")
                     ? int.Parse(stepsMatch.Groups["score"].Value)
                     : 9999;
-                var health = new Regex("🟩").Count(lines[3]);
-                var foes = lines[4].Replace("⚔ ", "").Length / 2;
-                var treasure = lines[5].Replace("⬜", "").Length / 2;
+                var health = new Regex("🟩").Count(getResultLine(lines, 3));
+                var foes = getResultLine(lines, 4).Replace("⚔ ", "").Length / 2;
+                var treasure = getResultLine(lines, 5).Replace("⬜", "").Length / 2;
 
                 dailyResult.Scores = new List<int> { treasure, foes, steps, health };
             }
