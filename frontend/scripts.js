@@ -30,10 +30,12 @@ function getScore(dailyResult, golfScoring) {
   let defaultScore = golfScoring ? Infinity : 0;
 
   if (dailyResult.score != null && dailyResult.time != null && (dailyResult.game === 'Murdle' || dailyResult.game === 'Clues by Sam')) {
+    // the score in clues by sam is the number of green suspects - 20 minus the score is the number of failures
+    const failures = dailyResult.game === 'Clues by Sam' ? 20 - dailyResult.score : dailyResult.score;
     // special and lazy handling for murdle & clues by sam - highest score with lowest time should win
     const time = new Date(dailyResult.date.replace('00:00:00', dailyResult.time)) - new Date(dailyResult.date);
     // each failure adds a day in milliseconds to the score
-    return dailyResult.score * 24 * 60 * 60 * 1000 + time;
+    return failures * 24 * 60 * 60 * 1000 + time;
   }
 
   if (dailyResult.score != null) {
