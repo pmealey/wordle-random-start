@@ -1,3 +1,4 @@
 - Removed the trailing / from Juxtastat results.
 - Fixed Clues by Sam scoring (more mistakes was scoring better than fewer mistakes)
 - Fixed Rogule parsing (dungeons with no loot weren't got an error when parsing)
+- Fixed Raddle parsing for 100%s
