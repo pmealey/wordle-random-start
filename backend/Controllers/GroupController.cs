@@ -16,10 +16,11 @@ public class GroupController : ControllerBase
     private readonly ILogger<GroupController> _logger;
     private readonly IEnumerable<ResultParser> _resultParsers;
 
-    public static List<Group> Groups = new List<Group> 
+    public static List<Group> Groups = new List<Group>
     {
         new() { Name = "family", SelectGames = true },
-        new() { Name = "libo", SelectGames = false }
+        new() { Name = "libo", SelectGames = false },
+        new() { Name = "powerschool", SelectGames = false}
     };
 
     public GroupController(DataContext context, ILogger<GroupController> logger, IEnumerable<ResultParser> resultParsers)
