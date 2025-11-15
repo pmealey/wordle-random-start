@@ -18,12 +18,16 @@ namespace backend.Services.Parsers
         public override string? HelpText => null;
         private const string ScoreGroup = "score";
         private const string CompletedGroup = "completed";
-        protected override Regex Parser => new Regex($"^(?<{CompletedGroup}>.+?){GameName} #\\d+ in (?<{ScoreGroup}>\\d+) guesses");
-        public override string Url => "https://semantle.com/";
+        private const string HintsGroup = "hints";
+        protected override Regex Parser => new Regex($"{GameName} #\\d+.*?(?<{CompletedGroup}>✅|❌).*?(?<{ScoreGroup}>\\d+) Guesse?s?.*?💡 (?<{HintsGroup}>\\d+) Hints?", RegexOptions.Singleline);
+        public override string Url => "https://semantle.com";
 
         protected override string GetCleanResult(string result, Match parserResults)
         {
-            return result.Replace(Url, string.Empty).Trim();
+            return result
+                .Replace(Url, string.Empty)
+                .Replace(Url.Replace("https://", string.Empty), string.Empty)
+                .Trim();
         }
 
         public override string? GetScoreValue(DailyResult dailyResult)
@@ -34,14 +38,23 @@ namespace backend.Services.Parsers
         protected override DailyResult SetScore(DailyResult dailyResult, Match parserResults)
         {
             // gave up, no score
-            if (parserResults.Groups[CompletedGroup].Value.StartsWith("I gave up on"))
+            if (parserResults.Groups[CompletedGroup].Value == "❌")
             {
                 return dailyResult;
             }
 
-            if (Int32.TryParse(parserResults.Groups[ScoreGroup].Value, out var score))
+            if (parserResults.Groups.ContainsKey(HintsGroup) && int.TryParse(parserResults.Groups[HintsGroup].Value, out var hints))
             {
-                dailyResult.Score = score;
+                dailyResult.Score = hints * 10000;
+            }
+            else
+            {
+                dailyResult.Score = 0;
+            }
+
+            if (parserResults.Groups.ContainsKey(ScoreGroup) && int.TryParse(parserResults.Groups[ScoreGroup].Value, out var score))
+            {
+                dailyResult.Score += score;
             }
 
             return dailyResult;
