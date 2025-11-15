@@ -26,8 +26,31 @@ function scoreIsFailure(score, game) {
   return isFailure;
 }
 
+function isBalatroScoreBetter(a, b) {
+  // Higher is better for Balatro. Compare element by element.
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const av = a[i] ?? -Infinity;
+    const bv = b[i] ?? -Infinity;
+    if (av > bv) return true;
+    if (av < bv) return false;
+  }
+  return false;
+}
+
+function scoreIsWinning(score, game, scores) {
+  if (game.gameName === 'Balatro Daily Challenge' && Array.isArray(score)) {
+    return scores.every(other => other === score || !isBalatroScoreBetter(other, score));
+  }
+
+  return (game.golfScoring ? Math.min(...scores) : Math.max(...scores)) === score
+}
+
 function getScore(dailyResult, golfScoring) {
   let defaultScore = golfScoring ? Infinity : 0;
+
+  if (dailyResult.game === 'Balatro Daily Challenge') {
+    return dailyResult.scores;
+  }
 
   if (dailyResult.score != null && dailyResult.time != null && (dailyResult.game === 'Murdle' || dailyResult.game === 'Clues by Sam')) {
     // the score in clues by sam is the number of green suspects - 20 minus the score is the number of failures
@@ -381,7 +404,7 @@ function stringToColor(str) {
               let scores = dailyResultsForGame.map(dr => getScore(dr, game.golfScoring));
               let score = getScore(dailyResult, game.golfScoring);
               let isFailure = scoreIsFailure(score, game)
-              let winner = !isFailure && (game.golfScoring ? Math.min(...scores) : Math.max(...scores)) === score;
+              let winner = !isFailure && scoreIsWinning(score, game, scores);
               let container = addResult(game, dailyResult, user, winner, scores.length);
               resultsList.appendChild(container);
 

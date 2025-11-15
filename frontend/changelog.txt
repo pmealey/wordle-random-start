@@ -1,1 +1,2 @@
 - Fixed the Clues by Sam parser
+- Added the Balatro Daily Challenge
