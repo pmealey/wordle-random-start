@@ -20,8 +20,10 @@ namespace backend.Services.Parsers
         {
             get
             {
-                var today = DateTime.Today;
-                int seed = today.Year * 10000 + today.Month * 100 + today.Day;
+                var eastern = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                var nowEt  = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, eastern);
+                var todayEt = nowEt.Date;
+                int seed = todayEt.Year * 10000 + todayEt.Month * 100 + todayEt.Day;
                 var rand = new Random(seed);
 
                 var decks = new string[]
