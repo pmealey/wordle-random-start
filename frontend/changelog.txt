@@ -3,3 +3,4 @@
 - Added the Slay the Spire Daily Challenge
 - Separated the popularity of games in each group
 - Fixed the Semantle parser
+- Added the Semantle Junior game
