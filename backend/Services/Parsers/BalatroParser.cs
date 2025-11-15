@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using backend.Models;
+using backend.Utilities;
 
 namespace backend.Services.Parsers
 {
@@ -8,61 +9,58 @@ namespace backend.Services.Parsers
     {
         private ILogger<BalatroParser> _logger;
 
+        private readonly string randomDeck;
+
+        private readonly string randomStake;
+
         public BalatroParser(ILogger<BalatroParser> logger) : base(logger)
         {
+            var nowEt  = TimeUtility.GetNowEasternStandardTime();
+            var todayEt = nowEt.Date;
+            int seed = todayEt.Year * 10000 + todayEt.Month * 100 + todayEt.Day;
+            var rand = new Random(seed);
+
+            var decks = new string[]
+            {
+                "Red",
+                "Blue",
+                "Yellow",
+                "Green",
+                "Black",
+                "Magic",
+                "Nebula",
+                "Ghost",
+                "Abandoned",
+                "Checkered",
+                "Zodiac",
+                "Painted",
+                "Anaglyph",
+                "Plasma",
+                "Erratic"
+            };
+
+            var stakes = new string[]
+            {
+                "White",
+                "Red",
+                "Green",
+                "Black",
+                "Blue",
+                "Purple",
+                "Orange",
+                "Gold"
+            };
+
+            randomDeck = decks[rand.Next(0, decks.Length)];
+            randomStake = stakes[rand.Next(0, stakes.Length)];
+
             _logger = logger;
         }
 
         public override bool CountWinner => true;
         public override string GameName => "Balatro Daily Challenge";
         public override bool GolfScoring => false;
-        public override string? HelpText
-        {
-            get
-            {
-                var eastern = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-                var nowEt  = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, eastern);
-                var todayEt = nowEt.Date;
-                int seed = todayEt.Year * 10000 + todayEt.Month * 100 + todayEt.Day;
-                var rand = new Random(seed);
-
-                var decks = new string[]
-                {
-                    "Red",
-                    "Blue",
-                    "Yellow",
-                    "Green",
-                    "Black",
-                    "Magic",
-                    "Nebula",
-                    "Ghost",
-                    "Abandoned",
-                    "Checkered",
-                    "Zodiac",
-                    "Painted",
-                    "Anaglyph",
-                    "Plasma",
-                    "Erratic"
-                };
-
-                var stakes = new string[]
-                {
-                    "White",
-                    "Red",
-                    "Green",
-                    "Black",
-                    "Blue",
-                    "Purple",
-                    "Orange",
-                    "Gold"
-                };
-
-                var randomDeck = decks[rand.Next(0, decks.Length)];
-                var randomStake = stakes[rand.Next(0, stakes.Length)];
-
-                return $"Seed: today's random word.\nDeck: {randomDeck}.\nStake: {randomStake}.\nEntry examples: \"b 9 16 60000\", \"B a 9 r 16 bh 60000\", or \"Balatro ante 9 round 16 best hand 60,000\".";
-            }
-        }
+        public override string? HelpText=> $"Seed: today's random word.\nDeck: {randomDeck}.\nStake: {randomStake}.\nEntry examples: \"b 9 16 60000\", \"B a 9 r 16 bh 60000\", or \"Balatro ante 9 round 16 best hand 60,000\".";
         private readonly string AnteGroup = "Ante";
         private readonly string RoundGroup = "Round";
         private readonly string BestHandGroup = "BestHand";
