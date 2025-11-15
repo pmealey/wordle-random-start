@@ -362,7 +362,7 @@ function stringToColor(str) {
     clearData(summaryArea);
 
     let sortedGames = sortSelect.value === 'popularity'
-      ? games.toSorted((a, b) => b.popularity - a.popularity)
+      ? games.toSorted((a, b) => group.games[b.gameName].popularity - group.games[a.gameName].popularity)
       : sortSelect.value === 'alphabetically'
       ? games.toSorted((a, b) => b.gameName > a.gameName ? -1 : 1)
       : sortSelect.value === 'personal'
@@ -382,7 +382,7 @@ function stringToColor(str) {
       let gameContainer = document.createElement('div');
       gameContainer.classList.add('game');
       if (group.selectGames) {
-        if (game.countWinner) {
+        if (group.games[game.gameName].countWinner) {
           gameContainer.classList.add('count-winner');
         }
 
@@ -408,7 +408,7 @@ function stringToColor(str) {
               let container = addResult(game, dailyResult, user, winner, scores.length);
               resultsList.appendChild(container);
 
-              if ((group.selectGames && game.countWinner || 
+              if ((group.selectGames && group.games[game.gameName].countWinner || 
                    !group.selectGames && !isFailure) &&
                    scores.length > 1) {
                 logResult(user, winner);
@@ -465,7 +465,7 @@ function stringToColor(str) {
     let wrapper = document.createElement('div');
     wrapper.classList.add('result-wrapper');
 
-    if ((group.selectGames && game.countWinner || !group.selectGames) && numResults > 1 && winner) {
+    if ((group.selectGames && group.games[game.gameName].countWinner || !group.selectGames) && numResults > 1 && winner) {
       let winnerBorder = document.createElement('div');
       winnerBorder.classList.add('winner-border');
       wrapper.append(winnerBorder);

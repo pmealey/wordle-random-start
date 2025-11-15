@@ -39,6 +39,46 @@ public class GroupController : ControllerBase
             return NotFound();
         }
 
-        return Ok(group);
+        var now  = TimeUtility.GetNowEasternStandardTime();
+        var today = now.Date;
+        var seed = today.Year * 1000 + today.DayOfYear;
+        var lastWeek = today.AddDays(-7);
+        var rand = new Random(seed);
+
+        var lastWeeksResults = _context.DailyResult
+            .AsQueryable()
+            .Where(dr => dr.Date.Date != today.Date && dr.Date >= lastWeek && dr.Groups.Contains(name))
+            .ToList();
+
+        // calculate popularity for each individual game in each individual group
+        var popularity = _resultParsers
+            .ToDictionary(
+                rp => rp,
+                rp => lastWeeksResults.Count(dr => dr.Game == rp.GameName)
+            );
+
+        var allParsersByPopularity = _resultParsers
+            .Where(rp => rp.HideAfter > now && rp.CountWinner)
+            .OrderByDescending(rp => popularity[rp])
+            .ThenBy(rp => rand.Next())
+            .ToList();
+
+        var mostPopularGames = allParsersByPopularity.Take(6);
+
+        return Ok(new
+        {
+            group.Name,
+            group.Description,
+            group.SelectGames,
+            games = _resultParsers
+                .ToDictionary(
+                    rp => rp.GameName,
+                    rp => new
+                    {
+                        popularity = popularity[rp],
+                        countWinner = mostPopularGames.Contains(rp)
+                    }
+                )
+        });
     }
 }

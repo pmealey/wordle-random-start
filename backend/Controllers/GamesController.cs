@@ -35,7 +35,7 @@ public class GamesController : ControllerBase
         var seed = date.Year * 1000 + date.DayOfYear;
         var rand = new Random(seed);
 
-        var today = DateTime.Today;
+        var today = now.Date;
         var lastWeek = today.AddDays(-7);
 
         var lastWeeksResults = _context.DailyResult
@@ -43,28 +43,13 @@ public class GamesController : ControllerBase
             .Where(dr => dr.Date.Date != today.Date && dr.Date >= lastWeek)
             .ToList();
 
-        var popularity = _resultParsers
-            .ToDictionary(rp => rp, rp => lastWeeksResults.Count(dr => dr.Game == rp.GameName));
-
-        var allParsersByPopularity = _resultParsers
-            .Where(rp => rp.HideAfter > now && rp.CountWinner)
-            .OrderByDescending(rp => popularity[rp])
-            .ThenBy(rp => rand.Next())
-            .ToList();
-
-        var mostPopularGames = allParsersByPopularity
-            .Take(6)
-            .ToList();
-
         var games = _resultParsers
             .Where(rp => rp.HideAfter > now)
             .Select(rp => new
             {
-                CountWinner = rp.CountWinner && mostPopularGames.Contains(rp),
                 GameName = rp.GameName,
                 GolfScoring = rp.GolfScoring,
                 HelpText = rp.HelpText,
-                Popularity = lastWeeksResults.Count(dr => dr.Game == rp.GameName),
                 MyPopularity = lastWeeksResults.Where(dr => dr.User == user).Count(dr => dr.Game == rp.GameName),
                 Url = rp.Url
             })
