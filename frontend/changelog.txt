@@ -1,2 +1,3 @@
 - Fixed the Clues by Sam parser
 - Added the Balatro Daily Challenge
+- Added the Slay the Spire Daily Challenge
