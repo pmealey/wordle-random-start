@@ -158,6 +158,47 @@ function stringToColor(str) {
 
   let group = {};
 
+  let groups = {};
+
+  function setGroup(newGroup) {
+    let summaryRequest = new XMLHttpRequest();
+    summaryRequest.onreadystatechange = function () {
+      if (requestIsDone(summaryRequest)) {
+        if (requestHasSucceeded(summaryRequest)) {
+          let newSummaries = JSON.parse(summaryRequest.responseText);
+          setData(newSummaries);
+        } else {
+          errorArea.textContent = summaryRequest.responseText;
+          resultsArea.classList.add('hidden');
+          errorArea.classList.remove('hidden');
+        }
+      }
+    }
+
+    group = newGroup;
+    groups[newGroup.name] = newGroup;
+
+    groupDescription.textContent = group.description;
+    // if (group.description) {
+    //   groupDescription.classList.remove('hidden');
+    // } else {
+    //   groupDescription.classList.add('hidden');
+    // }
+
+    let summaryRequestUrl = '/api/wordle/daily-result';
+
+    const date = dateInput.value;
+    if (date) {
+      summaryRequestUrl += '/' + date;
+    }
+
+    // fetch results corresponding to the selected group
+    summaryRequestUrl = addGroupParam(summaryRequestUrl);
+
+    summaryRequest.open('GET', summaryRequestUrl, false);
+    summaryRequest.send();
+  }
+
   function refreshData() {
     errorArea.classList.add('hidden');
 
@@ -184,19 +225,11 @@ function stringToColor(str) {
     localStorage.setItem('sort', sort);
     sortSelect.value = sort;
 
+    const selectedGroup = getSelectedGroup();
 
-    let summaryRequest = new XMLHttpRequest();
-    summaryRequest.onreadystatechange = function () {
-      if (requestIsDone(summaryRequest)) {
-        if (requestHasSucceeded(summaryRequest)) {
-          let newSummaries = JSON.parse(summaryRequest.responseText);
-          setData(newSummaries);
-        } else {
-          errorArea.textContent = summaryRequest.responseText;
-          resultsArea.classList.add('hidden');
-          errorArea.classList.remove('hidden');
-        }
-      }
+    if (groups[selectedGroup]) {
+      setGroup(groups[selectedGroup]);
+      return;
     }
 
     let groupRequest = new XMLHttpRequest();
@@ -206,34 +239,14 @@ function stringToColor(str) {
       }
 
       if (requestHasSucceeded(groupRequest)) {
-        group = JSON.parse(groupRequest.responseText);
-
-        groupDescription.textContent = group.description;
-        // if (group.description) {
-        //   groupDescription.classList.remove('hidden');
-        // } else {
-        //   groupDescription.classList.add('hidden');
-        // }
-
-        let summaryRequestUrl = '/api/wordle/daily-result';
-
-        const date = dateInput.value;
-        if (date) {
-          summaryRequestUrl += '/' + date;
-        }
-
-        // fetch results corresponding to the selected group
-        summaryRequestUrl = addGroupParam(summaryRequestUrl);
-
-        summaryRequest.open('GET', summaryRequestUrl, false);
-        summaryRequest.send();
+        setGroup(JSON.parse(groupRequest.responseText))
       } else {
         resultsArea.classList.add('hidden');
         noUserOrGroupArea.classList.remove('hidden');
       }
     }
 
-    let groupRequestUrl =  ['/api/wordle/group', getSelectedGroup()].join('/');
+    let groupRequestUrl =  ['/api/wordle/group', selectedGroup].join('/');
 
     groupRequest.open('GET', groupRequestUrl, true);
     groupRequest.send();
