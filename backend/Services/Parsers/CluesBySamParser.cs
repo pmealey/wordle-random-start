@@ -17,7 +17,7 @@ namespace backend.Services.Parsers
         public override bool GolfScoring => true;
         public override string? HelpText => "Fewer mistakes/hints/clues is better than a faster time";
         private const string TimeGroup = "time";
-        protected override Regex Parser => new Regex($".*?Clues by Sam.*?in (?<{TimeGroup}>.*)");
+        protected override Regex Parser => new Regex($".*?(Clues by Sam|#CluesBySam).*?in (?<{TimeGroup}>.*)");
         public override string Url => "https://cluesbysam.com";
 
         protected override string GetCleanResult(string result, Match parserResults)
