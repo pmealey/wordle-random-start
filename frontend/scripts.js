@@ -1,3 +1,28 @@
+// API Configuration
+// Can be overridden by setting window.WORDLE_API_BASE_URL before this script loads
+// or by adding ?apiUrl=https://your-api-gateway-url to the URL
+const API_BASE_URL = (function() {
+  // Check URL parameter first (useful for testing)
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlApiBase = urlParams.get('apiUrl');
+  if (urlApiBase) {
+    return urlApiBase.replace(/\/$/, ''); // Remove trailing slash
+  }
+  
+  // Check global config
+  if (window.WORDLE_API_BASE_URL) {
+    return window.WORDLE_API_BASE_URL.replace(/\/$/, '');
+  }
+  
+  // Default to relative path (works with nginx proxy)
+  return '/api/wordle';
+})();
+
+function apiUrl(path) {
+  // Ensure path starts with /
+  const normalizedPath = path.startsWith('/') ? path : '/' + path;
+  return API_BASE_URL + normalizedPath;
+}
 
 function advancedModeEnabled() {
   return location.search.includes('advanced=Y');
@@ -412,7 +437,7 @@ function stringToColor(str) {
     //   groupDescription.classList.add('hidden');
     // }
 
-    let summaryRequestUrl = '/api/wordle/daily-result';
+    let summaryRequestUrl = apiUrl('/daily-result');
 
     const date = dateInput.value;
     if (date) {
@@ -472,7 +497,7 @@ function stringToColor(str) {
       }
     }
 
-    let groupRequestUrl =  ['/api/wordle/group', selectedGroup].join('/');
+    let groupRequestUrl = apiUrl('/group/' + selectedGroup);
 
     groupRequest.open('GET', groupRequestUrl, true);
     groupRequest.send();
@@ -513,7 +538,7 @@ function stringToColor(str) {
         }
       }
 
-      let url = '/api/wordle/daily-result/';
+      let url = '/daily-result/';
 
       if (resultIdInput.value) {
         url += resultIdInput.value;
@@ -525,7 +550,7 @@ function stringToColor(str) {
         }
       }
 
-      deleteRequest.open('DELETE', url, true);
+      deleteRequest.open('DELETE', apiUrl(url), true);
       deleteRequest.send();
     });
 
@@ -792,7 +817,7 @@ function stringToColor(str) {
       }
     }
 
-    viewRequest.open('GET', '/api/wordle/daily-result/' + resultIdInput.value, true);
+    viewRequest.open('GET', apiUrl('/daily-result/' + resultIdInput.value), true);
     viewRequest.send();
   }
 
@@ -996,18 +1021,22 @@ function stringToColor(str) {
     }
   }
 
-  (function initialize() {
+  function fetchGames(callback) {
     let gamesRequest = new XMLHttpRequest();
     gamesRequest.onreadystatechange = function () {
       if (requestHasSucceeded(gamesRequest)) {
         games = JSON.parse(gamesRequest.responseText);
-        initializeStep2();
+        if (callback) callback();
       }
     }
 
     let gamesParams = new URLSearchParams({ user: userInput.value || localStorage.getItem('user') });
-    gamesRequest.open('GET', '/api/wordle/games?' + gamesParams.toString(), true);
+    gamesRequest.open('GET', apiUrl('/games') + '?' + gamesParams.toString(), true);
     gamesRequest.send();
+  }
+
+  (function initialize() {
+    fetchGames(initializeStep2);
 
     let dailyWordRequest = new XMLHttpRequest();
     dailyWordRequest.onreadystatechange = function () {
@@ -1025,7 +1054,7 @@ function stringToColor(str) {
       }
     }
 
-    dailyWordRequest.open('GET', '/api/wordle/daily-word', true);
+    dailyWordRequest.open('GET', apiUrl('/daily-word'), true);
     dailyWordRequest.send();
   })();
 
@@ -1033,7 +1062,8 @@ function stringToColor(str) {
     localStorage.setItem('user', userInput.value);
 
     if (refresh) {
-      refreshData();
+      // Re-fetch games to update myPopularity for the new user
+      fetchGames(refreshData);
     }
   }
 
@@ -1047,7 +1077,8 @@ function stringToColor(str) {
     const thisUrlParams = new URLSearchParams(location.search);
     thisUrlParams.delete('group');
     groups?.forEach(group => thisUrlParams.append('group', group));
-    const newUrl = location.origin + location.pathname + (groups?.length ? '?' : '') + thisUrlParams.toString();
+    const queryString = thisUrlParams.toString();
+    const newUrl = location.origin + location.pathname + (queryString ? '?' + queryString : '');
     history.replaceState({path: newUrl}, '', newUrl);
 
     let selectedGroup = getSelectedGroup();
@@ -1131,13 +1162,13 @@ function stringToColor(str) {
       }
     }
 
-    let url = '/api/wordle/daily-result/' + userInput.value;
+    let url = '/daily-result/' + userInput.value;
 
     if (advancedModeEnabled() && dateInput.value) {
       url += '/' + dateInput.value;
     }
 
-    submitRequest.open('PUT', addGroupParams(url), true);
+    submitRequest.open('PUT', addGroupParams(apiUrl(url)), true);
     submitRequest.setRequestHeader('Content-Type', 'application/json');
     submitRequest.send(JSON.stringify(resultText));
   }

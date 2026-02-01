@@ -1,0 +1,928 @@
+[
+  {
+    "game": "Absurdle",
+    "input": "Absurdle 5/∞ \n\n⬜⬜⬜⬜⬜\n⬜⬜⬜⬜⬜\n⬜⬜🟨⬜⬜\n⬜🟩⬜⬜🟩\n🟩🟩🟩🟩🟩",
+    "description": "score=5",
+    "expectedScore": 5
+  },
+  {
+    "game": "Absurdle",
+    "input": "Absurdle 9/∞ \n\n⬜⬜⬜⬜⬜\n⬜🟨⬜⬜⬜\n🟨⬜🟨⬜⬜\n🟨⬜⬜🟩⬜\n⬜🟩🟩🟩🟩\n⬜🟩🟩🟩🟩\n⬜🟩🟩🟩🟩\n⬜🟩🟩🟩🟩\n🟩🟩🟩🟩🟩",
+    "description": "score=9",
+    "expectedScore": 9
+  },
+  {
+    "game": "Actorle",
+    "input": "Actorle #1417 1/8\n🟩\n\n#Actorle #MovieChallenge",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Actorle",
+    "input": "Actorle #1365 7/8\n⬛⬛🟨🟨🟨🟨🟩\n\n#Actorle #MovieChallenge",
+    "description": "score=7",
+    "expectedScore": 7
+  },
+  {
+    "game": "Antiwordle",
+    "input": "Antiwordle #630\n  3 guesses\n\n⬛🟥⬛⬛⬛\n⬛🟥🟥⬛⬛\n🟥🟥🟥🟥🟥",
+    "description": "score=3",
+    "expectedScore": 3
+  },
+  {
+    "game": "Antiwordle",
+    "input": "Antiwordle #719\n  13 guesses\n\n⬛🟨⬛⬛⬛\n⬛🟨⬛⬛⬛\n⬛🟨⬛⬛⬛\n⬛🟨⬛⬛⬛\n⬛🟨⬛⬛⬛\n⬛🟨🟨⬛⬛\n⬛🟨🟨⬛🟨\n🟨🟨⬛🟥⬛\n🟨🟨⬛🟥🟨\n🟨🟨⬛🟥🟨\n🟨🟨⬛🟥🟨\n🟨🟨🟥🟥🟨\n🟥🟥🟥🟥🟥",
+    "description": "score=13",
+    "expectedScore": 13
+  },
+  {
+    "game": "Artle",
+    "input": "Artle #759\n🎨 🟥 🟥 🟥 🟥",
+    "description": "no score data"
+  },
+  {
+    "game": "Artle",
+    "input": "Artle #738\n🎨 🟩 ⬜ ⬜ ⬜",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Artle",
+    "input": "Artle #663\n🎨 🟥 🟥 🟥 🟩",
+    "description": "score=4",
+    "expectedScore": 4
+  },
+  {
+    "game": "Balatro Daily Challenge",
+    "input": "b 11 31 2972970",
+    "description": "scores=[11,31,2972970]",
+    "expectedScores": [11, 31, 2972970],
+    "expectedCleanResult": "Balatro\nAnte: 11\nRound: 31\nBest hand: 2972970"
+  },
+  {
+    "game": "Balatro Daily Challenge",
+    "input": "Balatro ante 8 round 25 best hand 73,396",
+    "description": "scores=[8,25,73396]",
+    "expectedScores": [8, 25, 73396],
+    "expectedCleanResult": "Balatro\nAnte: 8\nRound: 25\nBest hand: 73,396"
+  },
+  {
+    "game": "Balatro Daily Challenge",
+    "input": "b a 5 r 12 bh 15171",
+    "description": "scores=[5,12,15171]",
+    "expectedScores": [5, 12, 15171],
+    "expectedCleanResult": "Balatro\nAnte: 5\nRound: 12\nBest hand: 15171"
+  },
+  {
+    "game": "Bandle",
+    "input": "Bandle #611 x/6\n⬛🟥⬛⬛⬛⬛\nFound: 2/3 (66.7%)\nCurrent Streak: 0 (max 1)\n#Bandle #Heardle #Wordle",
+    "description": "no score data"
+  },
+  {
+    "game": "Bandle",
+    "input": "Bandle #595 1/6\n🟩⬜⬜⬜⬜⬜\nFound: 1/1 (100%)\n#Bandle #Heardle #Wordle",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Bandle",
+    "input": "Bandle #659 6/6\n⬛🟥⬛⬛🟨🟩\nFound: 3/3 (100%)\nCurrent Streak: 2 (max 2)\n#Bandle #Heardle #Wordle",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Bazingle",
+    "input": "Bazingle 753 1/8\n\n🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Bazingle",
+    "input": "Bazingle 705 6/8\n\n⬜⬜🟨⬜🟨⬜🟨\n🟨⬜⬜⬜⬜⬜⬜\n⬜⬜🟨⬜🟨⬜⬜\n⬜🟩🟨🟩🟩⬜⬜\n🟩🟩⬜🟩🟩🟩⬜\n🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Box Office Game",
+    "input": "boxofficega.me\nOctober 29, 1982\n❌ 0\n❌ 0\n❌ 0\n❌ 0\n✅ 85\n🏆 85",
+    "description": "score=85",
+    "expectedScore": 85,
+    "expectedCleanResult": "boxofficegame\nOctober 29, 1982\n❌ 0\n❌ 0\n❌ 0\n❌ 0\n✅ 85\n🏆 85"
+  },
+  {
+    "game": "Box Office Game",
+    "input": "boxofficega.me\nDecember 23, 1994\n✅ 160\n✅ 160\n✅ 120\n✅ 120\n✅ 160\n➕ 200\n🏆 920",
+    "description": "score=920",
+    "expectedScore": 920,
+    "expectedCleanResult": "boxofficegame\nDecember 23, 1994\n✅ 160\n✅ 160\n✅ 120\n✅ 120\n✅ 160\n➕ 200\n🏆 920"
+  },
+  {
+    "game": "Bracket City",
+    "input": "[Bracket City]\nJanuary 27, 2026 🟡 (Medium)\n\nRank: 💼 (Power Broker)\n❌ Wrong guesses: 2\n👀 Peeks: 1\n\nTotal Score: 91.0\n🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜",
+    "description": "score=91",
+    "expectedScore": 91
+  },
+  {
+    "game": "Bracket City",
+    "input": "[Bracket City]\nFebruary 1, 2026 🟡 (Medium)\n\nRank: 👑 (Kingmaker)\n❌ Wrong guesses: 0\n\nTotal Score: 100.0\n🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=100",
+    "expectedScore": 100
+  },
+  {
+    "game": "Cloudle",
+    "input": "Cloudle - Budapest, Hungary: X/6\n\n⚫⚫⚫⚫⚫\n⚫⚫⚫⚫🟢\n⚫⚫⚫⚫🟢\n🟢🟢⚫⚫🟢\n🟢🟢⚫⚫🟢\n🟢🟢⚫⚫🟢",
+    "description": "no score data"
+  },
+  {
+    "game": "Cloudle",
+    "input": "Cloudle - Rangoon, Myanmar: 2/6\n\n🟢🟡⚫⚫⚫\n🟢🟢🟢🟢🟢",
+    "description": "score=2",
+    "expectedScore": 2
+  },
+  {
+    "game": "Cloudle",
+    "input": "Cloudle - The Valley, Anguilla: 6/6\n\n⚫⚫⚫⚫⚫\n⚫⚫⚫⚫⚫\n⚫🟢⚫⚫⚫\n🟢🟢🟢🟢⚫\n🟢🟢🟢🟢⚫\n🟢🟢🟢🟢🟢",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Clues by Sam",
+    "input": "I solved the daily #CluesBySam, Jan 28th 2026 (Tricky), in less than 11 minutes\n🟨🟩🟩🟨\n🟠🟩🟨🟩\n🟨🟨🟨🟩\n🟨🟩🟨🟩\n🟩🟨🟨🟨",
+    "description": "score=8, time=00:11:00",
+    "expectedScore": 8,
+    "expectedTime": "00:11:00"
+  },
+  {
+    "game": "Clues by Sam",
+    "input": "I solved the daily #CluesBySam, Jan 30th 2026 (Tricky), in 04:34\n🟩🟩🟩🟩\n🟩🟩🟩🟩\n🟩🟩🟩🟩\n🟩🟩🟩🟩\n🟩🟩🟩🟩",
+    "description": "score=20, time=00:04:34",
+    "expectedScore": 20,
+    "expectedTime": "00:04:34"
+  },
+  {
+    "game": "Colorfle",
+    "input": "Colorfle 773 X/6 \n⬜⬜🟨\n🟩🟩⬜\n🟩🟩⬜\n🟩🟩⬜\n🟩🟩⬜\n🟩🟩⬜\nMy closest guess had a color accuracy of 95.7%!",
+    "description": "no score data"
+  },
+  {
+    "game": "Colorfle",
+    "input": "Colorfle 866 2/6 \n🟩⬜🟩\n🟩🟩🟩\nMy average color accuracy was 90.4%!",
+    "description": "score=2",
+    "expectedScore": 2
+  },
+  {
+    "game": "Colorfle",
+    "input": "Colorfle 1018 6/6 \n⬜🟨⬜\n🟩⬜⬜\n🟩⬜⬜\n🟩🟨⬜\n🟩⬜🟩\n🟩🟩🟩\nMy average color accuracy was 90.5%!",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Colorfle (Hard mode)",
+    "input": "Colorfle 767 (Hard mode) X/6 \n🟩🟩🟩⬜\n🟩🟩🟩⬜\n🟩🟩🟩⬜\n🟩🟩🟩⬜\n🟩🟩🟩⬜\n🟩🟩🟩⬜\nMy closest guess had a color accuracy of 97.5%!",
+    "description": "no score data"
+  },
+  {
+    "game": "Colorfle (Hard mode)",
+    "input": "Colorfle 902 (Hard mode) 2/6 \n🟨⬜🟩🟨\n🟩🟩🟩🟩\nMy average color accuracy was 89.1%!",
+    "description": "score=2",
+    "expectedScore": 2
+  },
+  {
+    "game": "Colorfle (Hard mode)",
+    "input": "Colorfle 773 (Hard mode) 6/6 \n⬜🟨🟨⬜\n⬜🟨🟨⬜\n🟩🟩⬜🟩\n🟩🟩⬜🟩\n🟩🟩⬜🟩\n🟩🟩🟩🟩\nMy average color accuracy was 93.1%!",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Connections",
+    "input": "Connections\nPuzzle #966\n🟦🟦🟦🟦\n🟩🟩🟩🟩\n🟨🟨🟨🟨\n🟪🟪🟪🟪",
+    "description": "score=4",
+    "expectedScore": 4
+  },
+  {
+    "game": "Connections",
+    "input": "Connections\nPuzzle #964\n🟨🟩🟨🟨\n🟩🟨🟨🟨\n🟨🟨🟨🟨\n🟦🟦🟦🟦\n🟩🟩🟩🟩\n🟪🟪🟪🟪",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Contexto",
+    "input": "I played contexto.me #822 and got it in 11 guesses.\n\n🟩 3\n🟨🟨 4\n🟥🟥 4",
+    "description": "scores=[11]",
+    "expectedScores": [
+      11
+    ]
+  },
+  {
+    "game": "Contexto",
+    "input": "I played contexto.me #819 and got it in 10 guesses.\n\n🟩🟩🟩 5\n🟨 2\n🟥🟥 3",
+    "description": "scores=[10]",
+    "expectedScores": [
+      10
+    ]
+  },
+  {
+    "game": "Contexto",
+    "input": "I played contexto.me #816 and got it in 94 guesses.\n\n🟩🟩🟩 31\n🟨🟨🟨 28\n🟥🟥🟥🟥 35",
+    "description": "scores=[94]",
+    "expectedScores": [
+      94
+    ]
+  },
+  {
+    "game": "Costcodle",
+    "input": "Costcodle #866 X/6\n⬆️🟥\n⬆️🟥\n⬆️🟥\n⬆️🟥\n⬆️🟥\n⬆️🟨",
+    "description": "no score data"
+  },
+  {
+    "game": "Costcodle",
+    "input": "Costcodle #863 1/6\n✅",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Costcodle",
+    "input": "Costcodle #866 6/6\n⬆️🟥\n⬆️🟥\n⬆️🟨\n⬆️🟨\n⬆️🟨\n✅",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Crosswordle 1",
+    "input": "Daily Crosswordle 809: 10m 34s \n⬜⬜⬜⬜⬜\n⬜⬜⬜⬜⬜\n⬜🟨⬜⬜⬜\n🟩⬜⬜🟨🟨\n🟩🟨⬜🟩🟨\n🟩🟩🟩🟩🟩",
+    "description": "time=00:10:34",
+    "expectedTime": "00:10:34"
+  },
+  {
+    "game": "Crosswordle 2",
+    "input": "Crosswordle 745 (en) 2/10🔸\n⬜🟩🟨⬜🟩🟨 🟩🟩🟩🟩\n🟩🟩🟩🟩🟩🟩 🟩🟩🟩🟩",
+    "description": "score=2",
+    "expectedScore": 2
+  },
+  {
+    "game": "Crosswordle 2",
+    "input": "Crosswordle 733 (en) 5/10🔸\n⬜⬜🟨⬜🟧 🟨⬜🟨⬜🟨🟨🟧⬜\n⬜🟩🟨⬜🟨 🟨🟨🟨🟨⬜⬜🟩⬜\n⬜🟩🟩⬜⬜ ⬜🟨🟩🟨⬜🟨🟩⬜\n⬜🟩🟩⬜🟩 🟩🟩🟩🟩🟩🟩🟩🟩\n🟩🟩🟩🟩🟩 🟩🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=5",
+    "expectedScore": 5
+  },
+  {
+    "game": "Dungleon",
+    "input": "https://www.dungleon.com #1457 X/6\n\n⬛⬛⬛🟦⬛\n⬛🟦🟦⬛⬛\n⬛🟦🟦⬛⬛\n⬛🟦🟦⬛⬛\n🟦🟦🟦🟦🟦\n🟧🟧🟦🟦🟦\n0⚔️ 0👹 0🪙\nstreak: 0",
+    "description": "no score data",
+    "expectedCleanResult": "Dungleon #1457 X/6\n\n⬛⬛⬛🟦⬛\n⬛🟦🟦⬛⬛\n⬛🟦🟦⬛⬛\n⬛🟦🟦⬛⬛\n🟦🟦🟦🟦🟦\n🟧🟧🟦🟦🟦\n0⚔️ 0👹 0🪙\nstreak: 0"
+  },
+  {
+    "game": "Dungleon",
+    "input": "https://www.dungleon.com #1457 2/6🔸\n\n🟪🟪🟪🟨🟪\n🟩🟩🟩🟩🟩\n0⚔️ 4👹 0🪙\nstreak: 1",
+    "description": "score=2",
+    "expectedScore": 2,
+    "expectedCleanResult": "Dungleon #1457 2/6🔸\n\n🟪🟪🟪🟨🟪\n🟩🟩🟩🟩🟩\n0⚔️ 4👹 0🪙\nstreak: 1"
+  },
+  {
+    "game": "FoodGuessr",
+    "input": "FoodGuessr - 04 Nov 2024 GMT\n  Round 1 🌕🌕🌕🌕\n  Round 2 🌕🌕🌕🌘\n  Round 3 🌑🌑🌑🌑\nTotal score: 9,000 / 15,000",
+    "description": "score=9000",
+    "expectedScore": 9000
+  },
+  {
+    "game": "Framed",
+    "input": "Framed #1064\n🎥 🟥 🟥 🟥 🟥 🟥 🟥",
+    "description": "no score data"
+  },
+  {
+    "game": "Framed",
+    "input": "Framed #1396\n🎥 🟩 ⬛ ⬛ ⬛ ⬛ ⬛",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Framed",
+    "input": "Framed #1328\n🎥 🟥 🟥 🟥 🟥 🟥 🟩",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Framequiz",
+    "input": "Framequiz #459 - 🟥 🟥 🟥 - https://framequiz.com",
+    "description": "no score data",
+    "expectedCleanResult": "Framequiz #459 - 🟥 🟥 🟥"
+  },
+  {
+    "game": "Framequiz",
+    "input": "Framequiz #702 - 🟩 ⬛️ ⬛️ - https://framequiz.com",
+    "description": "score=1",
+    "expectedScore": 1,
+    "expectedCleanResult": "Framequiz #702 - 🟩 ⬛️ ⬛️"
+  },
+  {
+    "game": "Framequiz",
+    "input": "Framequiz #446 - 🟥 🟥 🟩 - https://framequiz.com",
+    "description": "score=3",
+    "expectedScore": 3,
+    "expectedCleanResult": "Framequiz #446 - 🟥 🟥 🟩"
+  },
+  {
+    "game": "Globle",
+    "input": "🌎 Sep 4, 2024 🌍\n🔥 1 | Avg. Guesses: 3\n🟨🟥🟩 = 3",
+    "description": "score=3",
+    "expectedScore": 3
+  },
+  {
+    "game": "Globle",
+    "input": "🌎 Dec 21, 2024 🌍\n🔥 1 | Avg. Guesses: 7.36\n🟥🟥🟥🟥🟥🟥🟥🟥\n🟥🟩 = 10",
+    "description": "score=10",
+    "expectedScore": 10
+  },
+  {
+    "game": "Hertl",
+    "input": "HERTL (Game #813) - X / 8\n\n⬜⬜⬜⬜🟩🟩⬜\n⬜🟩⬜⬜⬜⬜⬜\n⬜⬜⬜⬜⬜⬜🟨\n⬜⬜⬜🟩⬜🟩⬜\n⬜🟩⬜⬜⬜🟩⬜\n⬜🟩⬜🟩⬜🟩⬜\n⬜⬜⬜🟩⬜🟩⬜\n⬜⬜⬜🟩⬜🟩⬜",
+    "description": "no score data"
+  },
+  {
+    "game": "Hertl",
+    "input": "HERTL (Game #800) - 5 / 8\n\n⬜🟩⬜🟩⬜⬜⬜\n🟩🟩🟩⬜⬜⬜⬜\n🟩🟩🟩🟩⬜🟩⬜\n⬜⬜⬜🟩🟩⬜⬜\n🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=5",
+    "expectedScore": 5
+  },
+  {
+    "game": "Juxtastat",
+    "input": "Juxtastat 883 1/5\n\n🟩🟥🟥🟥🟥",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Juxtastat",
+    "input": "Juxtastat 881 5/5\n\n🟩🟩🟩🟩🟩",
+    "description": "score=5",
+    "expectedScore": 5
+  },
+  {
+    "game": "Kinda Hard Golf",
+    "input": "kindahard.golf 01/25\n\n📝 10\n\n3.⛳ 4\n2.⛳ 3\n1.⛳ 2\n0.🏌️ 1",
+    "description": "score=10",
+    "expectedScore": 10
+  },
+  {
+    "game": "Kinda Hard Golf",
+    "input": "kindahard.golf 01/29\n\n📝 73\n\n6.⛳ 2\n5.⛳ 11\n4.⛳ 8\n3.⛳ 3\n2.⛳ 42\n1.⛳ 3\n0.🏌️ 4",
+    "description": "score=73",
+    "expectedScore": 73
+  },
+  {
+    "game": "Lewdle",
+    "input": "Lewdle 🍆💦 122 x/6 🏠\n⬛🟨⬛🟨⬛\n🟨⬛🟨⬛⬛\n⬛⬛⬛🟩⬛\n⬛⬛⬛🟩🟩\n⬛⬛⬛🟩🟩\n⬛🟩🟩🟩🟩",
+    "description": "no score data"
+  },
+  {
+    "game": "Lewdle",
+    "input": "Lewdle 🍆💦 1310 3/6\n🟩🟨⬛⬛⬛\n🟩🟩⬛⬛🟩\n🟩🟩🟩🟩🟩\n\nBy SuperHappyFunTimes",
+    "description": "score=3",
+    "expectedScore": 3
+  },
+  {
+    "game": "Lewdle",
+    "input": "Lewdle 🍆💦 159 6/6\n🟨⬛🟨⬛⬛⬛\n⬛⬛🟨⬛🟨⬛\n⬛🟨⬛🟨⬛⬛\n⬛💡⬛⬛⬛⬛\n🟨🟩🟨⬛⬛🟨\n🟩🟩🟩🟩🟩🟩",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Minute Cryptic",
+    "input": "Minute Cryptic - 31 January, 2026\n\"Plain, unsalted barnacle\" (4)\n🟣🟣🟣🟣🟣🟣🟣\n🏆 0 hints – 1 under the community par (83,793 solvers so far).",
+    "description": "score=0",
+    "expectedScore": 0
+  },
+  {
+    "game": "Minute Cryptic",
+    "input": "Minute Cryptic - 30 January, 2026\n\"Fig 'n' ram!\" (5,7)\n⚪️⚪️⚪️🟡🟡🟡🟣🟣🟣🟣🟣🟣🟣🟣🟣\n🤝 6 hints – matched the community par (112,075 solvers so far).",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Moviedle 1",
+    "input": "#Moviedle #2024-02-18 \n\n 🎥 ⬛️ ⬛️ ⬛️ ⬛️ ⬛️ ⬛️  \n\n https://likewisetv.com/arcade/moviedle",
+    "description": "no score data"
+  },
+  {
+    "game": "Moviedle 1",
+    "input": "#Moviedle #2024-01-29 \n\n 🎥 🟩 ⬜️ ⬜️ ⬜️ ⬜️ ⬜️  \n\n https://likewisetv.com/arcade/moviedle",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Moviedle 1",
+    "input": "#Moviedle #2024-02-06 \n\n 🎥 🟥 🟥 🟥 🟩 ⬜️ ⬜️  \n\n https://likewisetv.com/arcade/moviedle",
+    "description": "score=4",
+    "expectedScore": 4
+  },
+  {
+    "game": "Moviedle 2",
+    "input": "Moviedle #471 X/8\n⬛⬛⬛⬛⬛⬛⬛⬛",
+    "description": "no score data"
+  },
+  {
+    "game": "Moviedle 2",
+    "input": "Moviedle #1186 1/8\n🟩",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Moviedle 2",
+    "input": "Moviedle #476 8/8\n⬛⬛⬛⬛⬛⬛⬛🟩",
+    "description": "score=8",
+    "expectedScore": 8
+  },
+  {
+    "game": "Moviemoji",
+    "input": "Moviemoji #489 X/8\n⬛⬛⬛⬛⬛⬛⬛⬛",
+    "description": "no score data"
+  },
+  {
+    "game": "Moviemoji",
+    "input": "Moviemoji #1063 2/8\n⬛🟩",
+    "description": "score=2",
+    "expectedScore": 2
+  },
+  {
+    "game": "Moviemoji",
+    "input": "Moviemoji #492 8/8\n⬛⬛⬛⬛⬛⬛⬛🟩",
+    "description": "score=8",
+    "expectedScore": 8
+  },
+  {
+    "game": "Murdle",
+    "input": "REMEMBER THE WET SPOT!\nMurdle for 12/4/2025\n\n👤🔪🏡     🕰️\n✅✅✅     3️⃣:4️⃣3️⃣",
+    "description": "score=0, time=00:03:43",
+    "expectedScore": 0,
+    "expectedTime": "00:03:43"
+  },
+  {
+    "game": "Nerdle",
+    "input": "nerdlegame 827 3/6\n\n⬛🟪🟪⬛⬛🟩⬛🟪\n🟩🟪🟩🟪⬛🟩🟪⬛\n🟩🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=3",
+    "expectedScore": 3
+  },
+  {
+    "game": "Nerdle",
+    "input": "nerdlegame 890 6/6\n\n⬛⬛⬛⬛🟪🟩🟪⬛\n🟪🟩⬛⬛🟪🟩⬛⬛\n🟪🟩🟪🟩⬛🟩🟪⬛\n🟪🟩🟪🟩🟪🟩🟪🟪\n🟪🟩🟪⬛🟪🟩🟩⬛\n🟩🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "NYT Crossword",
+    "input": "I solved the Sunday 2/1/2026 New York Times Daily Crossword in 25:34!\n\nhttps://nytimes.onelink.me/IM32/7owuagxr",
+    "description": "full share format",
+    "expectedTime": "00:25:34",
+    "expectedCleanResult": "NYT Crossword\n25 minutes, 34 seconds"
+  },
+  {
+    "game": "NYT Crossword",
+    "input": "nytc 9:41",
+    "description": "shorthand lowercase",
+    "expectedTime": "00:09:41",
+    "expectedCleanResult": "NYT Crossword\n9 minutes, 41 seconds"
+  },
+  {
+    "game": "NYT Crossword",
+    "input": "Nytc 22:30",
+    "description": "shorthand mixed case",
+    "expectedTime": "00:22:30",
+    "expectedCleanResult": "NYT Crossword\n22 minutes, 30 seconds"
+  },
+  {
+    "game": "NYT Crossword",
+    "input": "NYTC 1:23:22",
+    "description": "shorthand with hours",
+    "expectedTime": "01:23:22",
+    "expectedCleanResult": "NYT Crossword\n1 hour, 23 minutes, 22 seconds"
+  },
+  {
+    "game": "NYT Mini",
+    "input": "I solved the 2/1/2026 New York Times Mini Crossword in 0:28!\n\nhttps://nytimes.onelink.me/IM32/7owuagxr",
+    "description": "full share format",
+    "expectedTime": "00:00:28",
+    "expectedCleanResult": "NYT Mini\n28 seconds"
+  },
+  {
+    "game": "NYT Mini",
+    "input": "nytm 43",
+    "description": "shorthand seconds only",
+    "expectedTime": "00:00:43",
+    "expectedCleanResult": "NYT Mini\n43 seconds"
+  },
+  {
+    "game": "NYT Mini",
+    "input": "Nytm 1:23",
+    "description": "shorthand with minutes",
+    "expectedTime": "00:01:23",
+    "expectedCleanResult": "NYT Mini\n1 minute, 23 seconds"
+  },
+  {
+    "game": "Pimantle",
+    "input": "I solved Pimantle #100 with 11 guesses and no hints!",
+    "description": "scores=[11]",
+    "expectedScores": [11]
+  },
+  {
+    "game": "Pimantle",
+    "input": "I solved Pimantle #169 with 89 guesses and 13 hints!",
+    "description": "scores=[13,89]",
+    "expectedScores": [13, 89]
+  },
+  {
+    "game": "Poeltl",
+    "input": "Poeltl 700 - X/8 - 👤8\n\n⬛⬛⬛⬛🟩🟩⬛⬛\n⬛⬛⬛⬛🟩🟨🟨⬛\n⬛⬛🟩⬛🟩⬛⬛⬛\n⬛⬛🟩⬛🟩🟨⬛⬛\n⬛⬛🟩⬛⬛⬛⬛🟩\n⬛⬛🟩⬛⬛⬛🟨⬛\n⬛⬛🟩⬛🟨⬛🟨⬛\n⬛⬛⬛⬛🟨⬛🟨⬛",
+    "description": "no score data"
+  },
+  {
+    "game": "Poeltl",
+    "input": "Poeltl 502 - 1/8 - 👤1\n\n🟩🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Poeltl",
+    "input": "Poeltl 700 - 8/8 \r\n\r\n⬛⬛🟩⬛🟩🟨⬛⬛\r\n⬛🟩🟩🟩🟩⬛⬛⬛\r\n⬛🟩🟩🟩🟩⬛🟨⬛\r\n⬛🟩🟩🟩🟩🟨🟨⬛\r\n⬛🟩🟩🟩🟩🟩⬛⬛\r\n⬛🟩🟩🟩🟩🟩🟨⬛\r\n⬛🟩🟩🟩🟩🟩🟨🟨\r\n🟩🟩🟩🟩🟩🟩🟩🟩",
+    "description": "score=8",
+    "expectedScore": 8
+  },
+  {
+    "game": "Quordle",
+    "input": "🙂 Daily Quordle 1442\n5️⃣7️⃣\n3️⃣6️⃣",
+    "description": "scores=[5,7,3,6]",
+    "expectedScores": [
+      5,
+      7,
+      3,
+      6
+    ]
+  },
+  {
+    "game": "Quordle",
+    "input": "🙂 Daily Quordle 1406\n3️⃣5️⃣\n4️⃣7️⃣",
+    "description": "scores=[3,5,4,7]",
+    "expectedScores": [
+      3,
+      5,
+      4,
+      7
+    ]
+  },
+  {
+    "game": "Quordle",
+    "input": "🙂 Daily Quordle 1374\n6️⃣8️⃣\n4️⃣5️⃣\n\n⬜⬜⬜🟨⬜ 🟨⬜⬜⬜⬜\n⬜🟨⬜⬜🟩 ⬜⬜⬜⬜🟨\n⬜⬜🟩🟨⬜ ⬜⬜⬜⬜⬜\n🟨⬜⬜⬜🟨 🟩⬜⬜⬜⬜\n🟨⬜⬜🟨⬜ ⬜⬜⬜⬜⬜\n🟩🟩🟩🟩🟩 ⬜⬜⬜⬜🟨\n⬛⬛⬛⬛⬛ 🟩🟩🟩⬜⬜\n⬛⬛⬛⬛⬛ 🟩🟩🟩🟩🟩\n\n⬜🟩⬜🟨⬜ ⬜🟨🟨🟩⬜\n⬜⬜⬜⬜🟨 ⬜🟨⬜⬜⬜\n⬜🟨⬜🟨🟨 🟨⬜🟨🟩🟨\n🟩🟩🟩🟩🟩 ⬜🟨⬜⬜🟨\n⬛⬛⬛⬛⬛ 🟩🟩🟩🟩🟩",
+    "description": "scores=[6,8,4,5]",
+    "expectedScores": [
+      6,
+      8,
+      4,
+      5
+    ]
+  },
+  {
+    "game": "Raddle",
+    "input": "TOCO → TOUCAN [💯]\nRaddle #342 • Feb 01, 2026\n342\n\n🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢",
+    "description": "score=100",
+    "expectedScore": 100
+  },
+  {
+    "game": "Redactle",
+    "input": "I solved Redactle #1397 in 3 guesses with an accuracy of 100.0% and a time of 00:00:08. Play at https://redactle.net/",
+    "expectedCleanResult": "I solved Redactle #1397 in 3 guesses with an accuracy of 100.0% and a time of 00:00:08.",
+    "description": "score=3",
+    "expectedScore": 3
+  },
+  {
+    "game": "Rogule",
+    "input": "#Rogule 2026-2-1\n🧝 5xp ⛩ 128 👣 \nstreak: 2\n🟩🟩🟩🟩🟩\n⚔ 👻👹👹🐺🐗\n🌰🌰🌰🌰🍄🍄🍄",
+    "description": "scores=[7,5,128,5]",
+    "expectedScores": [
+      7,
+      5,
+      128,
+      5
+    ]
+  },
+  {
+    "game": "Rogule",
+    "input": "#Rogule 2026-2-1\n🧝 5xp ⛩ 157 👣 \nstreak: 3\n🟩🟩🟩🟩🟩\n⚔ 👻👹🐺👹🐗\n🌰🌰🌰🌰🍄🍄🍄",
+    "description": "scores=[7,5,157,5]",
+    "expectedScores": [
+      7,
+      5,
+      157,
+      5
+    ]
+  },
+  {
+    "game": "Rogule",
+    "input": "#Rogule 2026-1-31\n🧝 5xp ⛩ 117 👣 \nstreak: 1\n🟩🟩🟩🟩🟩\n⚔ 🦇🐗🐺👹🧛\n🌰🌰🍄🍄🍄💎",
+    "description": "scores=[6,5,117,5]",
+    "expectedScores": [
+      6,
+      5,
+      117,
+      5
+    ]
+  },
+  {
+    "game": "Sedec-order",
+    "input": "Daily Sedec-order #1087\nGuesses: X/21\n0️⃣5️⃣ 0️⃣6️⃣\n0️⃣8️⃣ 0️⃣9️⃣\n1️⃣0️⃣ 1️⃣1️⃣\n1️⃣2️⃣ 1️⃣3️⃣\n1️⃣5️⃣ 1️⃣6️⃣\n1️⃣7️⃣ 1️⃣8️⃣\n1️⃣9️⃣ 2️⃣0️⃣\n2️⃣1️⃣ 🟥🟥\nhttps://sedecordle.com/\n#sedecordle  #sedecorder",
+    "expectedCleanResult": "Daily Sedec-order #1087\nGuesses: X/21\n0️⃣5️⃣ 0️⃣6️⃣\n0️⃣8️⃣ 0️⃣9️⃣\n1️⃣0️⃣ 1️⃣1️⃣\n1️⃣2️⃣ 1️⃣3️⃣\n1️⃣5️⃣ 1️⃣6️⃣\n1️⃣7️⃣ 1️⃣8️⃣\n1️⃣9️⃣ 2️⃣0️⃣\n2️⃣1️⃣ 🟥🟥",
+    "description": "no score data"
+  },
+  {
+    "game": "Sedec-order",
+    "input": "Daily Sedec-order #1097\nGuesses: 18/21\n0️⃣3️⃣ 0️⃣4️⃣\n0️⃣5️⃣ 0️⃣6️⃣\n0️⃣7️⃣ 0️⃣8️⃣\n0️⃣9️⃣ 1️⃣0️⃣\n1️⃣1️⃣ 1️⃣2️⃣\n1️⃣3️⃣ 1️⃣4️⃣\n1️⃣5️⃣ 1️⃣6️⃣\n1️⃣7️⃣ 1️⃣8️⃣\nhttps://sedecordle.com/\n#sedecordle  #sedecorder",
+    "expectedCleanResult": "Daily Sedec-order #1097\nGuesses: 18/21\n0️⃣3️⃣ 0️⃣4️⃣\n0️⃣5️⃣ 0️⃣6️⃣\n0️⃣7️⃣ 0️⃣8️⃣\n0️⃣9️⃣ 1️⃣0️⃣\n1️⃣1️⃣ 1️⃣2️⃣\n1️⃣3️⃣ 1️⃣4️⃣\n1️⃣5️⃣ 1️⃣6️⃣\n1️⃣7️⃣ 1️⃣8️⃣",
+    "description": "score=18",
+    "expectedScore": 18
+  },
+  {
+    "game": "Sedec-order",
+    "input": "Daily Sedec-order #1096\nGuesses: 21/21\n0️⃣3️⃣ 0️⃣7️⃣\n0️⃣8️⃣ 0️⃣9️⃣\n1️⃣0️⃣ 1️⃣1️⃣\n1️⃣2️⃣ 1️⃣3️⃣\n1️⃣4️⃣ 1️⃣5️⃣\n1️⃣6️⃣ 1️⃣7️⃣\n1️⃣8️⃣ 1️⃣9️⃣\n2️⃣0️⃣ 2️⃣1️⃣\nhttps://sedecordle.com/\n#sedecordle  #sedecorder",
+    "expectedCleanResult": "Daily Sedec-order #1096\nGuesses: 21/21\n0️⃣3️⃣ 0️⃣7️⃣\n0️⃣8️⃣ 0️⃣9️⃣\n1️⃣0️⃣ 1️⃣1️⃣\n1️⃣2️⃣ 1️⃣3️⃣\n1️⃣4️⃣ 1️⃣5️⃣\n1️⃣6️⃣ 1️⃣7️⃣\n1️⃣8️⃣ 1️⃣9️⃣\n2️⃣0️⃣ 2️⃣1️⃣",
+    "description": "score=21",
+    "expectedScore": 21
+  },
+  {
+    "game": "Sedecordle",
+    "input": "Daily #1374\n1️⃣8️⃣⬛0️⃣4️⃣\n1️⃣9️⃣⬛0️⃣5️⃣\n0️⃣6️⃣⬛0️⃣7️⃣\n0️⃣8️⃣⬛0️⃣9️⃣\n1️⃣0️⃣⬛2️⃣0️⃣\n1️⃣1️⃣⬛1️⃣2️⃣\n1️⃣4️⃣⬛1️⃣5️⃣\n1️⃣6️⃣⬛1️⃣7️⃣\nsedecordle.com\n#sedecordle",
+    "expectedCleanResult": "Daily #1374\n1️⃣8️⃣⬛0️⃣4️⃣\n1️⃣9️⃣⬛0️⃣5️⃣\n0️⃣6️⃣⬛0️⃣7️⃣\n0️⃣8️⃣⬛0️⃣9️⃣\n1️⃣0️⃣⬛2️⃣0️⃣\n1️⃣1️⃣⬛1️⃣2️⃣\n1️⃣4️⃣⬛1️⃣5️⃣\n1️⃣6️⃣⬛1️⃣7️⃣",
+    "description": "scores=[18,4,19,5,6,7,8,9,10,20,11,12,14,15,16,17]",
+    "expectedScores": [
+      18,
+      4,
+      19,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      20,
+      11,
+      12,
+      14,
+      15,
+      16,
+      17
+    ]
+  },
+  {
+    "game": "Sedecordle",
+    "input": "Daily #1371\n1️⃣8️⃣⬛1️⃣9️⃣\n0️⃣5️⃣⬛0️⃣4️⃣\n0️⃣6️⃣⬛2️⃣0️⃣\n0️⃣7️⃣⬛0️⃣8️⃣\n0️⃣9️⃣⬛1️⃣0️⃣\n1️⃣1️⃣⬛1️⃣3️⃣\n1️⃣4️⃣⬛1️⃣5️⃣\n1️⃣6️⃣⬛1️⃣7️⃣\nsedecordle.com\n#sedecordle",
+    "expectedCleanResult": "Daily #1371\n1️⃣8️⃣⬛1️⃣9️⃣\n0️⃣5️⃣⬛0️⃣4️⃣\n0️⃣6️⃣⬛2️⃣0️⃣\n0️⃣7️⃣⬛0️⃣8️⃣\n0️⃣9️⃣⬛1️⃣0️⃣\n1️⃣1️⃣⬛1️⃣3️⃣\n1️⃣4️⃣⬛1️⃣5️⃣\n1️⃣6️⃣⬛1️⃣7️⃣",
+    "description": "scores=[18,19,5,4,6,20,7,8,9,10,11,13,14,15,16,17]",
+    "expectedScores": [
+      18,
+      19,
+      5,
+      4,
+      6,
+      20,
+      7,
+      8,
+      9,
+      10,
+      11,
+      13,
+      14,
+      15,
+      16,
+      17
+    ]
+  },
+  {
+    "game": "Sedecordle",
+    "input": "Daily #1370\n1️⃣4️⃣⬛1️⃣5️⃣\n0️⃣5️⃣⬛1️⃣6️⃣\n1️⃣7️⃣⬛0️⃣6️⃣\n1️⃣8️⃣⬛1️⃣9️⃣\n0️⃣7️⃣⬛0️⃣8️⃣\n1️⃣0️⃣⬛0️⃣9️⃣\n2️⃣1️⃣⬛2️⃣0️⃣\n1️⃣3️⃣⬛1️⃣1️⃣\nsedecordle.com\n#sedecordle",
+    "expectedCleanResult": "Daily #1370\n1️⃣4️⃣⬛1️⃣5️⃣\n0️⃣5️⃣⬛1️⃣6️⃣\n1️⃣7️⃣⬛0️⃣6️⃣\n1️⃣8️⃣⬛1️⃣9️⃣\n0️⃣7️⃣⬛0️⃣8️⃣\n1️⃣0️⃣⬛0️⃣9️⃣\n2️⃣1️⃣⬛2️⃣0️⃣\n1️⃣3️⃣⬛1️⃣1️⃣",
+    "description": "scores=[14,15,5,16,17,6,18,19,7,8,10,9,21,20,13,11]",
+    "expectedScores": [
+      14,
+      15,
+      5,
+      16,
+      17,
+      6,
+      18,
+      19,
+      7,
+      8,
+      10,
+      9,
+      21,
+      20,
+      13,
+      11
+    ]
+  },
+  {
+    "game": "Sedecordle Savior",
+    "input": "Daily Savior #1368\nGuesses: X/21\n1️⃣4️⃣ 1️⃣5️⃣\n1️⃣6️⃣ 1️⃣7️⃣\n1️⃣8️⃣ 1️⃣9️⃣\n0️⃣5️⃣ 2️⃣0️⃣\n0️⃣8️⃣ 0️⃣7️⃣\n0️⃣9️⃣ 2️⃣1️⃣\n🟥🟥 1️⃣0️⃣\n🟥🟥 1️⃣3️⃣\nhttps://sedecordle.com/\n#sedecordle",
+    "expectedCleanResult": "Daily Savior #1368\nGuesses: X/21\n1️⃣4️⃣ 1️⃣5️⃣\n1️⃣6️⃣ 1️⃣7️⃣\n1️⃣8️⃣ 1️⃣9️⃣\n0️⃣5️⃣ 2️⃣0️⃣\n0️⃣8️⃣ 0️⃣7️⃣\n0️⃣9️⃣ 2️⃣1️⃣\n🟥🟥 1️⃣0️⃣\n🟥🟥 1️⃣3️⃣",
+    "description": "no score data"
+  },
+  {
+    "game": "Sedecordle Savior",
+    "input": "Daily Savior #1339\nGuesses: 19/21\n1️⃣6️⃣ 0️⃣5️⃣\n1️⃣7️⃣ 1️⃣8️⃣\n0️⃣6️⃣ 0️⃣7️⃣\n0️⃣8️⃣ 0️⃣9️⃣\n0️⃣2️⃣ 1️⃣9️⃣\n1️⃣0️⃣ 1️⃣1️⃣\n1️⃣2️⃣ 1️⃣3️⃣\n1️⃣4️⃣ 1️⃣5️⃣\nhttps://sedecordle.com/\n#sedecordle",
+    "expectedCleanResult": "Daily Savior #1339\nGuesses: 19/21\n1️⃣6️⃣ 0️⃣5️⃣\n1️⃣7️⃣ 1️⃣8️⃣\n0️⃣6️⃣ 0️⃣7️⃣\n0️⃣8️⃣ 0️⃣9️⃣\n0️⃣2️⃣ 1️⃣9️⃣\n1️⃣0️⃣ 1️⃣1️⃣\n1️⃣2️⃣ 1️⃣3️⃣\n1️⃣4️⃣ 1️⃣5️⃣",
+    "description": "score=19",
+    "expectedScore": 19
+  },
+  {
+    "game": "Sedecordle Savior",
+    "input": "Daily Savior #1387\nGuesses: 21/21\n1️⃣4️⃣ 1️⃣5️⃣\n1️⃣6️⃣ 1️⃣7️⃣\n0️⃣6️⃣ 0️⃣5️⃣\n0️⃣7️⃣ 0️⃣9️⃣\n1️⃣1️⃣ 1️⃣0️⃣\n1️⃣2️⃣ 1️⃣8️⃣\n1️⃣9️⃣ 1️⃣3️⃣\n2️⃣0️⃣ 2️⃣1️⃣\nhttps://sedecordle.com/\n#sedecordle",
+    "expectedCleanResult": "Daily Savior #1387\nGuesses: 21/21\n1️⃣4️⃣ 1️⃣5️⃣\n1️⃣6️⃣ 1️⃣7️⃣\n0️⃣6️⃣ 0️⃣5️⃣\n0️⃣7️⃣ 0️⃣9️⃣\n1️⃣1️⃣ 1️⃣0️⃣\n1️⃣2️⃣ 1️⃣8️⃣\n1️⃣9️⃣ 1️⃣3️⃣\n2️⃣0️⃣ 2️⃣1️⃣",
+    "description": "score=21",
+    "expectedScore": 21
+  },
+  {
+    "game": "Semantle",
+    "input": "Semantle #1386\n✅ 38 Guesses\n🔝 Guess #35\n🥈 935/1000\n💡 4 Hints",
+    "description": "score=40038",
+    "expectedScore": 40038
+  },
+  {
+    "game": "Semantle Junior",
+    "input": "Semantle Junior #1273\n✅ 40 Guesses\n🔝 Guess #38\n🥈 986/1000\n💡 5 Hints",
+    "description": "score=50040",
+    "expectedScore": 50040
+  },
+  {
+    "game": "Slay the Spire Daily Challenge",
+    "input": "Slay the Spire 293",
+    "expectedCleanResult": "Slay the Spire\n293",
+    "description": "score=293",
+    "expectedScore": 293
+  },
+  {
+    "game": "Slay the Spire Daily Challenge",
+    "input": "Sts 1067",
+    "expectedCleanResult": "Slay the Spire\n1067",
+    "description": "score=1067",
+    "expectedScore": 1067
+  },
+  {
+    "game": "Squareword",
+    "input": "squareword.org 1461: 6 guesses\n\n🟩🟨🟨🟨🟨\n🟩🟩🟩🟩🟩\n🟩🟩🟩🟩🟩\n🟩🟩🟩🟩🟩\n🟩🟩🟩🟩🟩\n\n<6:🟩 <11:🟨 <16:🟧 16+:🟥\n#squareword #squareword1461",
+    "description": "score=6",
+    "expectedScore": 6,
+    "expectedCleanResult": "squareword 1461: 6 guesses\n\n🟩🟨🟨🟨🟨\n🟩🟩🟩🟩🟩\n🟩🟩🟩🟩🟩\n🟩🟩🟩🟩🟩\n🟩🟩🟩🟩🟩\n\n<6:🟩 <11:🟨 <16:🟧 16+:🟥\n#squareword #squareword1461"
+  },
+  {
+    "game": "Squareword",
+    "input": "squareword.org 1460: 11 guesses\n\n🟩🟨🟨🟩🟩\n🟩🟧🟩🟨🟨\n🟩🟨🟩🟨🟨\n🟩🟩🟨🟨🟨\n🟨🟨🟨🟨🟩\n\n<6:🟩 <11:🟨 <16:🟧 16+:🟥\n#squareword #squareword1460",
+    "description": "score=11",
+    "expectedScore": 11,
+    "expectedCleanResult": "squareword 1460: 11 guesses\n\n🟩🟨🟨🟩🟩\n🟩🟧🟩🟨🟨\n🟩🟨🟩🟨🟨\n🟩🟩🟨🟨🟨\n🟨🟨🟨🟨🟩\n\n<6:🟩 <11:🟨 <16:🟧 16+:🟥\n#squareword #squareword1460"
+  },
+  {
+    "game": "Strands",
+    "input": "Strands #646\n“On the court”\n🟡🔵🔵🔵\n🔵🔵🔵🔵",
+    "description": "score=0",
+    "expectedScore": 0
+  },
+  {
+    "game": "Strands",
+    "input": "Strands #447\n“Flights of fancy”\n💡🔵💡🔵\n🔵🟡🔵🔵",
+    "description": "score=2",
+    "expectedScore": 2
+  },
+  {
+    "game": "Subwaydle",
+    "input": "Subwaydle 727 X/6\n\n⚪🟡⚪\n⚪⚪🟢\n⚪⚪🟢\n⚪⚪🟢\n⚪⚪🟢\n⚪⚪🟢",
+    "description": "no score data"
+  },
+  {
+    "game": "Subwaydle",
+    "input": "Subwaydle 274 (Weekend Edition) 1/6\n\n🟢🟢🟢",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Subwaydle",
+    "input": "Subwaydle 726 6/6\n\n⚪⚪⚪\n⚪⚪⚪\n⚪🟡🟢\n🟢⚪🟢\n⚪🟢⚪\n🟢🟢🟢",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Thrice",
+    "input": "Thrice Game #937 → 8 points!\n🎲: 2️⃣1️⃣❌3️⃣2️⃣",
+    "description": "score=8",
+    "expectedScore": 8
+  },
+  {
+    "game": "Thrice",
+    "input": "Thrice Game #944 → 13 points!\n🎲: 3️⃣3️⃣3️⃣2️⃣2️⃣",
+    "description": "score=13",
+    "expectedScore": 13
+  },
+  {
+    "game": "TimeGuessr",
+    "input": "TimeGuessr #772 28,430/50,000\n🌎⬛️⬛️⬛️ 📅🟩🟨⬛\n🌎🟨⬛️⬛️ 📅🟩🟨⬛\n🌎🟩🟩🟨 📅⬛️⬛️⬛️\n🌎⬛️⬛️⬛️ 📅🟩🟩🟨\n🌎🟩🟩🟨 📅🟩🟨⬛",
+    "description": "score=28430",
+    "expectedScore": 28430
+  },
+  {
+    "game": "TimeGuessr",
+    "input": "TimeGuessr #583 44,489/50,000\n🌎🟩🟩🟨 📅🟩🟩🟩\n🌎🟩🟩🟩 📅🟨⬛️⬛️\n🌎🟩⬛️⬛️ 📅🟩🟩🟨\n🌎🟩🟩🟨 📅🟩🟩🟩\n🌎🟩🟩🟨 📅🟩🟩🟩",
+    "description": "score=44489",
+    "expectedScore": 44489
+  },
+  {
+    "game": "Tradle",
+    "input": "#Tradle #1422 X/6\n🟨⬜⬜⬜⬜\n🟩🟩🟩🟨⬜\n🟩🟩🟩🟨⬜\n🟩🟩🟩🟨⬜\n🟩🟩🟩🟩🟨\n🟩🟩🟩🟨⬜",
+    "description": "no score data"
+  },
+  {
+    "game": "Tradle",
+    "input": "#Tradle #1424 2/6\n🟩🟩🟩🟩🟨\n🟩🟩🟩🟩🟩",
+    "description": "score=2",
+    "expectedScore": 2
+  },
+  {
+    "game": "Tradle",
+    "input": "#Tradle #1428 6/6\n🟩🟩🟩🟩⬜\n🟩🟩🟩🟩🟨\n🟩🟩🟩🟩🟨\n🟩🟩🟩🟩🟨\n🟩🟩🟩🟩🟨\n🟩🟩🟩🟩🟩",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Travle",
+    "input": "#travle #742 (1 away)\n🟥🟧🟧🟩🟥🟧✅",
+    "description": "no score data"
+  },
+  {
+    "game": "Travle",
+    "input": "#travle #1145 +0 (Perfect)\n✅✅✅",
+    "description": "score=-1",
+    "expectedScore": -1
+  },
+  {
+    "game": "Travle",
+    "input": "#travle #1140 +1\n✅✅✅✅✅✅🟧✅",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Waffle",
+    "input": "#waffle1395 X/5\n\n🟩🟩⬛⬛🟩\n🟩⬜🟩⬜🟩\n🟩🟩🟩🟩🟩\n🟩⬜🟩⬜🟩\n🟩🟩🟩🟩🟩\n\n💔 streak: 0",
+    "description": "no score data"
+  },
+  {
+    "game": "Waffle",
+    "input": "#waffle1468 0/5\n\n🟩🟩🟩🟩🟩\n🟩⬜🟩⬜🟩\n🟩🟩🟩🟩🟩\n🟩⬜🟩⬜🟩\n🟩🟩🟩🟩🟩\n\n🔥 streak: 1",
+    "description": "score=0",
+    "expectedScore": 0
+  },
+  {
+    "game": "Waffle",
+    "input": "#waffle1471 5/5\n\n🟩🟩🟩🟩🟩\n🟩⭐🟩⭐🟩\n🟩🟩⭐🟩🟩\n🟩⭐🟩⭐🟩\n🟩🟩🟩🟩🟩\n\n🔥 streak: 138\n🌟 #wafflecenturion",
+    "description": "score=5",
+    "expectedScore": 5
+  },
+  {
+    "game": "Weaver",
+    "input": "Weaver #733\n\nPACK\n🟩⬜⬜⬜\n🟩🟩⬜⬜\n🟩🟩🟩⬜\n🟩🟩🟩🟩\nMULE",
+    "description": "score=4",
+    "expectedScore": 4
+  },
+  {
+    "game": "Weaver",
+    "input": "Weaver #745\n\nBLOG\n⬜⬜⬜⬜\n⬜⬜⬜⬜\n⬜⬜⬜⬜\n⬜⬜⬜⬜\n⬜⬜⬜⬜\n⬜⬜⬜⬜\n⬜⬜⬜⬜\n🟩⬜⬜⬜\n🟩🟩⬜⬜\n🟩🟩🟩⬜\n🟩🟩🟩🟩\nPAGE",
+    "description": "score=11",
+    "expectedScore": 11
+  },
+  {
+    "game": "Wordle",
+    "input": "Wordle 1.672 X/6\n\n⬜🟨⬜⬜🟨\n⬜⬜🟨🟨🟩\n⬜🟩⬜🟩🟩\n⬜🟩⬜🟩🟩\n⬜🟩⬜🟩🟩\n⬜🟩⬜🟩🟩",
+    "description": "no score data"
+  },
+  {
+    "game": "Wordle",
+    "input": "Wordle 1,685 3/6*\n\n🟨⬛⬛🟩⬛\n🟩🟩⬛🟩⬛\n🟩🟩🟩🟩🟩",
+    "description": "score=3",
+    "expectedScore": 3
+  },
+  {
+    "game": "Wordle",
+    "input": "Wordle 1,687 6/6\n\n⬜🟨⬜⬜⬜\n⬜🟩🟨⬜⬜\n🟩🟩🟨⬜⬜\n🟩🟩⬜⬜🟨\n🟩🟩🟩🟩⬜\n🟩🟩🟩🟩🟩",
+    "description": "score=6",
+    "expectedScore": 6
+  },
+  {
+    "game": "Worldle",
+    "input": "#Worldle #1471 (31.01.2026) X/6 (77%)\n🔥 Current Win Streak: 26 days\n🟩⬜⬜⬜⬜⬇️\n🟩🟩🟩⬜⬜➡️\n🟩🟩🟩🟨⬜↙️\n🟩🟩🟩🟨⬜➡️\n🟩🟩🟩⬜⬜➡️\n🟩🟩⬜⬜⬜🛟",
+    "description": "no score data"
+  },
+  {
+    "game": "Worldle",
+    "input": "#Worldle #1472 (01.02.2026) 1/6 (100%)\n🔥 Current Win Streak: 27 days\n🟩🟩🟩🟩🟩🎉",
+    "description": "score=1",
+    "expectedScore": 1
+  },
+  {
+    "game": "Worldle",
+    "input": "#Worldle #1465 (25.01.2026) 5/6 (100%)\n🔥 Current Win Streak: 20 days\n🟩🟨⬜⬜⬜⬅️\n🟩🟩🟨⬜⬜➡️\n🟩🟩🟩🟩🟨⬆️\n🟩🟩🟩🟩⬜↙️\n🟩🟩🟩🟩🟩🎉",
+    "description": "score=5",
+    "expectedScore": 5
+  }
+]

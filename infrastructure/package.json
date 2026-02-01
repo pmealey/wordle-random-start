@@ -1,0 +1,32 @@
+{
+  "name": "wordle-infrastructure",
+  "version": "1.0.0",
+  "description": "AWS CDK infrastructure for Daily Games (Wordle) app",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "deploy:dev": "cdk deploy --context stage=dev --all",
+    "deploy:prod": "cdk deploy --context stage=prod --all",
+    "diff:dev": "cdk diff --context stage=dev --all",
+    "diff:prod": "cdk diff --context stage=prod --all",
+    "synth:dev": "cdk synth --context stage=dev --all",
+    "synth:prod": "cdk synth --context stage=prod --all",
+    "outputs:dev": "aws cloudformation describe-stacks --query \"Stacks[?contains(StackName,'dev')].{Stack:StackName,Outputs:Outputs[*].{Key:OutputKey,Value:OutputValue}}\" --output table",
+    "outputs:prod": "aws cloudformation describe-stacks --query \"Stacks[?contains(StackName,'prod')].{Stack:StackName,Outputs:Outputs[*].{Key:OutputKey,Value:OutputValue}}\" --output table",
+    "urls:dev": "aws cloudformation describe-stacks --query \"Stacks[?contains(StackName,'Wordle') && contains(StackName,'dev')].Outputs[?contains(OutputKey,'Url')].OutputValue\" --output text",
+    "urls:prod": "aws cloudformation describe-stacks --query \"Stacks[?contains(StackName,'Wordle') && contains(StackName,'prod')].Outputs[?contains(OutputKey,'Url')].OutputValue\" --output text",
+    "destroy:dev": "cdk destroy --context stage=dev --all",
+    "destroy:prod": "echo 'Are you sure? Run: cdk destroy --context stage=prod --all'"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0",
+    "aws-cdk": "^2.170.0",
+    "esbuild": "^0.21.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.170.0",
+    "constructs": "^10.3.0"
+  }
+}
