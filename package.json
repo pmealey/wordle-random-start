@@ -1,0 +1,37 @@
+{
+  "name": "wordle-random-start",
+  "version": "1.0.0",
+  "description": "Daily Games (Wordle) - Monorepo with frontend, backend, infrastructure, and lambdas",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix infrastructure && npm install --prefix lambdas && npm install --prefix scripts",
+    
+    "build:lambdas": "npm run build --prefix lambdas",
+    "build:infra": "npm run build --prefix infrastructure",
+    "build": "npm run build:lambdas && npm run build:infra",
+    
+    "deploy:dev": "npm run deploy:dev --prefix infrastructure",
+    "deploy:prod": "npm run deploy:prod --prefix infrastructure",
+    
+    "diff:dev": "npm run diff:dev --prefix infrastructure",
+    "diff:prod": "npm run diff:prod --prefix infrastructure",
+    
+    "synth:dev": "npm run synth:dev --prefix infrastructure",
+    "synth:prod": "npm run synth:prod --prefix infrastructure",
+    
+    "destroy:dev": "npm run destroy:dev --prefix infrastructure",
+    "destroy:prod": "npm run destroy:prod --prefix infrastructure",
+    
+    "outputs:dev": "npm run outputs:dev --prefix infrastructure",
+    "outputs:prod": "npm run outputs:prod --prefix infrastructure",
+    
+    "urls:dev": "npm run urls:dev --prefix infrastructure",
+    "urls:prod": "npm run urls:prod --prefix infrastructure",
+    
+    "migrate:dev": "npm run migrate:dev --prefix scripts",
+    "migrate:prod": "npm run migrate:prod --prefix scripts",
+    
+    "test:lambdas": "npm test --prefix lambdas",
+    "test": "npm run test:lambdas"
+  }
+}

@@ -4,9 +4,7 @@
   "description": "Migration and utility scripts for Daily Games",
   "scripts": {
     "migrate:dev": "npx ts-node migrate-from-postgres.ts --stage dev",
-    "migrate:prod": "npx ts-node migrate-from-postgres.ts --stage prod",
-    "migrate-csv:dev": "npx ts-node migrate-data.ts --stage dev",
-    "migrate-csv:prod": "npx ts-node migrate-data.ts --stage prod"
+    "migrate:prod": "npx ts-node migrate-from-postgres.ts --stage prod"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.131",
