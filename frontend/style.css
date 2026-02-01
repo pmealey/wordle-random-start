@@ -53,22 +53,6 @@ button:hover { background-color: #e0e0e0;}
 .dialog-footer > * + * { margin-left: 10px; }
 .dialog-body { flex: 1 1 100%; overflow-y: auto; }
 
-.comment-input { display: flex; flex-direction: column; }
-.comment-input > div { display: flex; flex-direction: row; justify-content: flex-end; }
-.comment-input textarea { min-height: 75px; height: 75px; resize: none; }
-.comment-input textarea + button { margin-left: 5px; }
-.comment-row { display: flex; justify-content: flex-end; }
-.comment-row.mine { justify-content: flex-start; }
-.comment-row.mine .comment { text-align: left; }
-.comment { border: solid 1px #444; padding: 5px; border-radius: 4px; text-align: right; max-width: 75%; }
-.played-game .comment { border: dashed 1.5px #444; }
-.played-game .comment-row.post-game .comment { border: solid 1px #444; }
-.comment-row + .comment-row { margin-top: 5px; }
-.comment .user { font-size: 0.75em; }
-.hidden-comments { text-align: center; justify-self: center; font-size: 0.75em; padding-left: 20px; padding-right: 20px; }
-.unread-comments { background-color: #f003 }
-.comment-input button { font-size: 1.25em; }
-
 .winner-border {
   position: absolute; display: block; overflow: hidden;
   top: -150%; left: -100%; z-index: -9; height: 400%; width: 300%;
