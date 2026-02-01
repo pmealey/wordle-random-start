@@ -138,6 +138,41 @@ function stringToColor(str) {
   return colour + '44';
 }
 
+// Loading state management
+function showResultsLoading() {
+  const loadingIndicator = document.getElementById('results-loading');
+  const summaryArea = document.getElementById('summary');
+  const leaderboardContainer = document.getElementById('leaderboard-container');
+  
+  if (loadingIndicator) {
+    loadingIndicator.classList.remove('hidden');
+  }
+  // Hide previous results while loading
+  if (summaryArea) {
+    summaryArea.classList.add('loading-hidden');
+  }
+  if (leaderboardContainer) {
+    leaderboardContainer.classList.add('loading-hidden');
+  }
+}
+
+function hideResultsLoading() {
+  const loadingIndicator = document.getElementById('results-loading');
+  const summaryArea = document.getElementById('summary');
+  const leaderboardContainer = document.getElementById('leaderboard-container');
+  
+  if (loadingIndicator) {
+    loadingIndicator.classList.add('hidden');
+  }
+  // Show results again
+  if (summaryArea) {
+    summaryArea.classList.remove('loading-hidden');
+  }
+  if (leaderboardContainer) {
+    leaderboardContainer.classList.remove('loading-hidden');
+  }
+}
+
 // function checkNotificationPromise() {
 //   try {
 //     Notification.requestPermission().then();
@@ -413,29 +448,10 @@ function stringToColor(str) {
   }
 
   function setGroup(newGroup) {
-    let summaryRequest = new XMLHttpRequest();
-    summaryRequest.onreadystatechange = function () {
-      if (requestIsDone(summaryRequest)) {
-        if (requestHasSucceeded(summaryRequest)) {
-          let newSummaries = JSON.parse(summaryRequest.responseText);
-          setData(newSummaries);
-        } else {
-          errorArea.textContent = summaryRequest.responseText;
-          resultsArea.classList.add('hidden');
-          errorArea.classList.remove('hidden');
-        }
-      }
-    }
-
     group = newGroup;
     groups[newGroup.name] = newGroup;
 
     groupDescription.textContent = group.description;
-    // if (group.description) {
-    //   groupDescription.classList.remove('hidden');
-    // } else {
-    //   groupDescription.classList.add('hidden');
-    // }
 
     let summaryRequestUrl = apiUrl('/daily-result');
 
@@ -447,7 +463,25 @@ function stringToColor(str) {
     // fetch results corresponding to the selected group
     summaryRequestUrl = addGroupParam(summaryRequestUrl);
 
-    summaryRequest.open('GET', summaryRequestUrl, false);
+    // Show loading state while fetching results
+    showResultsLoading();
+
+    let summaryRequest = new XMLHttpRequest();
+    summaryRequest.onreadystatechange = function () {
+      if (requestIsDone(summaryRequest)) {
+        hideResultsLoading();
+        if (requestHasSucceeded(summaryRequest)) {
+          let newSummaries = JSON.parse(summaryRequest.responseText);
+          setData(newSummaries);
+        } else {
+          errorArea.textContent = summaryRequest.responseText;
+          resultsArea.classList.add('hidden');
+          errorArea.classList.remove('hidden');
+        }
+      }
+    }
+
+    summaryRequest.open('GET', summaryRequestUrl, true);  // async = true
     summaryRequest.send();
   }
 
@@ -483,6 +517,11 @@ function stringToColor(str) {
       return;
     }
 
+    // Show loading state while fetching group
+    showResultsLoading();
+    noUserOrGroupArea.classList.add('hidden');
+    resultsArea.classList.remove('hidden');
+
     let groupRequest = new XMLHttpRequest();
     groupRequest.onreadystatechange = function () {
       if (!requestIsDone(groupRequest)) {
@@ -492,6 +531,7 @@ function stringToColor(str) {
       if (requestHasSucceeded(groupRequest)) {
         setGroup(JSON.parse(groupRequest.responseText))
       } else {
+        hideResultsLoading();
         resultsArea.classList.add('hidden');
         noUserOrGroupArea.classList.remove('hidden');
       }

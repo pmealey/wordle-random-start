@@ -5,7 +5,7 @@
     <base href="wordle">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Daily Games</title>
-    <link rel="stylesheet" href="style.css?v=23">
+    <link rel="stylesheet" href="style.css?v=25">
     <meta name="robots" content="noindex">
 </head>
 <body>
@@ -14,7 +14,7 @@
     </div>
     <h2><span id="title">Daily Games</span> - <span id="today"></span></h2>
     <p class="help">Last updated 01/15/2026: <a href="changelog.txt" target="_blank">changelog</a></p>
-    <p>Today's random word: <a id="starting-word" target="_blank">Loading...</span></p>
+    <p>Today's random word: <a id="starting-word" target="_blank"><span class="loading-text">Loading...</span></a></p>
 
     <p id="user-area" class="hidden input-row">
         <label for="user">Name:</label>
@@ -111,6 +111,11 @@
         </div>
     
 
+        <div id="results-loading" class="results-loading hidden">
+            <div class="loading-spinner"></div>
+            <span>Loading results...</span>
+        </div>
+
         <div id="summary" class="summary results-area"></div>
     </div>
 
@@ -118,6 +123,6 @@
 
     <!-- <p class="hidden"><button id="allow-notifications">&#128276 Allow Notifications &#128276</button></p> -->
 
-    <script src="scripts.js?v=44"></script>
+    <script src="scripts.js?v=46"></script>
 </body>
 </html>
