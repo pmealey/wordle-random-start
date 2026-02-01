@@ -145,20 +145,247 @@ function stringToColor(str) {
   let deleteButton = document.getElementById('delete');
   let noUserOrGroupArea = document.getElementById('no-user-or-group-area');
   let groupSelectionArea = document.getElementById('group-selection-area');
-  let sortSelect = document.getElementById('sort');
   let resultsArea = document.getElementById('results-area');
+  let leaderboardContainer = document.getElementById('leaderboard-container');
   let crownColumn1 = document.getElementById('crown1');
   let leaderboardArea = document.getElementById('leaderboard');
   let crownColumn2 = document.getElementById('crown2');
   let groupDescription = document.getElementById('group-description');
   let summaryArea = document.getElementById('summary');
   let errorArea = document.getElementById('error-area');
+  let settingsCard = document.getElementById('settings-card');
+  let toggleSettingsButton = document.getElementById('toggle-settings');
+  let closeSettingsButton = document.getElementById('close-settings');
+  let leaderboardSummary = document.getElementById('leaderboard-summary');
+  let displaySummary = document.getElementById('display-summary');
+  let sortSummary = document.getElementById('sort-summary');
+  let leaderboardCountInput = document.getElementById('leaderboard-count');
 
   let games = [];
 
   let group = {};
 
   let groups = {};
+
+  let settingsAreOpen = false;
+  let leaderboardStateWhenSettingsOpened = null;
+
+  // Settings management
+  function getLeaderboardSettings(groupName) {
+    const key = `leaderboard_${groupName}`;
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+    
+    // Defaults: family gets 'top', others get 'all'
+    const isFamily = groupName && groupName.includes('family');
+    return {
+      mode: isFamily ? 'top' : 'all',
+      count: 6
+    };
+  }
+
+  function saveLeaderboardSettings(groupName, settings) {
+    const key = `leaderboard_${groupName}`;
+    localStorage.setItem(key, JSON.stringify(settings));
+  }
+
+  function getGamesDisplay() {
+    return localStorage.getItem('gamesDisplay') || 'all';
+  }
+
+  function saveGamesDisplay(value) {
+    localStorage.setItem('gamesDisplay', value);
+  }
+
+  function getGamesSort() {
+    return localStorage.getItem('sort') || 'popularity';
+  }
+
+  function saveGamesSort(value) {
+    localStorage.setItem('sort', value);
+  }
+
+  function getLeaderboardModeLabel(settings) {
+    if (settings.mode === 'top') {
+      return `Top ${settings.count} Games`;
+    } else if (settings.mode === 'my') {
+      return 'My Games';
+    } else if (settings.mode === 'hidden') {
+      return 'Hidden';
+    } else {
+      return 'All Games';
+    }
+  }
+
+  function getDisplayLabel(display) {
+    if (display === 'popular') {
+      return 'Popular Games';
+    } else if (display === 'my') {
+      return 'My Games';
+    } else {
+      return 'All Games';
+    }
+  }
+
+  function getSortLabel(sort) {
+    if (sort === 'arbitrary') {
+      return 'Arbitrary';
+    } else if (sort === 'popularity') {
+      return 'By Popularity';
+    } else if (sort === 'personal') {
+      return 'By My Popularity';
+    } else {
+      return 'Alphabetically';
+    }
+  }
+
+  function updateSettingsSummary() {
+    const selectedGroup = getSelectedGroup();
+    if (!selectedGroup) return;
+
+    const leaderboardSettings = getLeaderboardSettings(selectedGroup);
+    const display = getGamesDisplay();
+    const sort = getGamesSort();
+
+    leaderboardSummary.textContent = `🏆 ${getLeaderboardModeLabel(leaderboardSettings)}`;
+    displaySummary.textContent = `📋 ${getDisplayLabel(display)}`;
+    sortSummary.textContent = `↕️ ${getSortLabel(sort)}`;
+  }
+
+  function updateSettingsCard() {
+    const selectedGroup = getSelectedGroup();
+    if (!selectedGroup) return;
+
+    const leaderboardSettings = getLeaderboardSettings(selectedGroup);
+    const display = getGamesDisplay();
+    const sort = getGamesSort();
+
+    // Update leaderboard mode
+    document.querySelector(`input[name="leaderboard-mode"][value="${leaderboardSettings.mode}"]`).checked = true;
+    leaderboardCountInput.value = leaderboardSettings.count;
+    leaderboardCountInput.disabled = leaderboardSettings.mode !== 'top';
+
+    // Update games display
+    document.querySelector(`input[name="games-display"][value="${display}"]`).checked = true;
+
+    // Update sort
+    document.querySelector(`input[name="games-sort"][value="${sort}"]`).checked = true;
+  }
+
+  function updateLeaderboardVisibility() {
+    const selectedGroup = getSelectedGroup();
+    if (!selectedGroup) return;
+
+    const leaderboardSettings = getLeaderboardSettings(selectedGroup);
+    const currentStateIsHidden = leaderboardSettings.mode === 'hidden';
+    
+    if (!settingsAreOpen) {
+      // Settings closed - apply final state
+      if (currentStateIsHidden) {
+        leaderboardContainer.classList.remove('hidden-preserve-space');
+        leaderboardContainer.classList.add('hidden');
+      } else {
+        leaderboardContainer.classList.remove('hidden', 'hidden-preserve-space');
+      }
+    } else {
+      // Settings open - only modify if state changed
+      if (currentStateIsHidden !== leaderboardStateWhenSettingsOpened) {
+        if (leaderboardStateWhenSettingsOpened === false) {
+          // Was visible, now hidden - hide content but preserve space
+          leaderboardContainer.classList.remove('hidden');
+          leaderboardContainer.classList.add('hidden-preserve-space');
+        }
+        // If was hidden, now visible - keep it hidden (display: none), don't preserve space
+        // Do nothing - it stays in display: none
+      }
+      // If state hasn't changed, don't modify anything
+    }
+  }
+
+  function toggleSettingsCard() {
+    if (settingsCard.classList.contains('hidden')) {
+      // Opening settings - track initial state, don't change anything visually
+      const selectedGroup = getSelectedGroup();
+      const leaderboardSettings = getLeaderboardSettings(selectedGroup);
+      leaderboardStateWhenSettingsOpened = leaderboardSettings.mode === 'hidden';
+      settingsAreOpen = true;
+      
+      settingsCard.classList.remove('hidden');
+      setTimeout(() => settingsCard.classList.add('expanded'), 10);
+      updateSettingsCard();
+    } else {
+      // Closing settings
+      settingsCard.classList.remove('expanded');
+      setTimeout(() => {
+        settingsCard.classList.add('hidden');
+        settingsAreOpen = false;
+        leaderboardStateWhenSettingsOpened = null;
+        
+        // Apply final leaderboard state
+        updateLeaderboardVisibility();
+        
+        // Regenerate leaderboard if it's now visible
+        const selectedGroup = getSelectedGroup();
+        const leaderboardSettings = getLeaderboardSettings(selectedGroup);
+        if (leaderboardSettings.mode !== 'hidden' && lastDailyResults) {
+          displayLeaderboard();
+        }
+      }, 300);
+    }
+  }
+
+  function closeSettingsCard() {
+    settingsCard.classList.remove('expanded');
+    setTimeout(() => {
+      settingsCard.classList.add('hidden');
+      settingsAreOpen = false;
+      leaderboardStateWhenSettingsOpened = null;
+      
+      // Apply final leaderboard state
+      updateLeaderboardVisibility();
+      
+      // Regenerate leaderboard if it's now visible
+      const selectedGroup = getSelectedGroup();
+      const leaderboardSettings = getLeaderboardSettings(selectedGroup);
+      if (leaderboardSettings.mode !== 'hidden' && lastDailyResults) {
+        displayLeaderboard();
+      }
+    }, 300);
+  }
+
+  function filterGamesForLeaderboard(allGames, leaderboardSettings) {
+    if (leaderboardSettings.mode === 'hidden') {
+      return [];
+    } else if (leaderboardSettings.mode === 'all') {
+      return allGames;
+    } else if (leaderboardSettings.mode === 'my') {
+      return allGames.filter(game => game.myPopularity > 0);
+    } else if (leaderboardSettings.mode === 'top') {
+      // Sort by group popularity and take top N
+      return allGames
+        .filter(game => group.games && group.games[game.gameName])
+        .sort((a, b) => group.games[b.gameName].popularity - group.games[a.gameName].popularity)
+        .slice(0, leaderboardSettings.count);
+    }
+    return allGames;
+  }
+
+  function filterGamesForDisplay(allGames, displayMode) {
+    if (displayMode === 'all') {
+      return allGames;
+    } else if (displayMode === 'my') {
+      return allGames.filter(game => game.myPopularity > 0);
+    } else if (displayMode === 'popular') {
+      return allGames.filter(game => group.games && group.games[game.gameName] && group.games[game.gameName].popularity > 0);
+    }
+    return allGames;
+  }
+
+  function shouldCountForLeaderboard(gameName, leaderboardGames) {
+    return leaderboardGames.some(g => g.gameName === gameName);
+  }
 
   function setGroup(newGroup) {
     let summaryRequest = new XMLHttpRequest();
@@ -221,11 +448,10 @@ function stringToColor(str) {
       groupSelectionArea.classList.remove('hidden');
     }
 
-    let sort = localStorage.getItem('sort') || 'popularity';
-    localStorage.setItem('sort', sort);
-    sortSelect.value = sort;
-
     const selectedGroup = getSelectedGroup();
+    
+    // Initialize settings summary
+    updateSettingsSummary();
 
     if (groups[selectedGroup]) {
       setGroup(groups[selectedGroup]);
@@ -374,13 +600,29 @@ function stringToColor(str) {
     leaderboard = {};
     clearData(summaryArea);
 
-    let sortedGames = sortSelect.value === 'popularity'
-      ? games.toSorted((a, b) => group.games[b.gameName].popularity - group.games[a.gameName].popularity)
-      : sortSelect.value === 'alphabetically'
-      ? games.toSorted((a, b) => b.gameName > a.gameName ? -1 : 1)
-      : sortSelect.value === 'personal'
-      ? games.toSorted((a, b) => b.myPopularity - a.myPopularity)
-      : games;
+    const selectedGroup = getSelectedGroup();
+    const leaderboardSettings = getLeaderboardSettings(selectedGroup);
+    const displayMode = getGamesDisplay();
+    const sortMode = getGamesSort();
+
+    // Filter games for leaderboard calculation
+    const leaderboardGames = filterGamesForLeaderboard(games, leaderboardSettings);
+    
+    // Filter games for display
+    let gamesToDisplay = filterGamesForDisplay(games, displayMode);
+
+    // Sort the displayed games
+    let sortedGames = sortMode === 'popularity'
+      ? gamesToDisplay.toSorted((a, b) => {
+          const popA = group.games && group.games[a.gameName] ? group.games[a.gameName].popularity : 0;
+          const popB = group.games && group.games[b.gameName] ? group.games[b.gameName].popularity : 0;
+          return popB - popA;
+        })
+      : sortMode === 'alphabetically'
+      ? gamesToDisplay.toSorted((a, b) => b.gameName > a.gameName ? -1 : 1)
+      : sortMode === 'personal'
+      ? gamesToDisplay.toSorted((a, b) => b.myPopularity - a.myPopularity)
+      : gamesToDisplay;
 
     sortedGames.forEach((game) => {
       let dailyResultsForGame = dailyResults
@@ -394,10 +636,11 @@ function stringToColor(str) {
 
       let gameContainer = document.createElement('div');
       gameContainer.classList.add('game');
-      if (group.selectGames) {
-        if (group.games[game.gameName].countWinner) {
-          gameContainer.classList.add('count-winner');
-        }
+      
+      const countsForLeaderboard = shouldCountForLeaderboard(game.gameName, leaderboardGames);
+      
+      if (countsForLeaderboard) {
+        gameContainer.classList.add('count-winner');
 
         if (allUsersForGame.length > 1) {
           gameContainer.classList.add('competitive');
@@ -421,9 +664,7 @@ function stringToColor(str) {
               let container = addResult(game, dailyResult, user, winner, scores.length);
               resultsList.appendChild(container);
 
-              if ((group.selectGames && group.games[game.gameName].countWinner || 
-                   !group.selectGames && !isFailure) &&
-                   scores.length > 1) {
+              if (countsForLeaderboard && !isFailure && scores.length > 1) {
                 logResult(user, winner);
               }
             });
@@ -435,7 +676,15 @@ function stringToColor(str) {
     noUserOrGroupArea.classList.add('hidden');
     resultsArea.classList.remove('hidden');
 
-    displayLeaderboard();
+    // Show or hide leaderboard based on mode
+    // Only update if settings are NOT open (to avoid jumping)
+    if (!settingsAreOpen) {
+      updateLeaderboardVisibility();
+      
+      if (leaderboardSettings.mode !== 'hidden') {
+        displayLeaderboard();
+      }
+    }
   }
 
   function addGameLink(game, dailyResult, container) {
@@ -832,6 +1081,8 @@ function stringToColor(str) {
               .forEach(groupButton => groupButton.classList.remove('selected'));
 
             groupButton.classList.add('selected');
+            updateSettingsSummary();
+            closeSettingsCard();
             refreshData();
           }
         });
@@ -890,13 +1141,69 @@ function stringToColor(str) {
     submitRequest.send(JSON.stringify(resultText));
   }
 
-  sortSelect.addEventListener('change', (event) => {
-    localStorage.setItem('sort', event.target.value);
+  toggleSettingsButton.addEventListener('click', toggleSettingsCard);
+  closeSettingsButton.addEventListener('click', closeSettingsCard);
+
+  // Leaderboard mode change
+  document.querySelectorAll('input[name="leaderboard-mode"]').forEach(radio => {
+    radio.addEventListener('change', (event) => {
+      const selectedGroup = getSelectedGroup();
+      if (!selectedGroup) return;
+
+      const settings = getLeaderboardSettings(selectedGroup);
+      settings.mode = event.target.value;
+      saveLeaderboardSettings(selectedGroup, settings);
+      
+      leaderboardCountInput.disabled = settings.mode !== 'top';
+      updateSettingsSummary();
+      
+      // Update visibility - will hide but preserve space if settings are open and state changed
+      updateLeaderboardVisibility();
+      
+      if (lastDailyResults) {
+        setData(lastDailyResults);
+      }
+    });
+  });
+
+  // Leaderboard count change
+  leaderboardCountInput.addEventListener('change', (event) => {
+    const selectedGroup = getSelectedGroup();
+    if (!selectedGroup) return;
+
+    const settings = getLeaderboardSettings(selectedGroup);
+    settings.count = parseInt(event.target.value) || 6;
+    saveLeaderboardSettings(selectedGroup, settings);
+    
+    updateSettingsSummary();
+    
     if (lastDailyResults) {
       setData(lastDailyResults);
-    } else {
-      refreshData();
     }
+  });
+
+  // Games display change
+  document.querySelectorAll('input[name="games-display"]').forEach(radio => {
+    radio.addEventListener('change', (event) => {
+      saveGamesDisplay(event.target.value);
+      updateSettingsSummary();
+      
+      if (lastDailyResults) {
+        setData(lastDailyResults);
+      }
+    });
+  });
+
+  // Games sort change
+  document.querySelectorAll('input[name="games-sort"]').forEach(radio => {
+    radio.addEventListener('change', (event) => {
+      saveGamesSort(event.target.value);
+      updateSettingsSummary();
+      
+      if (lastDailyResults) {
+        setData(lastDailyResults);
+      }
+    });
   });
 
   function getSelectedGroup() {

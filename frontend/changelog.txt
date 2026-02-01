@@ -1,1 +1,1 @@
-- Fixed the Clues by Sam parser
+- Added leaderboard and game display settings.
