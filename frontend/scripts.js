@@ -639,7 +639,8 @@ function stringToColor(str) {
       
       const countsForLeaderboard = shouldCountForLeaderboard(game.gameName, leaderboardGames);
       
-      if (countsForLeaderboard) {
+      // Only show border if leaderboard mode is not "all" (since all games would have it)
+      if (countsForLeaderboard && leaderboardSettings.mode !== 'all') {
         gameContainer.classList.add('count-winner');
 
         if (allUsersForGame.length > 1) {
