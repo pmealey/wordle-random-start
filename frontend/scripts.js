@@ -209,23 +209,23 @@ function stringToColor(str) {
 
   function getLeaderboardModeLabel(settings) {
     if (settings.mode === 'top') {
-      return `Top ${settings.count} Games`;
+      return `Top ${settings.count}`;
     } else if (settings.mode === 'my') {
-      return 'My Games';
+      return 'Mine';
     } else if (settings.mode === 'hidden') {
-      return 'Hidden';
+      return 'Off';
     } else {
-      return 'All Games';
+      return 'All';
     }
   }
 
   function getDisplayLabel(display) {
     if (display === 'popular') {
-      return 'Popular Games';
+      return 'Popular';
     } else if (display === 'my') {
-      return 'My Games';
+      return 'Mine';
     } else {
-      return 'All Games';
+      return 'All';
     }
   }
 
@@ -233,11 +233,11 @@ function stringToColor(str) {
     if (sort === 'arbitrary') {
       return 'Arbitrary';
     } else if (sort === 'popularity') {
-      return 'By Popularity';
+      return 'Popular';
     } else if (sort === 'personal') {
-      return 'By My Popularity';
+      return 'Mine';
     } else {
-      return 'Alphabetically';
+      return 'A-Z';
     }
   }
 

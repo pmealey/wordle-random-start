@@ -1,15 +1,17 @@
-body { margin: 40px auto; max-width: 450px; line-height: 1.6; font-size: 18px; color: #444; padding: 0 10px; }
+body { margin: 20px auto; max-width: 450px; line-height: 1.6; font-size: 18px; color: #444; padding: 0 10px; }
 h1, h2, h3 {line-height: 1.2;}
 textarea {width: 100%;min-height: 150px;}
+a, input, textarea, button { touch-action: manipulation; }
 button { border: solid 1px #e0e0e0; padding: 5px; border-radius: 4px; background-color: #EFEFEF; color: #444; cursor: pointer; }
 button:hover { background-color: #e0e0e0;}
 .help { font-style: italic; padding-left: 5px; padding-right: 5px; white-space: pre-line; }
-.menu { position: fixed; right: 10px; background: transparent; padding: 5px; z-index: 100; }
+.menu { position: fixed; top: 0; right: 10px; background: transparent; padding: 5px; z-index: 100; }
 .menu button + button { margin-left: 5px; }
-.summary, .help {font-size: 14px;}
+.summary, .help {font-size: 0.875rem;}
 .input-row, textarea {min-width: 200px;}
-.input-row {display: flex; flex-direction: row;}
+.input-row {display: flex; flex-direction: row; align-items: stretch;}
 .input-row label, .input-row button {flex: 0 0 auto;}
+.input-row label {display: flex; align-items: center;}
 .input-row * + input, .input-row * + button {margin-left: 5px;}
 .input-row input {flex: 1 1 auto;min-width: 0;}
 .hidden {display: none;visibility: hidden;}
@@ -62,11 +64,12 @@ button:hover { background-color: #e0e0e0;}
 
 .group-info-area { display: flex; justify-content: space-between; gap: 4px; }
 
-.settings-summary { display: flex; align-items: center; font-size: 14px; flex: 1; position: relative; }
-.settings-summary-content { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center; }
+.settings-summary { display: flex; align-items: center; font-size: 0.875rem; flex: 1; justify-content: space-between; }
+.settings-summary-spacer { width: 28px; } /* Matches gear button width for centering */
+.settings-summary-content { display: flex; align-items: center; gap: 8px; justify-content: center; }
 .setting-summary-item { white-space: nowrap; }
 .setting-separator { opacity: 0.5; }
-.settings-toggle { border: none; background: transparent; padding: 2px 5px; cursor: pointer; font-size: 16px; position: absolute; right: 0; }
+.settings-toggle { border: none; background: transparent; padding: 2px 5px; cursor: pointer; font-size: 0.875rem; width: 28px; }
 .settings-toggle:hover { background-color: #0001; border-radius: 4px; }
 
 .settings-card { 
@@ -81,21 +84,29 @@ button:hover { background-color: #e0e0e0;}
 }
 .settings-card.expanded { max-height: 500px; }
 .settings-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 5px; margin-bottom: 10px; }
-.settings-header h4 { margin: 0; font-size: 16px; }
-.settings-header button { border: none; background: transparent; cursor: pointer; font-size: 16px; padding: 0 5px; }
+.settings-header h4 { margin: 0; font-size: 0.875rem; }
+.settings-header button { border: none; background: transparent; cursor: pointer; font-size: 0.875rem; padding: 0 5px; }
 .settings-header button:hover { background-color: #0001; border-radius: 4px; }
 .settings-body { display: flex; flex-direction: column; gap: 10px; }
 .setting-row { display: flex; flex-direction: column; gap: 5px; }
-.setting-label { font-weight: bold; font-size: 14px; }
-.setting-controls { display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
+.setting-label { font-weight: bold; font-size: 0.875rem; }
+.setting-controls { display: flex; flex-direction: column; gap: 3px; font-size: 0.875rem; }
 .setting-controls label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
 .setting-controls input[type="radio"] { cursor: pointer; }
 .count-input { width: 30px; padding: 2px; border: 1px solid #999; border-radius: 2px; }
 
 .group-tabs { border-bottom: 1px solid #333; margin-bottom: 18px; margin-top: 18px; padding-left: 8px; padding-right: 8px; display: flex; flex-flow: row; gap: 8px; position: relative; }
+.group-tabs.hidden { display: none; margin: 0; }
 .group-tabs button { border-top-right-radius: 4px; border-top-left-radius: 4px; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border: 1px solid #333; border-bottom: 1px solid white; }
 .group-tabs button.selected { position: relative; bottom: -1px; }
 
 .error { color: red; }
 
 @keyframes shine { to { background-position: 200% center; } }
+
+/* Mobile-specific touch improvements */
+@media (max-width: 768px) {
+  button { padding: 8px 12px; min-height: 44px; }
+  .group-tabs button { padding: 10px 16px; min-height: 44px; }
+  .menu { top: calc(100dvh - 60px); right: 10px; }
+}
