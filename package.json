@@ -10,6 +10,7 @@
     "build:infra": "npm run build --prefix infrastructure",
     "build": "npm run build:lambdas && npm run build:infra",
     
+    "deploy:all": "npm run deploy:dev --prefix infrastructure && npm run deploy:prod --prefix infrastructure",
     "deploy:dev": "npm run deploy:dev --prefix infrastructure",
     "deploy:prod": "npm run deploy:prod --prefix infrastructure",
     
