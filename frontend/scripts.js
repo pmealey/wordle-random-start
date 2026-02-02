@@ -70,6 +70,15 @@ function scoreIsWinning(score, game, scores) {
   return (game.golfScoring ? Math.min(...scores) : Math.max(...scores)) === score
 }
 
+function parseTimeToMs(timeString) {
+  // Parse time string (HH:MM:SS) directly to milliseconds
+  const timeParts = timeString.split(':');
+  const hours = parseInt(timeParts[0], 10) || 0;
+  const minutes = parseInt(timeParts[1], 10) || 0;
+  const seconds = parseInt(timeParts[2], 10) || 0;
+  return hours * 3600000 + minutes * 60000 + seconds * 1000;
+}
+
 function getScore(dailyResult, golfScoring) {
   let defaultScore = golfScoring ? Infinity : 0;
 
@@ -81,7 +90,7 @@ function getScore(dailyResult, golfScoring) {
     // the score in clues by sam is the number of green suspects - 20 minus the score is the number of failures
     const failures = dailyResult.game === 'Clues by Sam' ? 20 - dailyResult.score : dailyResult.score;
     // special and lazy handling for murdle & clues by sam - highest score with lowest time should win
-    const time = new Date(dailyResult.date.replace('00:00:00', dailyResult.time)) - new Date(dailyResult.date);
+    const time = parseTimeToMs(dailyResult.time);
     // each failure adds a day in milliseconds to the score
     return failures * 24 * 60 * 60 * 1000 + time;
   }
@@ -118,7 +127,7 @@ function getScore(dailyResult, golfScoring) {
   }
 
   if (dailyResult.time) {
-    return new Date(dailyResult.date.replace('00:00:00', dailyResult.time)) - new Date(dailyResult.date);
+    return parseTimeToMs(dailyResult.time);
   }
 
   return defaultScore;
