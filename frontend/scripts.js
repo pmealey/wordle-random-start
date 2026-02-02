@@ -1318,4 +1318,25 @@ function hideResultsLoading() {
   function setClipboard(dailyResult) {
     navigator.clipboard.writeText(dailyResult.result);
   }
+
+  // Check if the infrastructure notice was previously dismissed
+  checkInfrastructureNotice();
 })();
+
+// Infrastructure notice functions (global scope for onclick handler)
+function dismissNotice() {
+  const notice = document.getElementById('infrastructure-notice');
+  if (notice) {
+    notice.classList.add('hidden');
+    localStorage.setItem('infrastructureNoticeDismissed', 'true');
+  }
+}
+
+function checkInfrastructureNotice() {
+  const dismissed = localStorage.getItem('infrastructureNoticeDismissed');
+  const notice = document.getElementById('infrastructure-notice');
+  if (notice && dismissed !== 'true') {
+    // Only show the notice if it hasn't been dismissed
+    notice.classList.remove('hidden');
+  }
+}

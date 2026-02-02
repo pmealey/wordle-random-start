@@ -102,6 +102,36 @@ button:hover { background-color: #e0e0e0;}
 
 .error { color: red; }
 
+/* Infrastructure notice banner */
+.notice-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  margin: 10px 0;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+  border: 1px solid #ffc107;
+  border-left: 4px solid #ff9800;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.notice-banner.hidden { display: none; }
+.notice-icon { font-size: 1.25rem; flex-shrink: 0; }
+.notice-text { flex: 1; font-size: 0.875rem; line-height: 1.4; color: #856404; }
+.notice-text strong { color: #664d03; }
+.notice-dismiss {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: #856404;
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 1rem;
+  border-radius: 4px;
+  min-height: auto;
+}
+.notice-dismiss:hover { background: rgba(0,0,0,0.1); }
+
 @keyframes shine { to { background-position: 200% center; } }
 
 /* Loading states */
