@@ -6,8 +6,8 @@ export class FramedParser extends BasicScoreResultParser {
   readonly countWinner = true;
   readonly gameName = 'Framed';
   readonly helpText = null;
-  protected readonly extraContent = this.url;
   readonly url = 'https://framed.wtf';
+  protected readonly extraContent = this.url;
   
   // Captures emoji line after 🎥: "Framed #1064\n🎥 🟥 🟥 🟥 🟥 🟥 🟩"
   protected readonly parser = new RegExp(

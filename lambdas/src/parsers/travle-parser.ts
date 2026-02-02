@@ -5,8 +5,8 @@ export class TravleParser extends BasicScoreResultParser {
   readonly countWinner = true;
   readonly gameName = 'Travle';
   readonly helpText = null;
-  protected readonly extraContent = this.url;
   readonly url = 'https://travle.earth';
+  protected readonly extraContent = this.url;
   
   // Matches "#travle #742 (1 away)" or "#travle #555 +0 (Perfect)" or "#travle #535 +6"
   // The regex captures optional +X score, may be empty for failures like "(1 away)"

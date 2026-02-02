@@ -6,8 +6,8 @@ export class MinuteCrypticParser extends BasicScoreResultParser {
   readonly countWinner = true;
   readonly gameName = 'Minute Cryptic';
   readonly helpText = null;
-  protected readonly extraContent = this.url + '/?utm_source=share';
   readonly url = 'https://www.minutecryptic.com';
+  protected readonly extraContent = this.url + '/?utm_source=share';
   
   // Match emoji circles: ⚪️, 🟡, 🟣
   protected readonly parser = new RegExp(

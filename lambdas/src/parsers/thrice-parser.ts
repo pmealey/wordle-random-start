@@ -7,8 +7,8 @@ export class ThriceParser extends BasicScoreResultParser {
   readonly gameName = 'Thrice';
   readonly golfScoring = false;
   readonly helpText = null;
-  protected readonly extraContent = this.url;
   readonly url = 'https://thricegame.com';
+  protected readonly extraContent = this.url;
   
   // Matches "Thrice Game #365 → 3 points" or "Thrice Game #507 → I got a perfect score"
   protected readonly parser = new RegExp(

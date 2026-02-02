@@ -6,8 +6,8 @@ export class Moviedle1Parser extends BasicScoreResultParser {
   readonly countWinner = true;
   readonly gameName = 'Moviedle 1';
   readonly helpText = 'Guess a movie from a compressed 1-6 second version of it.';
-  protected readonly extraContent = this.url;
   readonly url = 'https://moviedle.app';
+  protected readonly extraContent = this.url;
   
   // Captures emoji line: "#Moviedle #2024-02-18 \n\n 🎥 ⬛️ ⬛️ ⬛️..."
   protected readonly parser = new RegExp(

@@ -4,8 +4,8 @@ export class BandleParser extends BasicScoreResultParser {
   readonly countWinner = true;
   readonly gameName = 'Bandle';
   readonly helpText = null;
-  protected readonly extraContent = this.url;
   readonly url = 'https://bandle.app/';
+  protected readonly extraContent = this.url;
   
   // Matches "Bandle #611 x/6" or "Bandle #595 1/6"
   // Note: C# uses [\d|x] which incorrectly includes literal pipe - fixed here to [\dx]

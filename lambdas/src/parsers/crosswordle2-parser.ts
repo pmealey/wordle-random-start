@@ -4,8 +4,8 @@ export class Crosswordle2Parser extends BasicScoreResultParser {
   readonly countWinner = true;
   readonly gameName = 'Crosswordle 2';
   readonly helpText = 'Guess a two word phrase.';
-  protected readonly extraContent = this.url;
   readonly url = 'https://crosswordle.serializer.ca/';
+  protected readonly extraContent = this.url;
   
   // Match "Crosswordle 123 ... 5/6" - score is before the slash
   protected readonly parser = new RegExp(

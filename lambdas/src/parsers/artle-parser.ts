@@ -6,8 +6,8 @@ export class ArtleParser extends BasicScoreResultParser {
   readonly countWinner = true;
   readonly gameName = 'Artle';
   readonly helpText = null;
-  protected readonly extraContent = this.url;
   readonly url = 'https://www.nga.gov/Artle';
+  protected readonly extraContent = this.url;
   
   // Captures emoji line after 🎨: "Artle #759\n🎨 🟥 🟥 🟥 🟥"
   protected readonly parser = new RegExp(
