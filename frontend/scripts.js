@@ -1186,7 +1186,10 @@ function hideResultsLoading() {
       }
 
       if (requestHasSucceeded(submitRequest)) {
-        if (!advancedModeEnabled() && dateInput.value !== new Date(Date.now()).toISOString().substring(0, new Date(Date.now()).toISOString().indexOf('T'))) {
+        // Check if the date has changed (e.g., submitted after midnight local time)
+        const now = new Date();
+        const localDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        if (!advancedModeEnabled() && dateInput.value !== localDate) {
           location.reload();
           return;
         }
