@@ -11,9 +11,10 @@ import { getParsers } from '../parsers';
  */
 export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
-    const namesParam = event.queryStringParameters?.names || 'all';
-    const excludeParam = event.queryStringParameters?.exclude || '';
-    const groupParam = event.queryStringParameters?.group;
+    // Decode query parameters since API Gateway passes them URL-encoded
+    const namesParam = event.queryStringParameters?.names ? decodeURIComponent(event.queryStringParameters.names) : 'all';
+    const excludeParam = event.queryStringParameters?.exclude ? decodeURIComponent(event.queryStringParameters.exclude) : '';
+    const groupParam = event.queryStringParameters?.group ? decodeURIComponent(event.queryStringParameters.group) : undefined;
     
     // Parse parameters
     const excludedGames = excludeParam.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);

@@ -18,9 +18,10 @@ import { tryParseResult } from '../parsers';
  */
 export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const method = event.httpMethod;
-  const param1 = event.pathParameters?.param1;
-  const param2 = event.pathParameters?.param2;
-  const param3 = event.pathParameters?.param3;
+  // Decode path parameters since API Gateway passes them URL-encoded
+  const param1 = event.pathParameters?.param1 ? decodeURIComponent(event.pathParameters.param1) : undefined;
+  const param2 = event.pathParameters?.param2 ? decodeURIComponent(event.pathParameters.param2) : undefined;
+  const param3 = event.pathParameters?.param3 ? decodeURIComponent(event.pathParameters.param3) : undefined;
   
   try {
     switch (method) {

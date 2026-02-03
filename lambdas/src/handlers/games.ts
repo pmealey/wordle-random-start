@@ -11,7 +11,8 @@ import { getParsers } from '../parsers';
  */
 export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
-    const user = event.queryStringParameters?.user || '';
+    // Decode query parameter since API Gateway passes them URL-encoded
+    const user = event.queryStringParameters?.user ? decodeURIComponent(event.queryStringParameters.user) : '';
     const now = getNowEasternStandardTime();
     const today = formatDateString(now);
     

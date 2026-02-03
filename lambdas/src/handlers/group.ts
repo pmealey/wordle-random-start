@@ -11,7 +11,8 @@ import { getParsers } from '../parsers';
  */
 export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
-    const groupName = event.pathParameters?.name;
+    // Decode path parameter since API Gateway passes them URL-encoded
+    const groupName = event.pathParameters?.name ? decodeURIComponent(event.pathParameters.name) : undefined;
     
     if (!groupName) {
       return errorResponse('Group name is required', 400);
